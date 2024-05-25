@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['sedapms.ams3.cdn.digitaloceanspaces.com'],
+    domains: ['sedaems.ams3.cdn.digitaloceanspaces.com'],
   },
 };
 

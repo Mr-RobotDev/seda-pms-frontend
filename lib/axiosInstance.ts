@@ -1,11 +1,10 @@
-// utils/axiosInstance.ts
 import axios from "axios";
 import Cookies from "js-cookie";
 import { IncomingMessage } from "http";
 import cookie from "cookie";
 
 const axiosInstance = axios.create({
-  baseURL: "https://api.sedapms.originsmartcontrols.com/v1",
+  baseURL: "https://api.sedaems.originsmartcontrols.com/v1",
 });
 
 axiosInstance.interceptors.request.use(
