@@ -22,8 +22,8 @@ interface DevicesType {
   oem: string;
   name: string;
   type: string;
-  temperature: Number;
-  relativeHumidity: Number;
+  temperature: number;
+  relativeHumidity: number;
   location: {
     lat: number;
     long: number;
