@@ -5,7 +5,7 @@ import DevicesStats from "./DevicesStats";
 import axiosInstance from "@/lib/axiosInstance";
 import toast from "react-hot-toast";
 import { Card, Spin } from "antd";
-import LeafLetMap from "./LeafLetMap";
+import LeafLetMap from "./LeafLetMap/LeafLetMap";
 
 const MainFloorView = () => {
   const [devicesStats, setDevicesStats] = useState();

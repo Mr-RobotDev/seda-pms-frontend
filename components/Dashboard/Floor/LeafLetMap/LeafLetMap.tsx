@@ -8,11 +8,11 @@ import {
 } from "react-leaflet";
 import { Icon } from "leaflet";
 import { LatLngBoundsExpression } from "leaflet";
-
+import axiosInstance from "@/lib/axiosInstance";
+import DeviceDetailsComp from "../../DeviceDetailsComp";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
-import axiosInstance from "@/lib/axiosInstance";
-import DeviceDetailsComp from "../DeviceDetailsComp";
+import "./leaflet.css"
 
 interface LeafLetMapProps {
   diagram?: string;
@@ -56,23 +56,23 @@ const LeafLetMap = ({ diagram }: LeafLetMapProps) => {
   ];
 
   const customThermometerIcon = new Icon({
-    iconUrl: "/thermometer.png",
-    iconSize: [35, 35],
+    iconUrl: "/thermometer-1.png",
+    iconSize: [25, 25],
   });
 
   const customColdStorageIcon = new Icon({
     iconUrl: "/snowflake.png",
-    iconSize: [30, 30],
+    iconSize: [25, 25],
   });
 
   return (
     <div
       style={{ width: "100%" }}
-      className="w-full h-[350px] md:max-h-[600px] 2xl:h-[800px]"
+      className="w-full h-[500px] md:max-h-[600px] 2xl:h-[800px]"
     >
       <MapContainer
         center={[51.5014, -0.083]}
-        zoom={20}
+        zoom={19}
         minZoom={19}
         scrollWheelZoom={false}
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
