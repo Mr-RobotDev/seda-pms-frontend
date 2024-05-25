@@ -1,25 +1,53 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   MapContainer,
   ImageOverlay,
   Marker,
   Popup,
-  FeatureGroup,
-  Circle,
 } from "react-leaflet";
 import { Icon } from "leaflet";
-import { LatLngBoundsExpression, LatLngTuple } from "leaflet";
-import { EditControl } from "react-leaflet-draw";
+import { LatLngBoundsExpression } from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
+import axiosInstance from "@/lib/axiosInstance";
+import DeviceDetailsComp from "../DeviceDetailsComp";
 
 interface LeafLetMapProps {
   diagram?: string;
 }
 
+interface DevicesType {
+  oem: string;
+  name: string;
+  type: string;
+  temperature: Number;
+  relativeHumidity: Number;
+  location: {
+    lat: number;
+    long: number;
+  };
+}
+
 const LeafLetMap = ({ diagram }: LeafLetMapProps) => {
+
+  const [devices, setDevices] = React.useState<DevicesType[]>([]);
+
+  useEffect(() => {
+    (
+      async () => {
+        try {
+          const response = await axiosInstance.get('/devices?page=1&limit=20')
+          if (response.status === 200) {
+            setDevices(response.data.results)
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    )()
+  }, [])
   const imageUrl = diagram || "/seda-ground-floor.jpg";
 
   const bounds: LatLngBoundsExpression = [
@@ -27,9 +55,15 @@ const LeafLetMap = ({ diagram }: LeafLetMapProps) => {
     [51.5019, -0.082],
   ];
 
-  const _onCreate = (e: any) => console.log(e);
-  const _onEditPath = (e: any) => console.log(e);
-  const _onDeleted = (e: any) => console.log(e);
+  const customThermometerIcon = new Icon({
+    iconUrl: "/thermometer.png",
+    iconSize: [35, 35],
+  });
+
+  const customColdStorageIcon = new Icon({
+    iconUrl: "/snowflake.png",
+    iconSize: [30, 30],
+  });
 
   return (
     <div
@@ -44,28 +78,18 @@ const LeafLetMap = ({ diagram }: LeafLetMapProps) => {
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
       >
         <ImageOverlay url={imageUrl} bounds={bounds} />
-        <FeatureGroup>
-          <EditControl
-            position="topright"
-            onEdited={_onEditPath}
-            onCreated={_onCreate}
-            onDeleted={_onDeleted}
-            draw={{
-              rectangle: false,
-              polygon: false,
-              polyline: false,
-              circle: false,
-              circlemarker: true,
-              marker: false,
-            }}
-          />
-        </FeatureGroup>
 
-        {/* {markers.map((marker, index) => (
-          <Marker key={index} position={marker.geocode} icon={customIcon}>
-            <Popup>{marker.popUp}</Popup>
+        {devices.map(device => (
+          <Marker
+            key={device.oem}
+            position={[device.location.lat, device.location.long]}
+            icon={device.type === 'cold' ? customColdStorageIcon: customThermometerIcon }
+          >
+            <Popup>
+              <DeviceDetailsComp device={device} />
+            </Popup>
           </Marker>
-        ))} */}
+        ))}
       </MapContainer>
     </div>
   );
