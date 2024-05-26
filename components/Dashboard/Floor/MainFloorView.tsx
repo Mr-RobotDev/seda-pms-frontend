@@ -13,6 +13,7 @@ import { RootState } from "@/app/store/store";
 const MainFloorView = () => {
   const dispatch = useDispatch();
   const deviceStats = useSelector((state: RootState) => state.statisticsReducer)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -21,10 +22,12 @@ const MainFloorView = () => {
         if (response.status === 200) {
           dispatch(setDevicesStats(response.data))
         } else {
+          setError(true)
           toast.error("Error fetching devices stats");
         }
       } catch (error) {
         console.log("error->", error);
+        setError(true)
         toast.error("Error fetching devices stats");
       }
     })();
@@ -32,23 +35,28 @@ const MainFloorView = () => {
 
   return (
     <>
-      <div>
-        <h1 className=" text-3xl font-semibold">Floor</h1>
-        {deviceStats.totalDevices === 0 ?
-          <div className="  w-full h-full flex justify-center items-center">
-            <Spin size="large" />
-          </div>
-          :
-          <>
-            <DevicesStats />
-            <Card>
-              <div className=" w-full h-full">
-                <LeafLetMap />
+      <h1 className=" text-3xl font-semibold">Floor</h1>
+      {
+        error ?
+          <h1 className=" text-2xl font-semibold mt-20 text-center">Error Loading the Resources</h1>
+          : <div>
+
+            {deviceStats.totalDevices === 0 ?
+              <div className="  w-full h-full flex justify-center items-center">
+                <Spin size="large" />
               </div>
-            </Card>
-          </>
-        }
-      </div>
+              :
+              <>
+                <DevicesStats />
+                <Card>
+                  <div className=" w-full h-full">
+                    <LeafLetMap />
+                  </div>
+                </Card>
+              </>
+            }
+          </div>
+      }
     </>
   );
 };
