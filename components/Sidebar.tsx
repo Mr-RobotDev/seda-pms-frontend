@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Menu, Button } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -8,14 +8,14 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { logout } from "@/app/store/slice/authSlice";
 import Image from "next/image";
-import { BellAlertIcon, CircleStackIcon } from "@heroicons/react/16/solid";
+import { BellAlertIcon, CircleStackIcon, DevicePhoneMobileIcon } from "@heroicons/react/16/solid";
 
 interface SidenavProps {
   color: string;
 }
 
 const Sidebar: React.FC<SidenavProps> = ({ color }) => {
-  const page = usePathname().split("/").at(-1);
+  const page = usePathname().split("/");
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -110,7 +110,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                   <div>
                     <span
                       className="icon"
-                      style={{ background: page === "dashboard" ? color : "" }}
+                      style={{ background: page.at(-1) === "dashboard" ? color : "" }}
                     >
                       {dashboard}
                     </span>
@@ -123,7 +123,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                   <div>
                     <span
                       className="icon"
-                      style={{ background: page === "floor" ? color : "" }}
+                      style={{ background: page.includes("floor") ? color : "" }}
                     >
                       {tables}
                     </span>
@@ -144,17 +144,29 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
               <Menu.Item key="4">
                 <div className="px-4 py-2">
                   <div>
-                    <span className="icon">
+                    <span className="icon" >
                       <CircleStackIcon width={20} />
                     </span>
                     <span className="label text-black">Data Sources</span>
                   </div>
                 </div>
               </Menu.Item>
+              <Menu.Item key="10">
+                <Link href="/dashboard/devices">
+                  <div>
+                    <span 
+                      className="icon"
+                      style={{ background: page.includes("devices") ? color : "" }} >
+                      <DevicePhoneMobileIcon width={20} />
+                    </span>
+                    <span className="label text-black">Devices</span>
+                  </div>
+                </Link>
+              </Menu.Item>
             </div>
           </div>
-        </Menu>
-      </div>
+        </Menu >
+      </div >
       <Menu theme="light" mode="inline">
         <div className=" flex flex-col justify-between h-full">
           <div>
@@ -166,7 +178,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 <div>
                   <span
                     className="icon"
-                    style={{ background: page === "profile" ? color : "" }}
+                    style={{ background: page.includes("profile") ? color : "" }}
                   >
                     {profile}
                   </span>
@@ -187,7 +199,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
           </div>
         </div>
       </Menu>
-    </div>
+    </div >
   );
 };
 

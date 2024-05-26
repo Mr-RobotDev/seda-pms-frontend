@@ -6,11 +6,13 @@ import axiosInstance from "@/lib/axiosInstance";
 import toast from "react-hot-toast";
 import { Card, Spin } from "antd";
 import LeafLetMap from "./LeafLetMap/LeafLetMap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
+import { RootState } from "@/app/store/store";
 
 const MainFloorView = () => {
   const dispatch = useDispatch();
+  const deviceStats = useSelector((state: RootState) => state.statisticsReducer)
 
   useEffect(() => {
     (async () => {
@@ -29,16 +31,25 @@ const MainFloorView = () => {
   }, [dispatch]);
 
   return (
-    <div>
-      <>
-        <DevicesStats />
-        <Card>
-          <div className=" w-full h-full">
-            <LeafLetMap />
+    <>
+      <div>
+        <h1 className=" text-3xl font-semibold">Floor</h1>
+        {deviceStats.totalDevices === 0 ?
+          <div className="  w-full h-full flex justify-center items-center">
+            <Spin size="large" />
           </div>
-        </Card>
-      </>
-    </div>
+          :
+          <>
+            <DevicesStats />
+            <Card>
+              <div className=" w-full h-full">
+                <LeafLetMap />
+              </div>
+            </Card>
+          </>
+        }
+      </div>
+    </>
   );
 };
 

@@ -96,14 +96,6 @@ const Header: React.FC<HeaderProps> = ({
               {toggler}
             </Button>
           </div>
-          <div className="ant-page-header-heading">
-            <span
-              className="text-2xl font-semibold"
-              style={{ textTransform: "capitalize" }}
-            >
-              {page}
-            </span>
-          </div>
           <Drawer
             className="settings-drawer"
             mask={true}
