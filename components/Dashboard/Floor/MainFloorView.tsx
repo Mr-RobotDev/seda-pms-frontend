@@ -6,16 +6,18 @@ import axiosInstance from "@/lib/axiosInstance";
 import toast from "react-hot-toast";
 import { Card, Spin } from "antd";
 import LeafLetMap from "./LeafLetMap/LeafLetMap";
+import { useDispatch } from "react-redux";
+import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
 
 const MainFloorView = () => {
-  const [devicesStats, setDevicesStats] = useState();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
       try {
         const response = await axiosInstance.get("/devices/stats");
         if (response.status === 200) {
-          setDevicesStats(response.data);
+          dispatch(setDevicesStats(response.data))
         } else {
           toast.error("Error fetching devices stats");
         }
@@ -24,24 +26,18 @@ const MainFloorView = () => {
         toast.error("Error fetching devices stats");
       }
     })();
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>
-      {devicesStats ? (
-        <>
-          <DevicesStats devicesStats={devicesStats} />
-          <Card>
-            <div className=" w-full h-full">
-              <LeafLetMap />
-            </div>
-          </Card>
-        </>
-      ) : (
-        <div className=" flex justify-center">
-          <Spin size="large" />
-        </div>
-      )}
+      <>
+        <DevicesStats />
+        <Card>
+          <div className=" w-full h-full">
+            <LeafLetMap />
+          </div>
+        </Card>
+      </>
     </div>
   );
 };

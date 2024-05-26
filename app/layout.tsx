@@ -33,7 +33,7 @@ export default function RootLayout({
           >
             <AntdRegistry>
               {children}
-              <Toaster />
+              <Toaster position="top-right" reverseOrder={false} />
             </AntdRegistry>
           </PersistGate>
         </body>
