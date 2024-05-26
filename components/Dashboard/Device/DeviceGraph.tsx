@@ -79,7 +79,6 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         if (response.status === 200) {
           setDeviceOem(response.data.oem)
           setDeviceData(response.data)
-          console.log('response->', response)
         } else {
           console.log('error->', response)
         }
