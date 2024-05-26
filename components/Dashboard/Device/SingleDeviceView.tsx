@@ -5,13 +5,13 @@ import DeviceGraph from './DeviceGraph'
 
 
 interface SingleDeviceViewProps {
-  oem: string
+  id: string
 }
-const SingleDeviceView = ({ oem }: SingleDeviceViewProps) => {
+const SingleDeviceView = ({ id }: SingleDeviceViewProps) => {
   return (
     <>
       <div>
-        <DeviceGraph oem={oem} />
+        <DeviceGraph id={id} />
       </div>
     </>
   )

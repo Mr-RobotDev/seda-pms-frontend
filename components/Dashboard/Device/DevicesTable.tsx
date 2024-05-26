@@ -4,19 +4,7 @@ import type { TableProps } from 'antd';
 import axiosInstance from '@/lib/axiosInstance';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
-interface DevicesType {
-  oem: string;
-  name: string;
-  type: string;
-  temperature: number;
-  relativeHumidity: number;
-  location: {
-    lat: number;
-    long: number;
-  };
-}
-
+import { DevicesType } from '@/type';
 
 const columns: TableProps<DevicesType>['columns'] = [
   {
@@ -66,17 +54,17 @@ const DevicesTable = () => {
   const onRowClick = (record: DevicesType) => {
     return{
       onClick: () => {
-        router.push(`/dashboard/devices/${record.oem}`)
+        router.push(`/dashboard/devices/${record.id}`)
       }
     }
   }
 
   return (
     <div className=' p-4 md:p-16'>
-      <Table 
-        columns={columns} 
-        dataSource={devices} 
-        scroll={{ x: 500 }} 
+      <Table
+        columns={columns}
+        dataSource={devices}
+        scroll={{ x: 500 }}
         onRow={onRowClick}
         loading={devices.length === 0}
         className='cursor-pointer'

@@ -12,21 +12,10 @@ import { RootState } from "@/app/store/store";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
+import { DevicesType } from "@/type";
 
 interface LeafLetMapProps {
   diagram?: string;
-}
-
-interface DevicesType {
-  oem: string;
-  name: string;
-  type: string;
-  temperature: number;
-  relativeHumidity: number;
-  location: {
-    lat: number;
-    long: number;
-  };
 }
 
 const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
