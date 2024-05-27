@@ -9,6 +9,7 @@ import { User } from '@/type'
 import toast from 'react-hot-toast';
 
 const initialUserState: User = {
+  id: '',
   firstName: '',
   lastName: '',
   email: '',
@@ -27,62 +28,85 @@ const formItemLayout = {
   },
 };
 
-const columns: TableProps<any>['columns'] = [
-  {
-    title: 'First Name',
-    dataIndex: 'firstName',
-    key: 'firstName',
-  },
-  {
-    title: 'Last Name',
-    dataIndex: 'lastName',
-    key: 'lastName',
-  },
-  {
-    title: 'Email',
-    dataIndex: 'email',
-    key: 'email',
-  },
-  {
-    title: 'Role',
-    key: 'role',
-    dataIndex: 'role',
-    render: (_, { role }) => {
-      let color = role === 'User' ? 'geekblue' : 'volcano';
-      return (
-        <div className='flex'>
-          <div className='w-16'>
-            <Tag color={color}>
-              {role.toUpperCase()}
-            </Tag>
-          </div>
-          <p className='!text-blue-500 !text-xs hover:underline duration-200 transition-all transform cursor-pointer flex items-end'>Change Role</p>
-        </div>
-      );
-    },
-  },
-  {
-    title: 'Active',
-    key: 'isActive',
-    dataIndex: 'isActive',
-    render: (_, { isActive }) => {
-      let component = isActive ? <CheckIcon width={20} /> : <XMarkIcon width={20} />;
-      return (
-        <span>{component}</span>
-      );
-    },
-  },
-];
-
 const UserMainView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([])
   const [user, setUser] = useState<User>(initialUserState)
   const [form] = Form.useForm()
 
+
+  const columns: TableProps<any>['columns'] = [
+    {
+      title: 'First Name',
+      dataIndex: 'firstName',
+      key: 'firstName',
+    },
+    {
+      title: 'Last Name',
+      dataIndex: 'lastName',
+      key: 'lastName',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Role',
+      key: 'role',
+      dataIndex: 'role',
+      render: (_, { role, id }) => {
+        let color = role === 'User' ? 'geekblue' : 'volcano';
+        return (
+          <div className='flex'>
+            <div className='w-16'>
+              <Tag color={color}>
+                {role.toUpperCase()}
+              </Tag>
+            </div>
+            <p onClick={() => changeUserRole(id, role)} className='!text-blue-500 !text-xs hover:underline duration-200 transition-all transform cursor-pointer flex items-end'>Change Role</p>
+          </div>
+        );
+      },
+    },
+    {
+      title: 'Active',
+      key: 'isActive',
+      dataIndex: 'isActive',
+      render: (_, { isActive }) => {
+        let component = isActive ? <CheckIcon width={20} /> : <XMarkIcon width={20} />;
+        return (
+          <span>{component}</span>
+        );
+      },
+    },
+  ];
+
   const showModal = () => {
     setIsModalOpen(true);
   };
+
+  const changeUserRole = async (userId: string, role: string) => {
+
+    const newRole = role === 'User' ? 'Admin' : 'User'
+    try {
+      const response = await axiosInstance.patch(`/users/${userId}/update-role`, { role: newRole });
+      if (response.status === 200) {
+        setUsers((prevState) => {
+          return prevState.map(user =>
+            user.id === userId ? { ...user, role: newRole } : user
+          );
+        });
+        toast.success('User role changed successfully');
+      } else {
+        toast.error('Error changing user role');
+      }
+    } catch (error) {
+      console.log('error ->', error);
+      toast.error('Error changing user role');
+    }
+
+  }
 
   const handleOk = async () => {
     try {
@@ -96,6 +120,7 @@ const UserMainView = () => {
       if (response.status === 201) {
         // Assuming the API returns the new user object
         setUsers((prevUsers) => [...prevUsers, response.data]);
+        toast.success('User created successfully')
         setIsModalOpen(false);
       } else {
         console.log('Error creating user:', response);
@@ -115,7 +140,6 @@ const UserMainView = () => {
         const response = await axiosInstance.get('/users')
         if (response.status === 200) {
           setUsers(response.data.results)
-          toast.success('User created successfully')
           console.log(response)
         } else {
           console.log('error ->', response)
