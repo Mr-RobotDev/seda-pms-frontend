@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import withDashboardLayout from '@/hoc/withDashboardLayout'
-import { Button, Modal, Table, TableProps, Tag, Form, Input, Select } from 'antd';
+import { Button, Modal, Table, TableProps, Tag, Form, Input, Select, Card } from 'antd';
 import axiosInstance from '@/lib/axiosInstance';
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/20/solid';
@@ -161,7 +161,7 @@ const UserMainView = () => {
   };
 
   return (
-    <>
+    <Card>
       <h1 className="text-3xl font-semibold">Users</h1>
       <div className='p-4 md:px-16'>
         <div className='flex justify-end mb-5'>
@@ -234,7 +234,7 @@ const UserMainView = () => {
           </Form>
         </div>
       </Modal>
-    </>
+    </Card>
   )
 }
 
