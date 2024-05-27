@@ -22,7 +22,7 @@ interface DataPoint {
 }
 
 const formatDate = (timestamp: string, isLargeRange: boolean) => {
-  return dayjs(timestamp).format(isLargeRange ? 'YYYY-MM-DD' : 'HH:mm');
+  return dayjs(timestamp).format(isLargeRange ? 'DD MMM' : 'HH:mm');
 };
 
 const filterDataByDateRange = (data: DataPoint[], range: [Dayjs, Dayjs]) => {
@@ -32,9 +32,9 @@ const filterDataByDateRange = (data: DataPoint[], range: [Dayjs, Dayjs]) => {
 };
 
 const prepareChartData = (data: DataPoint[], range: [Dayjs, Dayjs]) => {
-  const filteredData = filterDataByDateRange(data, range);
-  const isLargeRange = range[1].diff(range[0], 'days') > 1;
-  return filteredData.map(point => ({
+  // const filteredData = filterDataByDateRange(data, range);
+  const isLargeRange = range[1].diff(range[0], 'days') >= 1;
+  return data.map(point => ({
     ...point,
     createdAt: formatDate(point.createdAt, isLargeRange),
   }));
@@ -89,10 +89,14 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   }, [id])
 
   useEffect(() => {
-    const from = range[0].toISOString();
-    const to = range[1].toISOString();
+    const from = dayjs(range[0].toISOString()).format('YYYY-MM-DD')
+    const to = dayjs(range[1].toISOString()).format('YYYY-MM-DD')
     fetchData(from, to);
   }, [range, fetchData]);
+
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   const handleRangeChange = (dates: any, dateStrings: [string, string]) => {
     if (dates && dates.length > 0) {
@@ -101,8 +105,6 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       toast.error('Date Range cannot be empty')
     }
   };
-
-  const chartData = prepareChartData(data, range);
 
   return (
     loading ?
@@ -144,9 +146,9 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <LineChart data={prepareChartData(data, range)} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="createdAt" />
+                      <XAxis dataKey="createdAt" interval={10}/>
                       <YAxis yAxisId="left" label={{ value: 'Temperature (°C)', angle: -90, position: 'insideLeft' }} />
                       <Tooltip />
                       <Legend />

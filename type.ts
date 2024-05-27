@@ -10,3 +10,12 @@ export interface DevicesType {
     long: number;
   };
 }
+
+
+export interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  role: string;
+}
