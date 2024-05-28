@@ -72,18 +72,19 @@ const commonChartOptions = {
     x: {
       format: 'dd MMM yyyy HH:mm',
     },
+    shared: true,
   },
   stroke: {
     width: 2, // Set the line thickness
     curve: 'smooth', // Optional: make the line smooth
+    colors: ['#373737'] 
   },
   markers: {
-    size: 3, // Size of the points on the line
-    colors: ['#FF4560'], // Optional: custom color for the markers
-    strokeColors: '#fff', // Optional: color of the marker border
+    size: 4, // Size of the points on the line
+    colors: ['#111111'], // Optional: custom color for the markers
     strokeWidth: 2, // Optional: width of the marker border
     hover: {
-      size: 5
+      size: 6
     }
   },
 };
@@ -114,7 +115,6 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   }, []);
 
   const TemperatureChart = ({ data }: { data: any }) => {
-    console.log('temperatureChart', data.length,);
     const options = {
       ...commonChartOptions,
       chart: {
@@ -137,7 +137,6 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   };
 
   const HumidityChart = ({ data }: { data: any }) => {
-    console.log('humidityChart', data.length)
     const options = {
       ...commonChartOptions,
       chart: {
@@ -158,15 +157,6 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           data,
         }
       ],
-      markers: {
-        size: 3, // Size of the points on the line
-        colors: ['#111111'], // Optional: custom color for the markers
-        strokeColors: '#fff', // Optional: color of the marker border
-        strokeWidth: 2, // Optional: width of the marker border
-        hover: {
-          size: 5
-        }
-      },
     };
     return <ReactApexChart options={options as any} series={options.series} type="line" height={350} width={"100%"} />;
   };
