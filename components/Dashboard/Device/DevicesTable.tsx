@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import axiosInstance from '@/lib/axiosInstance';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { DevicesType } from '@/type';
+import SimSignal from './SimSignal';
+import { formatDate } from '@/lib/formatDate';
 
 const columns: TableProps<DevicesType>['columns'] = [
   {
@@ -33,6 +35,35 @@ const columns: TableProps<DevicesType>['columns'] = [
     key: 'relativeHumidity',
     dataIndex: 'relativeHumidity',
   },
+  {
+    title: 'Last Updated',
+    key: 'lastUpdated',
+    render: (_, { lastUpdated }) => (
+      lastUpdated ?
+        <div className=' flex flex-row items-center'>
+          <p className=' !text-black'>{`${formatDate(new Date(lastUpdated))}`}</p>
+        </div> :
+        <div>
+          <p className=' !text-2xl !ml-4'>-</p>
+        </div>
+    ),
+  },
+  {
+    title: 'Signal',
+    render: (_, { signalStrength }) => (
+      signalStrength ?
+        <div className=' flex flex-row items-center'>
+          <SimSignal signalStrength={signalStrength} />
+        </div>
+        :
+        <div>
+          <Tag color='error'>
+          Offline
+          </Tag>
+
+        </div>
+    ),
+  },
 ];
 
 const DevicesTable = () => {
@@ -52,7 +83,7 @@ const DevicesTable = () => {
   }, []);
 
   const onRowClick = (record: DevicesType) => {
-    return{
+    return {
       onClick: () => {
         router.push(`/dashboard/devices/${record.id}`)
       }

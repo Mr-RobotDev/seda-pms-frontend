@@ -62,7 +62,6 @@ const commonChartOptions = {
     },
     animations: {
       enabled: true,
-
     },
   },
   xaxis: {
@@ -97,10 +96,10 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   const [data, setData] = useState<DataPoint[]>([]);
   const [deviceOem, setDeviceOem] = useState<string>('');
   const [deviceData, setDeviceData] = useState<DevicesType>();
-  const [range, setRange] = useState<[Dayjs, Dayjs]>([dayjs().subtract(7, 'day').startOf('day'), dayjs().endOf('day')]);
+  const [range, setRange] = useState<[Dayjs, Dayjs]>([dayjs().subtract(3, 'day').startOf('day'), dayjs().endOf('day')]);
   const [loading, setLoading] = useState<boolean>(true);
   const [graphloading, setGraphLoading] = useState<boolean>(false);
-  const [currentPreset, setCurrentPreset] = useState<string>('Last Week');
+  const [currentPreset, setCurrentPreset] = useState<string>('Last 3 Days');
 
   const [temperatureData, setTemperatureData] = useState<DataPoint[]>([])
   const [humidityData, setHumidityData] = useState<DataPoint[]>([])
@@ -119,7 +118,19 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       ...commonChartOptions,
       chart: {
         id: 'TemperatureChart',
-        group: 'device'
+        group: 'device',
+        toolbar: {
+          show: true,
+          tools: {
+            download: false,
+            selection: false,
+            zoom: false,
+            zoomin: true,
+            zoomout: false,
+            pan: false,
+            reset: true,
+          },
+        },
       },
       yaxis: {
         title: {
@@ -141,7 +152,19 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       ...commonChartOptions,
       chart: {
         id: 'HumidityChart',
-        group: 'device'
+        group: 'device',
+        toolbar: {
+          show: true,
+          tools: {
+            download: false,
+            selection: false,
+            zoom: false,
+            zoomin: true,
+            zoomout: false,
+            pan: false,
+            reset: true,
+          },
+        },
       },
       yaxis: {
         title: {
@@ -215,6 +238,14 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
     const from = dayjs(range[0].toISOString()).format('YYYY-MM-DD');
     const to = dayjs(range[1].toISOString()).format('YYYY-MM-DD');
     fetchData(from, to);
+
+    if (window && window.history) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('from', from);
+      url.searchParams.set('to', to);
+      window.history.pushState({}, '', url.toString());
+    }
+
   }, [range, fetchData]);
 
   const handleRangeChange = (dates: any, dateStrings: [string, string]) => {

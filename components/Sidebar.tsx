@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import { logout } from "@/app/store/slice/authSlice";
 import Image from "next/image";
 import { BellAlertIcon, CircleStackIcon, DevicePhoneMobileIcon, UserIcon } from "@heroicons/react/16/solid";
+import useBrowserDetect from "@/hooks/useBrowseDetect";
+import axiosInstance from "@/lib/axiosInstance";
 
 interface SidenavProps {
   color: string;
@@ -18,8 +20,10 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
   const page = usePathname().split("/");
   const dispatch = useDispatch();
   const router = useRouter();
+  const browser = useBrowserDetect();
 
-  const LogoutButtonHandler = () => {
+  const LogoutButtonHandler = async () => {
+    await axiosInstance.post('/auth/logout', { userAgent: browser })
     dispatch(logout());
     router.push("/login");
   };
@@ -154,7 +158,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
               <Menu.Item key="10">
                 <Link href="/dashboard/devices">
                   <div>
-                    <span 
+                    <span
                       className="icon"
                       style={{ background: page.includes("devices") ? color : "" }} >
                       <DevicePhoneMobileIcon width={20} />
@@ -166,7 +170,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
               <Menu.Item key="11">
                 <Link href="/dashboard/users">
                   <div>
-                    <span 
+                    <span
                       className="icon"
                       style={{ background: page.includes("users") ? color : "" }} >
                       <UserIcon width={20} />
