@@ -11,6 +11,7 @@ export interface DevicesType {
   };
   signalStrength: number;
   lastUpdated: string;
+  isOffline: boolean;
 }
 
 

@@ -9,9 +9,11 @@ import { DevicesType } from '@/type';
 import Image from 'next/image';
 import CountUp from 'react-countup';
 import dynamic from 'next/dynamic';
+import { CalendarIcon } from '@heroicons/react/20/solid';
 
 const ApexCharts = dynamic(() => import('react-apexcharts'), { ssr: false });
 import ReactApexChart from 'react-apexcharts';
+import { WifiIcon } from '@heroicons/react/16/solid';
 
 dayjs.extend(isBetween);
 
@@ -76,7 +78,7 @@ const commonChartOptions = {
   stroke: {
     width: 2, // Set the line thickness
     curve: 'smooth', // Optional: make the line smooth
-    colors: ['#373737'] 
+    colors: ['#373737']
   },
   markers: {
     size: 4, // Size of the points on the line
@@ -243,7 +245,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       const url = new URL(window.location.href);
       url.searchParams.set('from', from);
       url.searchParams.set('to', to);
-      window.history.pushState({}, '', url.toString());
+      window.history.replaceState({}, '', url.toString());
     }
 
   }, [range, fetchData]);
@@ -259,7 +261,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         const url = new URL(window.location.href);
         url.searchParams.set('from', from);
         url.searchParams.set('to', to);
-        window.history.pushState({}, '', url.toString());
+        window.history.replaceState({}, '', url.toString());
       }
     } else {
       toast.error('Date Range cannot be empty');
@@ -300,7 +302,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       const url = new URL(window.location.href);
       url.searchParams.set('from', from);
       url.searchParams.set('to', to);
-      window.history.pushState({}, '', url.toString());
+      window.history.replaceState({}, '', url.toString());
     }
     setCurrentPreset(preset);
   };
@@ -326,16 +328,16 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       </div>
       :
       <>
-        <Row className="rowgap-vbox" gutter={[24, 0]}>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8} className="mb-24">
-            <Card bordered={false} className="criclebox">
+        <Row className=" gap-1" gutter={[24, 0]}>
+          <Col xs={24} sm={24} md={12} lg={6} xl={6} className="mb-24">
+            <Card bordered={false} className="criclebox  h-[125px]">
               <div className=" text-2xl">
                 <Row align="middle" gutter={[24, 0]}>
                   <Col xs={18}>
                     <span className=" text-lg">Name</span>
                     <div className="">
                       <span className="">
-                        <p className='!text-3xl !font-bold mb-0'>{deviceData?.name}</p>
+                        <p className='!text-2xl !font-bold'>{deviceData?.name}</p>
                       </span>
                     </div>
                   </Col>
@@ -348,8 +350,8 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               </div>
             </Card>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8} className="mb-24">
-            <Card bordered={false} className="criclebox">
+          <Col xs={24} sm={24} md={12} lg={6} xl={6} className="mb-24">
+            <Card bordered={false} className="criclebox h-[125px]">
               <div className=" text-2xl">
                 <Row align="middle" gutter={[24, 0]}>
                   <Col xs={18}>
@@ -369,8 +371,8 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               </div>
             </Card>
           </Col>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8} className="mb-24">
-            <Card bordered={false} className="criclebox">
+          <Col xs={24} sm={24} md={12} lg={6} xl={6} className="mb-24">
+            <Card bordered={false} className="criclebox h-[125px]">
               <div className=" text-2xl">
                 <Row align="middle" gutter={[24, 0]}>
                   <Col xs={18}>
@@ -390,8 +392,30 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               </div>
             </Card>
           </Col>
+          <Col xs={24} sm={24} md={12} lg={6} xl={6} className="mb-24">
+            <Card bordered={false} className="criclebox h-[125px]">
+              <div className=" text-2xl">
+                <Row align="middle" gutter={[24, 0]}>
+                  <Col xs={18}>
+                    <span className=" text-lg">{deviceData?.isOffline ? 'Connectivity' : 'Signal Strength'}</span>
+                    <div className="">
+                      <span className="!text-3xl !font-bold">
+                        {deviceData?.signalStrength && <CountUp end={deviceData?.signalStrength as number} duration={2} />}
+                        {!deviceData?.signalStrength && <p className='!text-2xl !font-bold !mb-0'>Offline</p>}
+                      </span>
+                    </div>
+                  </Col>
+                  <Col xs={6}>
+                    <div className="icon-box flex items-center justify-center">
+                      <WifiIcon width={20} />
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+            </Card>
+          </Col>
         </Row>
-        <Card>
+        <div>
           <div className='px-3 md:px-16 mx-auto'>
             <div className='flex flex-col gap-2'>
               <div className='flex justify-end'>
@@ -401,7 +425,13 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                     <RangePicker onChange={handleRangeChange} defaultValue={range} />
                   </div>
                   <Dropdown overlay={menu} placement="bottomRight" arrow>
-                    <Button>{currentPreset}</Button>
+
+
+                    <Button className=' flex flex-row gap-2 items-center'>
+                      <CalendarIcon width={20} />
+                      <p className='!m-0'>{currentPreset}</p>
+                    </Button>
+
                   </Dropdown>
                 </div>
               </div>
@@ -427,7 +457,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               </div>
             </div>
           </div>
-        </Card>
+        </div>
       </>
   );
 };
