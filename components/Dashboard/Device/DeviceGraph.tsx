@@ -13,7 +13,7 @@ import { CalendarIcon } from '@heroicons/react/20/solid';
 
 const ApexCharts = dynamic(() => import('react-apexcharts'), { ssr: false });
 import ReactApexChart from 'react-apexcharts';
-import { WifiIcon } from '@heroicons/react/16/solid';
+import { SignalIcon, SignalSlashIcon } from '@heroicons/react/16/solid';
 
 dayjs.extend(isBetween);
 
@@ -388,12 +388,13 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                   <div className="">
                     <span className="!text-3xl !font-bold">
                       {deviceData?.signalStrength && <CountUp end={deviceData?.signalStrength as number} duration={2} />}
-                      {!deviceData?.signalStrength && <p className='!text-2xl !font-bold !mb-0'>Offline</p>}
+                      {!deviceData?.signalStrength && <p className='!text-2xl !font-bold !mb-0 '>Offline</p>}
                     </span>
                   </div>
                 </div>
                 <div className="icon-box flex items-center justify-center">
-                  <WifiIcon width={20} />
+                  {deviceData?.signalStrength && <SignalIcon width={20} />}
+                  {!deviceData?.signalStrength && <SignalSlashIcon width={20} />}
                 </div>
               </div>
             </Card>
@@ -409,13 +410,10 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                     <RangePicker onChange={handleRangeChange} defaultValue={range} />
                   </div>
                   <Dropdown overlay={menu} placement="bottomRight" arrow>
-
-
                     <Button className=' flex flex-row gap-2 items-center'>
                       <CalendarIcon width={20} />
                       <p className='!m-0'>{currentPreset}</p>
                     </Button>
-
                   </Dropdown>
                 </div>
               </div>

@@ -11,15 +11,14 @@ const UsersPage = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if(user.role !== 'Admin'){
-      toast.error('You are not allowed to access this')
+    if(user?.role !== 'Admin'){
       router.push('/dashboard/floor')
     }
-  }, [router, user.role])
+  }, [router, user?.role])
 
   return (
     <div>
-      {user.role === 'Admin' && <UserMainView />}
+      {user?.role === 'Admin' && <UserMainView />}
     </div>
   )
 }
