@@ -1,17 +1,18 @@
 'use client'
 import React, { useEffect, useState, useCallback } from 'react';
-import withDashboardLayout from '@/hoc/withDashboardLayout';
+import withDashboardLayout from '@/hoc/withDashboardLayout'
 import axiosInstance from '@/lib/axiosInstance';
 import { DatePicker, Table, TableProps, Tag } from 'antd';
 import toast from 'react-hot-toast';
 import dayjs, { Dayjs } from 'dayjs';
 import { formatDateTime, formatToTitleCase } from '@/lib/helperfunctions';
-import './UserTable.css';
+import '../../Users/UserTable.css'
+import Image from 'next/image';
 
 const { RangePicker } = DatePicker;
 
-interface UserActivityLogProps {
-  id: string;
+interface DeviceActivityLogViewProps {
+  id: string
 }
 
 const paginationInitialState = {
@@ -24,8 +25,7 @@ interface ActivityLog {
   page: string;
   action: string;
 }
-
-const UserActivityLog = ({ id }: UserActivityLogProps) => {
+const DeviceActivityLogView = ({ id }: DeviceActivityLogViewProps) => {
   const [range, setRange] = useState<[Dayjs, Dayjs]>([dayjs().startOf('day'), dayjs().endOf('day')]);
   const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -49,7 +49,7 @@ const UserActivityLog = ({ id }: UserActivityLogProps) => {
           limit,
           from: range[0].toISOString(),
           to: range[1].toISOString(),
-          user: id,
+          device: id,
         },
       });
       if (response.status === 200) {
@@ -116,6 +116,34 @@ const UserActivityLog = ({ id }: UserActivityLogProps) => {
       },
     },
     {
+      title: 'User Detail',
+      dataIndex: 'user',
+      render: (_, { user }) => {
+        return (
+          user ?
+            <div className='flex gap-2 items-center'>
+              <div className=' w-12 h-12'>
+                <Image
+                  src={user.profile ? user.profile : '/dummyAvatar.png'}
+                  alt="User avatar"
+                  className="w-full h-full object-cover rounded-full"
+                  unoptimized
+                  width={100}
+                  height={100}
+                />
+              </div>
+              <div>
+                <p className='!text-sm !text-[#000000e0]'>{user.firstName + ' ' + user.lastName}</p>
+              </div>
+            </div>
+            :
+            <div>
+              <p className=' !text-base !text-black'>-</p>
+            </div>
+        );
+      },
+    },
+    {
       title: 'Date',
       key: 'date',
       dataIndex: 'role',
@@ -154,6 +182,6 @@ const UserActivityLog = ({ id }: UserActivityLogProps) => {
       />
     </div>
   );
-};
+}
 
-export default withDashboardLayout(UserActivityLog);
+export default withDashboardLayout(DeviceActivityLogView);

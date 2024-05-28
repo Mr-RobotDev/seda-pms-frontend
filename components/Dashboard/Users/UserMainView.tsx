@@ -39,9 +39,9 @@ const UserMainView = () => {
 
   const columns: TableProps<any>['columns'] = [
     {
-      title: 'First Name',
-      dataIndex: 'firstName',
-      render: (_, { firstName, profile }) => {
+      title: 'User',
+      dataIndex: 'user',
+      render: (_, { firstName, profile, lastName }) => {
         return (
           <div className='flex gap-2 items-center'>
             <div className=' w-12 h-12'>
@@ -55,16 +55,11 @@ const UserMainView = () => {
               />
             </div>
             <div>
-              <p className='!text-sm !text-[#000000e0]'>{firstName}</p>
+              <p className='!text-sm !text-[#000000e0]'>{firstName + ' ' + lastName}</p>
             </div>
           </div>
         );
       },
-    },
-    {
-      title: 'Last Name',
-      dataIndex: 'lastName',
-      key: 'lastName',
     },
     {
       title: 'Email',

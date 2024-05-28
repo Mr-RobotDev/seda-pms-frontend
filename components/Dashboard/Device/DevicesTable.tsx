@@ -9,6 +9,7 @@ import SimSignal from './SimSignal';
 import { formatDate } from '@/lib/helperfunctions';
 import { useTimeAgo } from 'next-timeago';
 import { formatToTitleCase } from '@/lib/helperfunctions';
+import Link from 'next/link';
 
 const DevicesTable = () => {
   const [devices, setDevices] = useState<DevicesType[]>([])
@@ -82,6 +83,27 @@ const DevicesTable = () => {
           </div>
       ),
     },
+    {
+      title: 'Actions',
+      key: 'actions',
+      dataIndex: 'aactions',
+      render: (_, { id }) => {
+        return (
+          <div className=' flex flex-row gap-2'>
+            <Link href={`/dashboard/devices/${id}`}>
+              <div className=' inline px-2 py-1 bg-slate-500 hover:bg-slate-600 duration-150 transition-all transform rounded-md text-white'>
+                Show Details
+              </div>
+            </Link>
+            <Link href={`/dashboard/devices/${id}/activity-logs`}>
+              <div className=' inline px-2 py-1 !text-black duration-150 transition-all transform rounded-md underline '>
+                Activity Logs
+              </div>
+            </Link>
+          </div>
+        );
+      },
+    },
   ];
 
 
@@ -102,7 +124,7 @@ const DevicesTable = () => {
   const onRowClick = (record: DevicesType) => {
     return {
       onClick: () => {
-        router.push(`/dashboard/devices/${record.id}`)
+        router.push(``)
       }
     }
   }
@@ -113,7 +135,6 @@ const DevicesTable = () => {
         columns={columns}
         dataSource={devices}
         scroll={{ x: 500 }}
-        onRow={onRowClick}
         loading={devices.length === 0}
         className='cursor-pointer'
       />;
