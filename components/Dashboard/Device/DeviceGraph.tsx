@@ -9,9 +9,11 @@ import { DevicesType } from '@/type';
 import Image from 'next/image';
 import CountUp from 'react-countup';
 import dynamic from 'next/dynamic';
+import { CalendarIcon } from '@heroicons/react/20/solid';
 
 const ApexCharts = dynamic(() => import('react-apexcharts'), { ssr: false });
 import ReactApexChart from 'react-apexcharts';
+import { SignalIcon, SignalSlashIcon } from '@heroicons/react/16/solid';
 
 dayjs.extend(isBetween);
 
@@ -62,7 +64,6 @@ const commonChartOptions = {
     },
     animations: {
       enabled: true,
-
     },
   },
   xaxis: {
@@ -77,7 +78,7 @@ const commonChartOptions = {
   stroke: {
     width: 2, // Set the line thickness
     curve: 'smooth', // Optional: make the line smooth
-    colors: ['#373737'] 
+    colors: ['#373737']
   },
   markers: {
     size: 4, // Size of the points on the line
@@ -97,10 +98,10 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   const [data, setData] = useState<DataPoint[]>([]);
   const [deviceOem, setDeviceOem] = useState<string>('');
   const [deviceData, setDeviceData] = useState<DevicesType>();
-  const [range, setRange] = useState<[Dayjs, Dayjs]>([dayjs().subtract(7, 'day').startOf('day'), dayjs().endOf('day')]);
+  const [range, setRange] = useState<[Dayjs, Dayjs]>([dayjs().subtract(3, 'day').startOf('day'), dayjs().endOf('day')]);
   const [loading, setLoading] = useState<boolean>(true);
   const [graphloading, setGraphLoading] = useState<boolean>(false);
-  const [currentPreset, setCurrentPreset] = useState<string>('Last Week');
+  const [currentPreset, setCurrentPreset] = useState<string>('Last 3 Days');
 
   const [temperatureData, setTemperatureData] = useState<DataPoint[]>([])
   const [humidityData, setHumidityData] = useState<DataPoint[]>([])
@@ -119,7 +120,19 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       ...commonChartOptions,
       chart: {
         id: 'TemperatureChart',
-        group: 'device'
+        group: 'device',
+        toolbar: {
+          show: true,
+          tools: {
+            download: false,
+            selection: false,
+            zoom: false,
+            zoomin: true,
+            zoomout: false,
+            pan: false,
+            reset: true,
+          },
+        },
       },
       yaxis: {
         title: {
@@ -141,7 +154,19 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       ...commonChartOptions,
       chart: {
         id: 'HumidityChart',
-        group: 'device'
+        group: 'device',
+        toolbar: {
+          show: true,
+          tools: {
+            download: false,
+            selection: false,
+            zoom: false,
+            zoomin: true,
+            zoomout: false,
+            pan: false,
+            reset: true,
+          },
+        },
       },
       yaxis: {
         title: {
@@ -215,6 +240,14 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
     const from = dayjs(range[0].toISOString()).format('YYYY-MM-DD');
     const to = dayjs(range[1].toISOString()).format('YYYY-MM-DD');
     fetchData(from, to);
+
+    if (window && window.history) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('from', from);
+      url.searchParams.set('to', to);
+      window.history.replaceState({}, '', url.toString());
+    }
+
   }, [range, fetchData]);
 
   const handleRangeChange = (dates: any, dateStrings: [string, string]) => {
@@ -228,7 +261,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         const url = new URL(window.location.href);
         url.searchParams.set('from', from);
         url.searchParams.set('to', to);
-        window.history.pushState({}, '', url.toString());
+        window.history.replaceState({}, '', url.toString());
       }
     } else {
       toast.error('Date Range cannot be empty');
@@ -269,7 +302,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       const url = new URL(window.location.href);
       url.searchParams.set('from', from);
       url.searchParams.set('to', to);
-      window.history.pushState({}, '', url.toString());
+      window.history.replaceState({}, '', url.toString());
     }
     setCurrentPreset(preset);
   };
@@ -295,72 +328,79 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       </div>
       :
       <>
-        <Row className="rowgap-vbox" gutter={[24, 0]}>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8} className="mb-24">
-            <Card bordered={false} className="criclebox">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">Name</span>
-                    <div className="">
-                      <span className="">
-                        <p className='!text-3xl !font-bold mb-0'>{deviceData?.name}</p>
-                      </span>
-                    </div>
-                  </Col>
-                  <Col xs={6}>
-                    <div className=" w-12 h-12 flex items-center justify-center ml-auto">
-                      <Image src={deviceData?.type === 'cold' ? '/snowflake.png' : '/thermometer-1.png'} className=' w-full h-full' alt='icon' width={100} height={100} />
-                    </div>
-                  </Col>
-                </Row>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 px-3 md:px-8 lg:px-16 mx-auto mb-14'>
+          <div className=' h-full'>
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg">Name</span>
+                  <div className="">
+                    <span className="">
+                      <p className='!text-2xl !font-bold !mb-0'>{deviceData?.name}</p>
+                    </span>
+                  </div>
+                </div>
+                <div className=" w-12 h-12 flex items-center justify-center ml-auto">
+                  <Image src={deviceData?.type === 'cold' ? '/snowflake.png' : '/thermometer-1.png'} className=' w-full h-full' alt='icon' width={100} height={100} />
+                </div>
               </div>
             </Card>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8} className="mb-24">
-            <Card bordered={false} className="criclebox">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">Highest Temperature</span>
-                    <div className="text-2xl font-bold">
-                      <span className="!text-3xl !font-bold">
-                        <CountUp decimals={2} end={deviceData?.temperature as number} duration={2} />
-                      </span>
-                    </div>
-                  </Col>
-                  <Col xs={6}>
-                    <div className="icon-box flex items-center justify-center">
-                      {temperatureIcon}
-                    </div>
-                  </Col>
-                </Row>
+          </div>
+          <div>
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg !mb-0">Highest Temperature</span>
+                  <div className="text-2xl font-bold">
+                    <span className="!text-3xl !font-bold">
+                      <CountUp decimals={2} end={deviceData?.temperature as number} duration={2} />
+                    </span>
+                  </div>
+                </div>
+                <div className="icon-box flex items-center justify-center">
+                  {temperatureIcon}
+                </div>
               </div>
             </Card>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={8} xl={8} className="mb-24">
-            <Card bordered={false} className="criclebox">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">Highest Relative Humidity</span>
-                    <div className="">
-                      <span className="!text-3xl !font-bold">
-                        <CountUp decimals={2} end={deviceData?.relativeHumidity as number} duration={2} />
-                      </span>
-                    </div>
-                  </Col>
-                  <Col xs={6}>
-                    <div className="icon-box flex items-center justify-center">
-                      {humidityIcon}
-                    </div>
-                  </Col>
-                </Row>
+          </div>
+          <div>
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg !mb-0">Highest Relative Humidity</span>
+                  <div className="">
+                    <span className="!text-3xl !font-bold">
+                      <CountUp decimals={2} end={deviceData?.relativeHumidity as number} duration={2} />
+                    </span>
+                  </div>
+                </div>
+                <div className="icon-box flex items-center justify-center">
+                  {humidityIcon}
+                </div>
               </div>
             </Card>
-          </Col>
-        </Row>
-        <Card>
+          </div>
+          <div>
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg">{deviceData?.isOffline ? 'Connectivity' : 'Signal Strength'}</span>
+                  <div className="">
+                    <span className="!text-3xl !font-bold">
+                      {deviceData?.signalStrength && <CountUp end={deviceData?.signalStrength as number} duration={2} />}
+                      {!deviceData?.signalStrength && <p className='!text-2xl !font-bold !mb-0 '>Offline</p>}
+                    </span>
+                  </div>
+                </div>
+                <div className="icon-box flex items-center justify-center">
+                  {deviceData?.signalStrength && <SignalIcon width={20} />}
+                  {!deviceData?.signalStrength && <SignalSlashIcon width={20} />}
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+        <div>
           <div className='px-3 md:px-16 mx-auto'>
             <div className='flex flex-col gap-2'>
               <div className='flex justify-end'>
@@ -370,7 +410,10 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                     <RangePicker onChange={handleRangeChange} defaultValue={range} />
                   </div>
                   <Dropdown overlay={menu} placement="bottomRight" arrow>
-                    <Button>{currentPreset}</Button>
+                    <Button className=' flex flex-row gap-2 items-center'>
+                      <CalendarIcon width={20} />
+                      <p className='!m-0'>{currentPreset}</p>
+                    </Button>
                   </Dropdown>
                 </div>
               </div>
@@ -396,7 +439,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               </div>
             </div>
           </div>
-        </Card>
+        </div>
       </>
   );
 };

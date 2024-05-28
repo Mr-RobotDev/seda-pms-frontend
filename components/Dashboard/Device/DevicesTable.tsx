@@ -1,42 +1,89 @@
 import React, { useEffect, useState } from 'react'
-import { Table } from 'antd';
+import { Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
 import axiosInstance from '@/lib/axiosInstance';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { DevicesType } from '@/type';
-
-const columns: TableProps<DevicesType>['columns'] = [
-  {
-    title: 'Name',
-    render: (_, { type, name }) => (
-      <div className=' flex flex-row items-center gap-7'>
-        <div className=' w-5 h-5'>
-          <Image src={type === 'cold' ? '/snowflake.png' : '/thermometer-1.png'} alt='icon' width={100} height={100} />
-        </div>
-        <p className=' !text-black'>{name}</p>
-      </div>
-    ),
-  },
-  {
-    title: 'Type',
-    dataIndex: 'type',
-    key: 'type',
-  },
-  {
-    title: 'Temperature',
-    dataIndex: 'temperature',
-    key: 'temperature',
-  },
-  {
-    title: 'Relative Humidity',
-    key: 'relativeHumidity',
-    dataIndex: 'relativeHumidity',
-  },
-];
+import SimSignal from './SimSignal';
+import { formatDate } from '@/lib/formatDate';
+import { useTimeAgo } from 'next-timeago';
 
 const DevicesTable = () => {
   const [devices, setDevices] = useState<DevicesType[]>([])
+  const { TimeAgo } = useTimeAgo();
+
+  const columns: TableProps<DevicesType>['columns'] = [
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      render: (_, { type }) => (
+        <div className=' flex flex-row items-center gap-7'>
+          <div className=' w-5 h-5'>
+            <Image src={type === 'cold' ? '/snowflake.png' : '/thermometer-1.png'} alt='icon' width={100} height={100} />
+          </div>
+          <p className='!text-black'>{type.charAt(0).toUpperCase() + type.slice(1)}</p>
+        </div>
+      ),
+    },
+    {
+      title: 'Name',
+      render: (_, { type, name }) => (
+        <div className=' flex flex-row items-center'>
+          <p className=' !text-black'>{name}</p>
+        </div>
+      ),
+    },
+
+    {
+      title: 'Temperature (°C)',
+      dataIndex: 'temperature',
+      render: (_, { temperature }) => (
+        <div>
+          <p className='!text-black'>{temperature.toFixed(2)} °C</p>
+        </div>
+      ),
+    },
+    {
+      title: 'Relative Humidity (%)',
+      key: 'relativeHumidity',
+      render: (_, { relativeHumidity }) => (
+        <div>
+          <p className='!text-black'>{relativeHumidity.toFixed(2)} %</p>
+        </div>
+      ),
+    },
+    {
+      title: 'Last Updated',
+      key: 'lastUpdated',
+      render: (_, { lastUpdated }) => (
+        lastUpdated ?
+          <div className=' flex flex-row items-center'>
+            <TimeAgo date={new Date(lastUpdated)} locale='en' />
+          </div> :
+          <div>
+            <p className=' !text-2xl !ml-4'>-</p>
+          </div>
+      ),
+    },
+    {
+      title: 'Signal',
+      render: (_, { isOffline, signalStrength }) => (
+        !isOffline ?
+          <div className=' flex flex-row items-center'>
+            <SimSignal signalStrength={signalStrength} />
+          </div>
+          :
+          <div>
+            <Tag color='error'>
+              Offline
+            </Tag>
+          </div>
+      ),
+    },
+  ];
+
+
   const router = useRouter()
   useEffect(() => {
     (async () => {
@@ -52,7 +99,7 @@ const DevicesTable = () => {
   }, []);
 
   const onRowClick = (record: DevicesType) => {
-    return{
+    return {
       onClick: () => {
         router.push(`/dashboard/devices/${record.id}`)
       }

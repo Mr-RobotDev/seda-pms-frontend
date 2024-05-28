@@ -9,6 +9,9 @@ export interface DevicesType {
     lat: number;
     long: number;
   };
+  signalStrength: number;
+  lastUpdated: string;
+  isOffline: boolean;
 }
 
 

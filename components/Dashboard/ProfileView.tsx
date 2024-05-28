@@ -142,16 +142,27 @@ const ProfileView = () => {
                 </label>
               </div>
               <div className="mt-8 relative w-64 h-64 md:w-48 md:h-48 xl:w-64 xl:h-64 rounded-full overflow-hidden">
-                {user.profile && (
+                {user.profile ?
+                  (
+                    <Image
+                      src={user.profile}
+                      alt="User avatar"
+                      className="w-full h-full object-cover rounded-full"
+                      unoptimized
+                      width={100}
+                      height={100}
+                    />
+                  )
+                  :
                   <Image
-                    src={user.profile}
+                    src='/dummyAvatar.png'
                     alt="User avatar"
                     className="w-full h-full object-cover rounded-full"
                     unoptimized
                     width={100}
                     height={100}
                   />
-                )}
+                }
               </div>
             </Card>
           </Col>
