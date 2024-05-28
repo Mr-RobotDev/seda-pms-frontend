@@ -101,7 +101,7 @@ const UserMainView = () => {
       dataIndex: 'aactions',
       render: (_, { id }) => {
         return (
-          <Link href={`/dashboard/users/${id}`}>
+          <Link href={`/dashboard/users/${id}/activity-logs`}>
             <div className=' inline px-2 py-1 bg-blue-500 hover:bg-blue-600 duration-150 transition-all transform rounded-md text-white'>
               Activity Logs
             </div>
