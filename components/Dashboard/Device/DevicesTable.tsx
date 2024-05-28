@@ -25,15 +25,24 @@ const columns: TableProps<DevicesType>['columns'] = [
     dataIndex: 'type',
     key: 'type',
   },
+
   {
-    title: 'Temperature',
+    title: 'Temperature (°C)',
     dataIndex: 'temperature',
-    key: 'temperature',
+    render: (_, { temperature }) => (
+      <div>
+        <p className='!text-black'>{temperature.toFixed(2)} °C</p>
+      </div>
+    ),
   },
   {
-    title: 'Relative Humidity',
+    title: 'Relative Humidity (%)',
     key: 'relativeHumidity',
-    dataIndex: 'relativeHumidity',
+    render: (_, { relativeHumidity }) => (
+      <div>
+        <p className='!text-black'>{relativeHumidity.toFixed(2)} %</p>
+      </div>
+    ),
   },
   {
     title: 'Last Updated',
@@ -58,7 +67,7 @@ const columns: TableProps<DevicesType>['columns'] = [
         :
         <div>
           <Tag color='error'>
-          Offline
+            Offline
           </Tag>
 
         </div>
