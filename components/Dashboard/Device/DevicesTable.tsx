@@ -6,8 +6,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { DevicesType } from '@/type';
 import SimSignal from './SimSignal';
-import { formatDate } from '@/lib/formatDate';
+import { formatDate } from '@/lib/helperfunctions';
 import { useTimeAgo } from 'next-timeago';
+import { formatToTitleCase } from '@/lib/helperfunctions';
 
 const DevicesTable = () => {
   const [devices, setDevices] = useState<DevicesType[]>([])
@@ -22,7 +23,7 @@ const DevicesTable = () => {
           <div className=' w-5 h-5'>
             <Image src={type === 'cold' ? '/snowflake.png' : '/thermometer-1.png'} alt='icon' width={100} height={100} />
           </div>
-          <p className='!text-black'>{type.charAt(0).toUpperCase() + type.slice(1)}</p>
+          <p className='!text-black'>{formatToTitleCase(type)}</p>
         </div>
       ),
     },

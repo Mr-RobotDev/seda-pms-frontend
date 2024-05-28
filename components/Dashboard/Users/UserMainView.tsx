@@ -7,6 +7,8 @@ import { CheckIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import { User } from '@/type'
 import toast from 'react-hot-toast';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const initialUserState: User = {
   id: '',
@@ -39,7 +41,25 @@ const UserMainView = () => {
     {
       title: 'First Name',
       dataIndex: 'firstName',
-      key: 'firstName',
+      render: (_, { firstName, profile }) => {
+        return (
+          <div className='flex gap-2 items-center'>
+            <div className=' w-12 h-12'>
+              <Image
+                src={profile ? profile : '/dummyAvatar.png'}
+                alt="User avatar"
+                className="w-full h-full object-cover rounded-full"
+                unoptimized
+                width={100}
+                height={100}
+              />
+            </div>
+            <div>
+              <p className='!text-sm !text-[#000000e0]'>{firstName}</p>
+            </div>
+          </div>
+        );
+      },
     },
     {
       title: 'Last Name',
@@ -77,6 +97,20 @@ const UserMainView = () => {
         let component = isActive ? <CheckIcon width={20} /> : <XMarkIcon width={20} />;
         return (
           <span>{component}</span>
+        );
+      },
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      dataIndex: 'aactions',
+      render: (_, { id }) => {
+        return (
+          <Link href={`/dashboard/users/${id}`}>
+            <div className=' inline px-2 py-1 bg-blue-500 hover:bg-blue-600 duration-150 transition-all transform rounded-md text-white'>
+              Activity Logs
+            </div>
+          </Link>
         );
       },
     },
