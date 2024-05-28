@@ -54,99 +54,62 @@ const DevicesStats = () => {
   return (
     <div>
       <div className="layout-content">
-        <Row className="rowgap-vbox" gutter={[24, 0]}>
-          <Col
-            xs={24}
-            sm={24}
-            md={12}
-            lg={8}
-            xl={8}
-            className="mb-24"
-          >
-            <Card bordered={false} className="criclebox ">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">Total Devices</span>
-                    <div className="text-2xl font-bold">
-                      <span className="!text-3xl !font-bold">
-                        <CountUp className="" end={devicesStats.totalDevices} duration={2} />
-                      </span>
-                    </div>
-
-                  </Col>
-                  <Col xs={6}>
-                    <div className="icon-box flex items-center justify-center">
-                      <DevicePhoneMobileIcon width={25} />
-                    </div>
-                  </Col>
-                </Row>
+        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 mx-auto">
+          <div className=" h-full">
+            <Card bordered={false} className="criclebox h-full ">
+              <div className=" text-2xl flex flex-row justify-between h-full">
+                <div>
+                  <span className=" text-lg">Total Devices</span>
+                  <div className="text-2xl font-bold">
+                    <span className="!text-3xl !font-bold">
+                      <CountUp className="" end={devicesStats.totalDevices} duration={2} />
+                    </span>
+                  </div>
+                </div>
+                <div className="icon-box flex items-center justify-center">
+                  <DevicePhoneMobileIcon width={25} />
+                </div>
               </div>
             </Card>
-          </Col>
+          </div>
 
-          <Col
-            xs={24}
-            sm={24}
-            md={12}
-            lg={8}
-            xl={8}
-            className="mb-24"
-          >
-            <Card bordered={false} className="criclebox ">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">Highest Temperature</span>
-
-                    <div className="text-2xl font-bold">
-                      <span className="!text-3xl !font-bold">
-                        <CountUp decimals={2} end={devicesStats.highestTemperature} duration={2} />
-                      </span>
-                    </div>
-
-                  </Col>
-                  <Col xs={6}>
-                    <div className="icon-box flex items-center justify-center">
-                      {temperatureIcon}
-                    </div>
-                  </Col>
-                </Row>
+          <div className=" h-full">
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg">Highest Temperature</span>
+                  <div className="text-2xl font-bold">
+                    <span className="!text-3xl !font-bold">
+                      <CountUp decimals={2} end={devicesStats.highestTemperature} duration={2} />
+                    </span>
+                  </div>
+                </div>
+                <div className="icon-box flex items-center justify-center">
+                  {temperatureIcon}
+                </div>
               </div>
             </Card>
-          </Col>
+          </div>
 
-          <Col
-            xs={24}
-            sm={24}
-            md={12}
-            lg={8}
-            xl={8}
-            className="mb-24"
-          >
-            <Card bordered={false} className="criclebox ">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">Highest Relative Humidity</span>
+          <div className=" h-full">
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg">Highest Relative Humidity</span>
 
-                    <div className="">
-                      <span className="!text-3xl !font-bold">
-                        <CountUp decimals={2} end={devicesStats.highestRelativeHumidity} duration={2} />
-                      </span>
-                    </div>
-
-                  </Col>
-                  <Col xs={6}>
-                    <div className="icon-box flex items-center justify-center">
-                      {humidityIcon}
-                    </div>
-                  </Col>
-                </Row>
+                  <div className="">
+                    <span className="!text-3xl !font-bold">
+                      <CountUp decimals={2} end={devicesStats.highestRelativeHumidity} duration={2} />
+                    </span>
+                  </div>
+                </div>
+                <div className="icon-box flex items-center justify-center">
+                  {humidityIcon}
+                </div>
               </div>
             </Card>
-          </Col>
-        </Row>
+          </div>
+          </div>
       </div>
     </div>
   );

@@ -70,7 +70,7 @@ const MainFloorView = () => {
                     lg={8}
                     xl={8}
                   >
-                    <Card>
+                    <Card className="!p-0">
                       <h2 className=" text-xl font-semibold">Devices Status</h2>
                       <DeviceStatsPieChart />
                     </Card>
