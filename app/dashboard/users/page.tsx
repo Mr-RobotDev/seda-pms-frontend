@@ -11,10 +11,10 @@ const UsersPage = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if(user?.role !== 'Admin'){
+    if(user && user?.role !== 'Admin'){
       router.push('/dashboard/floor')
     }
-  }, [router, user?.role])
+  }, [router, user])
 
   return (
     <div>
