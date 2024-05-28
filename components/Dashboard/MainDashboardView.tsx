@@ -2,7 +2,11 @@
 import withDashboardLayout from "@/hoc/withDashboardLayout";
 
 const MainDashboardView = () => {
-  return <div>Dashboard View</div>;
+  return (
+    <div>
+      <h1 className=" text-3xl font-semibold">Dashboard</h1>
+    </div>
+  )
 };
 
 export default withDashboardLayout(MainDashboardView);

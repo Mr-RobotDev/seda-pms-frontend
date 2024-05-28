@@ -6,43 +6,58 @@ import axiosInstance from "@/lib/axiosInstance";
 import toast from "react-hot-toast";
 import { Card, Spin } from "antd";
 import LeafLetMap from "./LeafLetMap/LeafLetMap";
+import { useDispatch, useSelector } from "react-redux";
+import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
+import { RootState } from "@/app/store/store";
 
 const MainFloorView = () => {
-  const [devicesStats, setDevicesStats] = useState();
+  const dispatch = useDispatch();
+  const deviceStats = useSelector((state: RootState) => state.statisticsReducer)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     (async () => {
       try {
         const response = await axiosInstance.get("/devices/stats");
         if (response.status === 200) {
-          setDevicesStats(response.data);
+          dispatch(setDevicesStats(response.data))
         } else {
+          setError(true)
           toast.error("Error fetching devices stats");
         }
       } catch (error) {
         console.log("error->", error);
+        setError(true)
         toast.error("Error fetching devices stats");
       }
     })();
-  }, []);
+  }, [dispatch]);
 
   return (
-    <div>
-      {devicesStats ? (
-        <>
-          <DevicesStats devicesStats={devicesStats} />
-          <Card>
-            <div className=" w-full h-full">
-              <LeafLetMap />
-            </div>
-          </Card>
-        </>
-      ) : (
-        <div className=" flex justify-center">
-          <Spin size="large" />
-        </div>
-      )}
-    </div>
+    <>
+      <h1 className=" text-3xl font-semibold">Floor</h1>
+      {
+        error ?
+          <h1 className=" text-2xl font-semibold mt-20 text-center">Error Loading the Resources</h1>
+          : <div>
+
+            {deviceStats.totalDevices === 0 ?
+              <div className="  w-full h-full flex justify-center items-center">
+                <Spin size="large" />
+              </div>
+              :
+              <>
+                <DevicesStats />
+                <Card>
+                  <div className=" w-full h-full">
+                    <LeafLetMap />
+                  </div>
+                </Card>
+              </>
+            }
+          </div>
+      }
+    </>
   );
 };
 
