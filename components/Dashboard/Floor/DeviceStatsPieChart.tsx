@@ -33,7 +33,7 @@ const DeviceStatsPieChart: React.FC<ApexChartProps> = () => {
   });
 
   return (
-    <div id="chart" className=' w-full h-[400px]'>
+    <div id="chart" className=' w-full h-[360px]'>
       <ReactApexChart options={options} series={series} type="pie" width={'100%'} height={'100%'} />
     </div>
   );

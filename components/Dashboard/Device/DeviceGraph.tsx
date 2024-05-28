@@ -328,93 +328,77 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       </div>
       :
       <>
-        <Row className=" gap-1" gutter={[24, 0]}>
-          <Col xs={24} sm={24} md={12} lg={6} xl={6} className="mb-24">
-            <Card bordered={false} className="criclebox  h-[125px]">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">Name</span>
-                    <div className="">
-                      <span className="">
-                        <p className='!text-2xl !font-bold'>{deviceData?.name}</p>
-                      </span>
-                    </div>
-                  </Col>
-                  <Col xs={6}>
-                    <div className=" w-12 h-12 flex items-center justify-center ml-auto">
-                      <Image src={deviceData?.type === 'cold' ? '/snowflake.png' : '/thermometer-1.png'} className=' w-full h-full' alt='icon' width={100} height={100} />
-                    </div>
-                  </Col>
-                </Row>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 px-3 md:px-8 lg:px-16 mx-auto mb-14'>
+          <div className=' h-full'>
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg">Name</span>
+                  <div className="">
+                    <span className="">
+                      <p className='!text-2xl !font-bold !mb-0'>{deviceData?.name}</p>
+                    </span>
+                  </div>
+                </div>
+                <div className=" w-12 h-12 flex items-center justify-center ml-auto">
+                  <Image src={deviceData?.type === 'cold' ? '/snowflake.png' : '/thermometer-1.png'} className=' w-full h-full' alt='icon' width={100} height={100} />
+                </div>
               </div>
             </Card>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={6} xl={6} className="mb-24">
-            <Card bordered={false} className="criclebox h-[125px]">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">Highest Temperature</span>
-                    <div className="text-2xl font-bold">
-                      <span className="!text-3xl !font-bold">
-                        <CountUp decimals={2} end={deviceData?.temperature as number} duration={2} />
-                      </span>
-                    </div>
-                  </Col>
-                  <Col xs={6}>
-                    <div className="icon-box flex items-center justify-center">
-                      {temperatureIcon}
-                    </div>
-                  </Col>
-                </Row>
+          </div>
+          <div>
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg !mb-0">Highest Temperature</span>
+                  <div className="text-2xl font-bold">
+                    <span className="!text-3xl !font-bold">
+                      <CountUp decimals={2} end={deviceData?.temperature as number} duration={2} />
+                    </span>
+                  </div>
+                </div>
+                <div className="icon-box flex items-center justify-center">
+                  {temperatureIcon}
+                </div>
               </div>
             </Card>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={6} xl={6} className="mb-24">
-            <Card bordered={false} className="criclebox h-[125px]">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">Highest Relative Humidity</span>
-                    <div className="">
-                      <span className="!text-3xl !font-bold">
-                        <CountUp decimals={2} end={deviceData?.relativeHumidity as number} duration={2} />
-                      </span>
-                    </div>
-                  </Col>
-                  <Col xs={6}>
-                    <div className="icon-box flex items-center justify-center">
-                      {humidityIcon}
-                    </div>
-                  </Col>
-                </Row>
+          </div>
+          <div>
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg !mb-0">Highest Relative Humidity</span>
+                  <div className="">
+                    <span className="!text-3xl !font-bold">
+                      <CountUp decimals={2} end={deviceData?.relativeHumidity as number} duration={2} />
+                    </span>
+                  </div>
+                </div>
+                <div className="icon-box flex items-center justify-center">
+                  {humidityIcon}
+                </div>
               </div>
             </Card>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={6} xl={6} className="mb-24">
-            <Card bordered={false} className="criclebox h-[125px]">
-              <div className=" text-2xl">
-                <Row align="middle" gutter={[24, 0]}>
-                  <Col xs={18}>
-                    <span className=" text-lg">{deviceData?.isOffline ? 'Connectivity' : 'Signal Strength'}</span>
-                    <div className="">
-                      <span className="!text-3xl !font-bold">
-                        {deviceData?.signalStrength && <CountUp end={deviceData?.signalStrength as number} duration={2} />}
-                        {!deviceData?.signalStrength && <p className='!text-2xl !font-bold !mb-0'>Offline</p>}
-                      </span>
-                    </div>
-                  </Col>
-                  <Col xs={6}>
-                    <div className="icon-box flex items-center justify-center">
-                      <WifiIcon width={20} />
-                    </div>
-                  </Col>
-                </Row>
+          </div>
+          <div>
+            <Card bordered={false} className="criclebox h-full">
+              <div className=" text-2xl flex flex-row justify-between">
+                <div>
+                  <span className=" text-lg">{deviceData?.isOffline ? 'Connectivity' : 'Signal Strength'}</span>
+                  <div className="">
+                    <span className="!text-3xl !font-bold">
+                      {deviceData?.signalStrength && <CountUp end={deviceData?.signalStrength as number} duration={2} />}
+                      {!deviceData?.signalStrength && <p className='!text-2xl !font-bold !mb-0'>Offline</p>}
+                    </span>
+                  </div>
+                </div>
+                <div className="icon-box flex items-center justify-center">
+                  <WifiIcon width={20} />
+                </div>
               </div>
             </Card>
-          </Col>
-        </Row>
+          </div>
+        </div>
         <div>
           <div className='px-3 md:px-16 mx-auto'>
             <div className='flex flex-col gap-2'>

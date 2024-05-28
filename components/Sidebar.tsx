@@ -5,12 +5,13 @@ import { Menu, Button } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogoutOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/app/store/slice/authSlice";
 import Image from "next/image";
 import { BellAlertIcon, CircleStackIcon, DevicePhoneMobileIcon, UserIcon } from "@heroicons/react/16/solid";
 import useBrowserDetect from "@/hooks/useBrowseDetect";
 import axiosInstance from "@/lib/axiosInstance";
+import { RootState } from "@/app/store/store";
 
 interface SidenavProps {
   color: string;
@@ -21,6 +22,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const browser = useBrowserDetect();
+  const { user } = useSelector((state: RootState) => state.authReducer)
 
   const LogoutButtonHandler = async () => {
     await axiosInstance.post('/auth/logout', { userAgent: browser })
@@ -167,18 +169,21 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                   </div>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="11">
-                <Link href="/dashboard/users">
-                  <div>
-                    <span
-                      className="icon"
-                      style={{ background: page.includes("users") ? color : "" }} >
-                      <UserIcon width={20} />
-                    </span>
-                    <span className="label text-black">Users</span>
-                  </div>
-                </Link>
-              </Menu.Item>
+              {
+                user?.role === 'Admin' && <Menu.Item key="11">
+                  <Link href="/dashboard/users">
+                    <div>
+                      <span
+                        className="icon"
+                        style={{ background: page.includes("users") ? color : "" }} >
+                        <UserIcon width={20} />
+                      </span>
+                      <span className="label text-black">Users</span>
+                    </div>
+                  </Link>
+                </Menu.Item>
+              }
+
             </div>
           </div>
         </Menu >

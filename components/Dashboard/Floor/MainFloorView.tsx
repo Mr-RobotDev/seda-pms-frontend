@@ -54,8 +54,8 @@ const MainFloorView = () => {
                     xs={24}
                     sm={24}
                     md={24}
-                    lg={14}
-                    xl={14}
+                    lg={16}
+                    xl={16}
                     className="mb-24 md:mb-0"
                   >
                     <Card>
@@ -67,8 +67,8 @@ const MainFloorView = () => {
                     xs={24}
                     sm={24}
                     md={24}
-                    lg={10}
-                    xl={10}
+                    lg={8}
+                    xl={8}
                   >
                     <Card>
                       <h2 className=" text-xl font-semibold">Devices Status</h2>
