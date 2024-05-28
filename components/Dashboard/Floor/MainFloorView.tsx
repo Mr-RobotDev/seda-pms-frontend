@@ -4,11 +4,12 @@ import withDashboardLayout from "@/hoc/withDashboardLayout";
 import DevicesStats from "./DevicesStats";
 import axiosInstance from "@/lib/axiosInstance";
 import toast from "react-hot-toast";
-import { Card, Spin } from "antd";
+import { Card, Col, Row, Spin } from "antd";
 import LeafLetMap from "./LeafLetMap/LeafLetMap";
 import { useDispatch, useSelector } from "react-redux";
 import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
 import { RootState } from "@/app/store/store";
+import DeviceStatsPieChart from "./DeviceStatsPieChart";
 
 const MainFloorView = () => {
   const dispatch = useDispatch();
@@ -48,11 +49,33 @@ const MainFloorView = () => {
               :
               <>
                 <DevicesStats />
-                <Card>
-                  <div className=" w-full h-full">
-                    <LeafLetMap />
-                  </div>
-                </Card>
+                <Row className="rowgap-vbox" gutter={[24, 0]}>
+                  <Col
+                    xs={24}
+                    sm={24}
+                    md={24}
+                    lg={14}
+                    xl={14}
+                    className="mb-24 md:mb-0"
+                  >
+                    <Card>
+                      <LeafLetMap />
+                    </Card>
+                  </Col>
+
+                  <Col
+                    xs={24}
+                    sm={24}
+                    md={24}
+                    lg={10}
+                    xl={10}
+                  >
+                    <Card>
+                      <h2 className=" text-xl font-semibold">Devices Status</h2>
+                      <DeviceStatsPieChart />
+                    </Card>
+                  </Col>
+                </Row>
               </>
             }
           </div>
