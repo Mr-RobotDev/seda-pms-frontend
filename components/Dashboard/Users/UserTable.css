@@ -15,3 +15,9 @@
   height: 15px; /* Adjust height as needed */
   line-height: 15px; /* Ensure text is vertically centered */
 }
+
+.scrollableContainer {
+  height: 400px; /* Adjust the height as needed */
+  overflow-y: auto;
+  padding-right: 16px; /* Adjust padding to prevent horizontal overflow */
+}

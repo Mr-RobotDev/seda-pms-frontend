@@ -14,6 +14,7 @@ import { CalendarIcon } from '@heroicons/react/20/solid';
 const ApexCharts = dynamic(() => import('react-apexcharts'), { ssr: false });
 import ReactApexChart from 'react-apexcharts';
 import { SignalIcon, SignalSlashIcon } from '@heroicons/react/16/solid';
+import FileDownloadButton from '../Floor/FileDownloadButton';
 
 dayjs.extend(isBetween);
 
@@ -409,6 +410,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                     <p className='!m-0 font-semibold'>Date Range</p>
                     <RangePicker onChange={handleRangeChange} defaultValue={range} />
                   </div>
+                  <FileDownloadButton oem={deviceOem} from={range[0].format('YYYY-MM-DD')} to={range[1].format('YYYY-MM-DD')}/>
                   <Dropdown overlay={menu} placement="bottomRight" arrow>
                     <Button className=' flex flex-row gap-2 items-center'>
                       <CalendarIcon width={20} />

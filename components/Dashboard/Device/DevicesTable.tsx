@@ -10,6 +10,7 @@ import { formatDate } from '@/lib/helperfunctions';
 import { useTimeAgo } from 'next-timeago';
 import { formatToTitleCase } from '@/lib/helperfunctions';
 import Link from 'next/link';
+import { ArrowRightIcon } from '@heroicons/react/16/solid';
 
 const DevicesTable = () => {
   const [devices, setDevices] = useState<DevicesType[]>([])
@@ -96,9 +97,10 @@ const DevicesTable = () => {
               </div>
             </Link>
             <Link href={`/dashboard/devices/${id}/activity-logs`}>
-              <div className=' inline px-2 py-1 !text-black duration-150 transition-all transform rounded-md underline '>
-                Activity Logs
-              </div>
+            <div className='group px-2 py-1 text-blue-500 hover:text-blue-600 duration-150 transition-all transform rounded-md flex flex-row gap-2'>
+              Activity Logs
+              <ArrowRightIcon width={16} className='transform transition-transform duration-150 group-hover:translate-x-1' />
+            </div>
             </Link>
           </div>
         );
@@ -137,7 +139,7 @@ const DevicesTable = () => {
         scroll={{ x: 500 }}
         loading={devices.length === 0}
         className='cursor-pointer'
-      />;
+      />
     </div>
   )
 }

@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/app/store/slice/authSlice";
 import Image from "next/image";
 import { BellAlertIcon, CircleStackIcon, DevicePhoneMobileIcon, UserIcon } from "@heroicons/react/16/solid";
-import useBrowserDetect from "@/hooks/useBrowseDetect";
 import axiosInstance from "@/lib/axiosInstance";
 import { RootState } from "@/app/store/store";
 
@@ -21,11 +20,10 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
   const page = usePathname().split("/");
   const dispatch = useDispatch();
   const router = useRouter();
-  const browser = useBrowserDetect();
   const { user } = useSelector((state: RootState) => state.authReducer)
 
   const LogoutButtonHandler = async () => {
-    await axiosInstance.post('/auth/logout', { userAgent: browser })
+    await axiosInstance.post('/auth/logout')
     dispatch(logout());
     router.push("/login");
   };
@@ -183,7 +181,18 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                   </Link>
                 </Menu.Item>
               }
-
+              {/* <Menu.Item key="10">
+                <Link href="/dashboard/activity-logs">
+                  <div>
+                    <span
+                      className="icon"
+                      style={{ background: page.includes("activity-logs") ? color : "" }} >
+                      <DevicePhoneMobileIcon width={20} />
+                    </span>
+                    <span className="label text-black">Activity Logs</span>
+                  </div>
+                </Link>
+              </Menu.Item> */}
             </div>
           </div>
         </Menu >

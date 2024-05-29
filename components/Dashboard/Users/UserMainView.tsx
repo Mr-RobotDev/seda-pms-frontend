@@ -9,6 +9,7 @@ import { User } from '@/type'
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ArrowRightIcon } from '@heroicons/react/16/solid';
 
 const initialUserState: User = {
   id: '',
@@ -16,7 +17,8 @@ const initialUserState: User = {
   lastName: '',
   email: '',
   password: '',
-  role: 'User'
+  role: 'User',
+  organization: ''
 }
 
 const formItemLayout = {
@@ -96,14 +98,20 @@ const UserMainView = () => {
       },
     },
     {
+      title: 'Organization',
+      key: 'organization',
+      dataIndex: 'organization',
+    },
+    {
       title: 'Actions',
       key: 'actions',
       dataIndex: 'aactions',
       render: (_, { id }) => {
         return (
           <Link href={`/dashboard/users/${id}/activity-logs`}>
-            <div className=' inline px-2 py-1 bg-blue-500 hover:bg-blue-600 duration-150 transition-all transform rounded-md text-white'>
+            <div className='group px-2 py-1 text-blue-500 hover:text-blue-600 duration-150 transition-all transform rounded-md flex flex-row gap-2'>
               Activity Logs
+              <ArrowRightIcon width={16} className='transform transition-transform duration-150 group-hover:translate-x-1' />
             </div>
           </Link>
         );
