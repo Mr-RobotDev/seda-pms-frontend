@@ -18,7 +18,7 @@ const initialUserState: User = {
   email: '',
   password: '',
   role: 'User',
-  organization: ''
+  organization: 'Origin Smart'
 }
 
 const formItemLayout = {
@@ -266,6 +266,13 @@ const UserMainView = () => {
               <Select defaultValue="User">
                 <Select.Option value="User">User</Select.Option>
                 <Select.Option value="Admin">Admin</Select.Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item label="Organization" name="organization">
+              <Select defaultValue="Origin Smart">
+                <Select.Option value="Origin Smart">Origin Smart</Select.Option>
+                <Select.Option value="Seda">Seda</Select.Option>
               </Select>
             </Form.Item>
           </Form>

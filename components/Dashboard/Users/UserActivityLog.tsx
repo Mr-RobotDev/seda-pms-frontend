@@ -9,7 +9,7 @@ import { formatDateTime, formatToTitleCase } from '@/lib/helperfunctions';
 import './UserTable.css';
 import Link from 'next/link';
 import { useTimeAgo } from 'next-timeago';
-import { EyeIcon, PresentationChartBarIcon } from '@heroicons/react/16/solid';
+import { ArrowLeftStartOnRectangleIcon, EyeIcon, PresentationChartBarIcon } from '@heroicons/react/16/solid';
 import { ArrowLeftEndOnRectangleIcon } from '@heroicons/react/20/solid';
 
 const { RangePicker } = DatePicker;
@@ -60,6 +60,7 @@ const UserActivityLog = ({ id }: UserActivityLogProps) => {
   const actionIcons: { [key: string]: any } = {
     'viewed': <EyeIcon width={20} className=' text-white' />,
     'logged in': <ArrowLeftEndOnRectangleIcon width={20} className=' text-white' />,
+    'logged out': <ArrowLeftStartOnRectangleIcon width={20} className=' text-white' />,
     'default': <PresentationChartBarIcon width={20} className=' text-white' />,
   }
 
