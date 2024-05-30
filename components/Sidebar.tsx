@@ -6,9 +6,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/app/store/slice/authSlice";
 import Image from "next/image";
-import { ClipboardIcon, UserIcon, BellAlertIcon, CircleStackIcon, DevicePhoneMobileIcon, ArrowLeftStartOnRectangleIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
-import { MdOutlineDashboard } from "react-icons/md";
-
+import {
+  ClipboardIcon,
+  UserIcon,
+  BellAlertIcon,
+  CircleStackIcon,
+  DevicePhoneMobileIcon,
+  ArrowLeftStartOnRectangleIcon,
+  AdjustmentsHorizontalIcon,
+} from "@heroicons/react/24/outline";
 
 import axiosInstance from "@/lib/axiosInstance";
 import { RootState } from "@/app/store/store";
@@ -48,14 +54,22 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
         <Menu theme="dark" mode="inline">
           <div className=" flex flex-col justify-between h-full w-full">
             <div className=" h-full">
-
               <SidebarMenu
                 key="6"
                 title="Dashboard"
                 page={page}
                 isActive={page.at(-1) === "dashboard"}
-                icon={<AdjustmentsHorizontalIcon width={25} className={` w-7 h-7 ${page.at(-1) === "dashboard" ? '!text-blue-700 ' : "!text-black"}`} />}
-                url={'/dashboard'}
+                icon={
+                  <AdjustmentsHorizontalIcon
+                    width={25}
+                    className={` w-7 h-7 ${
+                      page.at(-1) === "dashboard"
+                        ? "!text-blue-700 "
+                        : "!text-black"
+                    }`}
+                  />
+                }
+                url={"/dashboard"}
               />
 
               <SidebarMenu
@@ -63,8 +77,15 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 title="Floor Plan"
                 page={page}
                 isActive={page.includes("floor")}
-                icon={<ClipboardIcon width={25} className={`${page.includes("floor") ? '!text-blue-700 ' : "!text-black"}`} />}
-                url={'/dashboard/floor'}
+                icon={
+                  <ClipboardIcon
+                    width={25}
+                    className={`${
+                      page.includes("floor") ? "!text-blue-700 " : "!text-black"
+                    }`}
+                  />
+                }
+                url={"/dashboard/floor"}
               />
 
               <SidebarMenu
@@ -72,8 +93,17 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 title="Alerts"
                 page={page}
                 isActive={page.includes("alerts")}
-                url={'#'}
-                icon={<BellAlertIcon width={25} className={`${page.includes("alerts") ? '!text-blue-700 ' : "!text-black"}`} />}
+                url={"#"}
+                icon={
+                  <BellAlertIcon
+                    width={25}
+                    className={`${
+                      page.includes("alerts")
+                        ? "!text-blue-700 "
+                        : "!text-black"
+                    }`}
+                  />
+                }
               />
 
               <SidebarMenu
@@ -81,16 +111,34 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 title="Data Sources"
                 page={page}
                 isActive={page.includes("date-source")}
-                icon={<CircleStackIcon width={25} className={`${page.includes("date-source") ? '!text-blue-700 ' : "!text-black"}`} />}
-                url={'#'}
+                icon={
+                  <CircleStackIcon
+                    width={25}
+                    className={`${
+                      page.includes("date-source")
+                        ? "!text-blue-700 "
+                        : "!text-black"
+                    }`}
+                  />
+                }
+                url={"#"}
               />
               <SidebarMenu
                 key="10"
                 title="Devices"
                 page={page}
                 isActive={page.includes("devices")}
-                icon={<DevicePhoneMobileIcon width={25} className={`${page.includes("devices") ? '!text-blue-700 ' : "!text-black"}`} />}
-                url={'/dashboard/devices'}
+                icon={
+                  <DevicePhoneMobileIcon
+                    width={25}
+                    className={`${
+                      page.includes("devices")
+                        ? "!text-blue-700 "
+                        : "!text-black"
+                    }`}
+                  />
+                }
+                url={"/dashboard/devices"}
               />
               {user?.role === "Admin" && (
                 <SidebarMenu
@@ -98,8 +146,17 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                   title="Users"
                   page={page}
                   isActive={page.includes("users")}
-                  icon={<UserIcon width={25} className={`${page.includes("users") ? '!text-blue-700 ' : "!text-black"}`} />}
-                  url={'/dashboard/users'}
+                  icon={
+                    <UserIcon
+                      width={25}
+                      className={`${
+                        page.includes("users")
+                          ? "!text-blue-700 "
+                          : "!text-black"
+                      }`}
+                    />
+                  }
+                  url={"/dashboard/users"}
                 />
               )}
             </div>
@@ -117,12 +174,25 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
               title="Profile"
               page={page}
               isActive={page.includes("profile")}
-              icon={<UserIcon width={25} className={`${page.includes("profile") ? '!text-blue-700 ' : "!text-black"}`} />}
-              url={'/dashboard/profile'}
+              icon={
+                <UserIcon
+                  width={25}
+                  className={`${
+                    page.includes("profile") ? "!text-blue-700 " : "!text-black"
+                  }`}
+                />
+              }
+              url={"/dashboard/profile"}
             />
             <div key="6" className="!w-auto !rounded-none py-2 !px-5">
-              <div className="py-2 flex flex-row gap-3 items-center" onClick={LogoutButtonHandler}>
-                <ArrowLeftStartOnRectangleIcon width={25} className=" !text-black" />
+              <div
+                className="py-2 flex flex-row gap-3 items-center"
+                onClick={LogoutButtonHandler}
+              >
+                <ArrowLeftStartOnRectangleIcon
+                  width={25}
+                  className=" !text-black"
+                />
                 <span className="label text-black">Log Out</span>
               </div>
             </div>

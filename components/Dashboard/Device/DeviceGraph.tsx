@@ -441,9 +441,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           <Card bordered={false} className="criclebox h-full">
             <div className=" text-2xl flex flex-row justify-between">
               <div>
-                <span className=" text-lg !mb-0">
-                  Highest Humidity
-                </span>
+                <span className=" text-lg !mb-0">Highest Humidity</span>
                 <div className="">
                   <span className="!text-3xl !font-bold">
                     <CountUp
@@ -539,8 +537,9 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               <div className="flex justify-end">
                 <div className=" flex flex-row gap-3 items-center justify-center">
                   <div
-                    className={`flex-row gap-3 items-center ${currentPreset === "Custom" ? "flex" : "hidden"
-                      }`}
+                    className={`flex-row gap-3 items-center ${
+                      currentPreset === "Custom" ? "flex" : "hidden"
+                    }`}
                   >
                     <p className="!m-0 font-semibold">Date Range</p>
                     <RangePicker

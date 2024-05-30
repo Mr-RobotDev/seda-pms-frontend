@@ -95,6 +95,7 @@ const DevicesTable = () => {
         return (
           <div className=" flex flex-row gap-2">
             <Link
+              target="_blank"
               href={`/dashboard/devices/${id}/activity-logs`}
               onClick={(e) => e.stopPropagation()}
             >

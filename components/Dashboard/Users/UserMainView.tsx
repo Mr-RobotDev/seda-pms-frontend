@@ -113,7 +113,7 @@ const UserMainView = () => {
               <span>Change Role</span>
               <UserSwitchOutlined />
             </p>
-            <Link href={`/dashboard/users/${id}/activity-logs`}>
+            <Link target="_blank" href={`/dashboard/users/${id}/activity-logs`}>
               <div className="group px-2 py-1 text-blue-500 hover:text-blue-600 duration-150 transition-all transform rounded-md flex flex-row gap-1">
                 Activity Logs
                 <ArrowUpRightIcon
