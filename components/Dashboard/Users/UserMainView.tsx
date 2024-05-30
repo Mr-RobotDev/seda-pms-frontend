@@ -19,6 +19,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import { UserSwitchOutlined } from "@ant-design/icons";
+import { formatToTitleCase } from "@/lib/helperfunctions";
 
 const initialUserState: User = {
   id: "",
@@ -92,7 +93,7 @@ const UserMainView = () => {
         return (
           <div className="flex">
             <div className="w-16">
-              <Tag color={color}>{role.toUpperCase()}</Tag>
+              <Tag color={color}>{formatToTitleCase(role)}</Tag>
             </div>
           </div>
         );
