@@ -55,11 +55,11 @@ const commonChartOptions = {
   stroke: {
     width: 2, // Set the line thickness
     curve: "smooth", // Optional: make the line smooth
-    colors: ["#373737"],
+    colors: ["#808080"],
   },
   markers: {
     size: 4, // Size of the points on the line
-    colors: ["#111111"], // Optional: custom color for the markers
+    colors: ["#FF0000"], // Optional: custom color for the markers
     strokeWidth: 2, // Optional: width of the marker border
     hover: {
       size: 6,
@@ -131,7 +131,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         options={options as any}
         series={options.series}
         type="line"
-        height={350}
+        height={275}
         width={"100%"}
       />
     );
@@ -170,13 +170,21 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           data,
         },
       ],
+      markers: {
+        size: 4, // Size of the points on the line
+        colors: ["#43A6C6"], // Optional: custom color for the markers
+        strokeWidth: 2, // Optional: width of the marker border
+        hover: {
+          size: 6,
+        },
+      },
     };
     return (
       <ReactApexChart
         options={options as any}
         series={options.series}
         type="line"
-        height={350}
+        height={275}
         width={"100%"}
       />
     );
@@ -505,74 +513,75 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       </div>
       <div>
         <div className="px-3 md:px-16 mx-auto">
-          <div className="flex flex-col gap-2">
-            <div className=" flex flex-row items-center gap-3 justify-end">
-              <FileDownloadButton
-                oem={deviceOem}
-                from={range[0].format("YYYY-MM-DD")}
-                to={range[1].format("YYYY-MM-DD")}
-              />
-              <Link
-                href={`/dashboard/devices/${id}/activity-logs`}
-                target="_blank"
-              >
-                <Button className=" flex flex-row items-center justify-center gap-3 w-36">
-                  Activity Logs
-                  <div>
-                    <ArrowUpRightIcon
-                      width={16}
-                      className="transform transition-transform duration-150 group-hover:translate-x-1"
+          <Card>
+            <div className="flex flex-col gap-2">
+              <div className=" flex flex-row items-center gap-3 justify-end">
+                <FileDownloadButton
+                  oem={deviceOem}
+                  from={range[0].format("YYYY-MM-DD")}
+                  to={range[1].format("YYYY-MM-DD")}
+                />
+                <Link
+                  href={`/dashboard/devices/${id}/activity-logs`}
+                  target="_blank"
+                >
+                  <Button className=" flex flex-row items-center justify-center gap-3 w-36">
+                    Activity Logs
+                    <div>
+                      <ArrowUpRightIcon
+                        width={16}
+                        className="transform transition-transform duration-150 group-hover:translate-x-1"
+                      />
+                    </div>
+                  </Button>
+                </Link>
+              </div>
+              <div className="flex justify-end">
+                <div className=" flex flex-row gap-3 items-center justify-center">
+                  <div
+                    className={`flex-row gap-3 items-center ${currentPreset === "Custom" ? "flex" : "hidden"
+                      }`}
+                  >
+                    <p className="!m-0 font-semibold">Date Range</p>
+                    <RangePicker
+                      onChange={handleRangeChange}
+                      defaultValue={range}
                     />
                   </div>
-                </Button>
-              </Link>
-            </div>
-            <div className="flex justify-end">
-              <div className=" flex flex-row gap-3 items-center justify-center">
-                <div
-                  className={`flex-row gap-3 items-center ${
-                    currentPreset === "Custom" ? "flex" : "hidden"
-                  }`}
-                >
-                  <p className="!m-0 font-semibold">Date Range</p>
-                  <RangePicker
-                    onChange={handleRangeChange}
-                    defaultValue={range}
-                  />
+                  <Dropdown overlay={menu} placement="bottomRight" arrow>
+                    <Button className="w-36 flex flex-row gap-2 items-center">
+                      <CalendarIcon width={20} />
+                      <p className="!m-0">{currentPreset}</p>
+                    </Button>
+                  </Dropdown>
                 </div>
-                <Dropdown overlay={menu} placement="bottomRight" arrow>
-                  <Button className="w-36 flex flex-row gap-2 items-center">
-                    <CalendarIcon width={20} />
-                    <p className="!m-0">{currentPreset}</p>
-                  </Button>
-                </Dropdown>
+              </div>
+              <div className=" w-full">
+                {graphloading ? (
+                  <div className="flex justify-center items-center h-full">
+                    <Spin size="large" />
+                  </div>
+                ) : data.length === 0 ? (
+                  <div className="flex justify-center items-center h-full">
+                    <p>No data available for the selected date range</p>
+                  </div>
+                ) : (
+                  <>
+                    <div className=" h-[275px]">
+                      {temperatureData.length !== 0 && (
+                        <TemperatureChart data={temperatureData} />
+                      )}
+                    </div>
+                    <div className=" h-[275px]">
+                      {humidityData.length !== 0 && (
+                        <HumidityChart data={humidityData} />
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
-            <div className=" w-full h-[700px]">
-              {graphloading ? (
-                <div className="flex justify-center items-center h-full">
-                  <Spin size="large" />
-                </div>
-              ) : data.length === 0 ? (
-                <div className="flex justify-center items-center h-full">
-                  <p>No data available for the selected date range</p>
-                </div>
-              ) : (
-                <>
-                  <div className=" h-[350px]">
-                    {temperatureData.length !== 0 && (
-                      <TemperatureChart data={temperatureData} />
-                    )}
-                  </div>
-                  <div className=" h-[350px]">
-                    {humidityData.length !== 0 && (
-                      <HumidityChart data={humidityData} />
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+          </Card>
         </div>
       </div>
     </>

@@ -8,14 +8,13 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/app/store/slice/authSlice";
 import Image from "next/image";
-import {
-  BellAlertIcon,
-  CircleStackIcon,
-  DevicePhoneMobileIcon,
-  UserIcon,
-} from "@heroicons/react/16/solid";
+import { ClipboardIcon, UserIcon, BellAlertIcon, CircleStackIcon, DevicePhoneMobileIcon, ArrowLeftStartOnRectangleIcon } from "@heroicons/react/24/outline";
+import { MdOutlineDashboard } from "react-icons/md";
+
+
 import axiosInstance from "@/lib/axiosInstance";
 import { RootState } from "@/app/store/store";
+import SidebarMenu from "@/app/ui/SidebarMenu";
 
 interface SidenavProps {
   color: string;
@@ -64,16 +63,17 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       key={12}
+      className=" fill-inherit"
     >
       <path
         d="M9 2C8.44772 2 8 2.44772 8 3C8 3.55228 8.44772 4 9 4H11C11.5523 4 12 3.55228 12 3C12 2.44772 11.5523 2 11 2H9Z"
-        fill={color}
+        className=" fill-inherit"
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M4 5C4 3.89543 4.89543 3 6 3C6 4.65685 7.34315 6 9 6H11C12.6569 6 14 4.65685 14 3C15.1046 3 16 3.89543 16 5V16C16 17.1046 15.1046 18 14 18H6C4.89543 18 4 17.1046 4 16V5ZM7 9C6.44772 9 6 9.44772 6 10C6 10.5523 6.44772 11 7 11H7.01C7.56228 11 8.01 10.5523 8.01 10C8.01 9.44772 7.56228 9 7.01 9H7ZM10 9C9.44772 9 9 9.44772 9 10C9 10.5523 9.44772 11 10 11H13C13.5523 11 14 10.5523 14 10C14 9.44772 13.5523 9 13 9H10ZM7 13C6.44772 13 6 13.4477 6 14C6 14.5523 6.44772 15 7 15H7.01C7.56228 15 8.01 14.5523 8.01 14C8.01 13.4477 7.56228 13 7.01 13H7ZM10 13C9.44772 13 9 13.4477 9 14C9 14.5523 9.44772 15 10 15H13C13.5523 15 14 14.5523 14 14C14 13.4477 13.5523 13 13 13H10Z"
-        fill={color}
+        className=" fill-inherit"
       />
     </svg>
   );
@@ -97,9 +97,9 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
   );
 
   return (
-    <div className="h-full flex flex-col justify-between">
+    <div className="h-full flex flex-col justify-between !bg-white border-r">
       <div>
-        <div className="brand">
+        <div className="brand p-5 pb-0">
           <div>
             <Image
               src="/logo.svg"
@@ -111,90 +111,62 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
           </div>
         </div>
         <hr />
-        <Menu theme="light" mode="inline">
-          <div className=" flex flex-col justify-between h-full">
+        <Menu theme="dark" mode="inline">
+          <div className=" flex flex-col justify-between h-full w-full">
             <div className=" h-full">
-              <Menu.Item key="1">
-                <Link href="/dashboard">
-                  <div>
-                    <span
-                      className="icon"
-                      style={{
-                        background: page.at(-1) === "dashboard" ? color : "",
-                      }}
-                    >
-                      {dashboard}
-                    </span>
-                    <span className="label">Dashboard</span>
-                  </div>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Link href="/dashboard/floor">
-                  <div>
-                    <span
-                      className="icon"
-                      style={{
-                        background: page.includes("floor") ? color : "",
-                      }}
-                    >
-                      {tables}
-                    </span>
-                    <span className="label">Floor Plan</span>
-                  </div>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="3">
-                <div className="px-4 py-2">
-                  <div>
-                    <span className="icon">
-                      <BellAlertIcon width={20} />
-                    </span>
-                    <span className="label text-black">Alerts</span>
-                  </div>
-                </div>
-              </Menu.Item>
-              <Menu.Item key="4">
-                <div className="px-4 py-2">
-                  <div>
-                    <span className="icon">
-                      <CircleStackIcon width={20} />
-                    </span>
-                    <span className="label text-black">Data Sources</span>
-                  </div>
-                </div>
-              </Menu.Item>
-              <Menu.Item key="10">
-                <Link href="/dashboard/devices">
-                  <div>
-                    <span
-                      className="icon"
-                      style={{
-                        background: page.includes("devices") ? color : "",
-                      }}
-                    >
-                      <DevicePhoneMobileIcon width={20} />
-                    </span>
-                    <span className="label text-black">Devices</span>
-                  </div>
-                </Link>
-              </Menu.Item>
+
+              <SidebarMenu
+                key="6"
+                title="Dashboard"
+                page={page}
+                isActive={page.at(-1) === "dashboard"}
+                icon={<MdOutlineDashboard width={25} className={` w-7 h-7 ${page.at(-1) === "dashboard" ? '!text-blue-700 ' : "!text-black"}`} />}
+                url={'/dashboard'}
+              />
+
+              <SidebarMenu
+                key="7"
+                title="Floor Plan"
+                page={page}
+                isActive={page.includes("floor")}
+                icon={<ClipboardIcon width={25} className={`${page.includes("floor") ? '!text-blue-700 ' : "!text-black"}`} />}
+                url={'/dashboard/floor'}
+              />
+
+              <SidebarMenu
+                key="8"
+                title="Alerts"
+                page={page}
+                isActive={page.includes("alerts")}
+                url={'#'}
+                icon={<BellAlertIcon width={25} className={`${page.includes("alerts") ? '!text-blue-700 ' : "!text-black"}`} />}
+              />
+
+              <SidebarMenu
+                key="9"
+                title="Data Sources"
+                page={page}
+                isActive={page.includes("date-source")}
+                icon={<CircleStackIcon width={25} className={`${page.includes("date-source") ? '!text-blue-700 ' : "!text-black"}`} />}
+                url={'#'}
+              />
+              <SidebarMenu
+                key="10"
+                title="Devices"
+                page={page}
+                isActive={page.includes("devices")}
+                icon={<DevicePhoneMobileIcon width={25} className={`${page.includes("devices") ? '!text-blue-700 ' : "!text-black"}`} />}
+                url={'/dashboard/devices'}
+              />
               {user?.role === "Admin" && (
-                <Menu.Item key="11">
-                  <Link href="/dashboard/users">
-                    <div>
-                      <span
-                        className="icon"
-                        style={{
-                          background: page.includes("users") ? color : "",
-                        }}
-                      >
-                        <UserIcon width={20} />
-                      </span>
-                      <span className="label text-black">Users</span>
-                    </div>
-                  </Link>
-                </Menu.Item>
+                <SidebarMenu
+                  key="10"
+                  title="Users"
+                  page={page}
+                  isActive={page.includes("users")}
+                  icon={<UserIcon width={25} className={`${page.includes("users") ? '!text-blue-700 ' : "!text-black"}`} />}
+                  url={'/dashboard/users'}
+                />
               )}
             </div>
           </div>
@@ -206,31 +178,20 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
             <Menu.Item className="menu-item-header" key="7">
               Account Pages
             </Menu.Item>
-            <Menu.Item key="5">
-              <Link href="/dashboard/profile">
-                <div>
-                  <span
-                    className="icon"
-                    style={{
-                      background: page.includes("profile") ? color : "",
-                    }}
-                  >
-                    {profile}
-                  </span>
-                  <span className="label">Profile</span>
-                </div>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="6">
-              <div className="px-4 py-2" onClick={LogoutButtonHandler}>
-                <div>
-                  <span className="icon">
-                    <LogoutOutlined />
-                  </span>
-                  <span className="label text-black">Log Out</span>
-                </div>
+            <SidebarMenu
+              key="5"
+              title="Profile"
+              page={page}
+              isActive={page.includes("profile")}
+              icon={<UserIcon width={25} className={`${page.includes("profile") ? '!text-blue-700 ' : "!text-black"}`} />}
+              url={'/dashboard/profile'}
+            />
+            <div key="6" className="!w-auto !rounded-none py-2 !px-5">
+              <div className="py-2 flex flex-row gap-3 items-center" onClick={LogoutButtonHandler}>
+                <ArrowLeftStartOnRectangleIcon width={25} className=" !text-black" />
+                <span className="label text-black">Log Out</span>
               </div>
-            </Menu.Item>
+            </div>
           </div>
         </div>
       </Menu>
