@@ -50,7 +50,9 @@ const humidityIcon = (
 );
 
 const DevicesStats = () => {
-  const devicesStats = useSelector((state: RootState) => state.statisticsReducer)
+  const devicesStats = useSelector(
+    (state: RootState) => state.statisticsReducer
+  );
   return (
     <div>
       <div className="layout-content">
@@ -62,7 +64,11 @@ const DevicesStats = () => {
                   <span className=" text-lg">Total Devices</span>
                   <div className="text-2xl font-bold">
                     <span className="!text-3xl !font-bold">
-                      <CountUp className="" end={devicesStats.totalDevices} duration={2} />
+                      <CountUp
+                        className=""
+                        end={devicesStats.totalDevices}
+                        duration={2}
+                      />
                     </span>
                   </div>
                 </div>
@@ -80,7 +86,11 @@ const DevicesStats = () => {
                   <span className=" text-lg">Highest Temperature</span>
                   <div className="text-2xl font-bold">
                     <span className="!text-3xl !font-bold">
-                      <CountUp decimals={2} end={devicesStats.highestTemperature} duration={2} />
+                      <CountUp
+                        decimals={2}
+                        end={devicesStats.highestTemperature}
+                        duration={2}
+                      />
                     </span>
                   </div>
                 </div>
@@ -99,7 +109,11 @@ const DevicesStats = () => {
 
                   <div className="">
                     <span className="!text-3xl !font-bold">
-                      <CountUp decimals={2} end={devicesStats.highestRelativeHumidity} duration={2} />
+                      <CountUp
+                        decimals={2}
+                        end={devicesStats.highestRelativeHumidity}
+                        duration={2}
+                      />
                     </span>
                   </div>
                 </div>
@@ -109,7 +123,7 @@ const DevicesStats = () => {
               </div>
             </Card>
           </div>
-          </div>
+        </div>
       </div>
     </div>
   );

@@ -8,7 +8,12 @@ import { LogoutOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/app/store/slice/authSlice";
 import Image from "next/image";
-import { BellAlertIcon, CircleStackIcon, DevicePhoneMobileIcon, UserIcon } from "@heroicons/react/16/solid";
+import {
+  BellAlertIcon,
+  CircleStackIcon,
+  DevicePhoneMobileIcon,
+  UserIcon,
+} from "@heroicons/react/16/solid";
 import axiosInstance from "@/lib/axiosInstance";
 import { RootState } from "@/app/store/store";
 
@@ -20,10 +25,10 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
   const page = usePathname().split("/");
   const dispatch = useDispatch();
   const router = useRouter();
-  const { user } = useSelector((state: RootState) => state.authReducer)
+  const { user } = useSelector((state: RootState) => state.authReducer);
 
   const LogoutButtonHandler = async () => {
-    await axiosInstance.post('/auth/logout')
+    await axiosInstance.post("/auth/logout");
     dispatch(logout());
     router.push("/login");
   };
@@ -114,7 +119,9 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                   <div>
                     <span
                       className="icon"
-                      style={{ background: page.at(-1) === "dashboard" ? color : "" }}
+                      style={{
+                        background: page.at(-1) === "dashboard" ? color : "",
+                      }}
                     >
                       {dashboard}
                     </span>
@@ -127,7 +134,9 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                   <div>
                     <span
                       className="icon"
-                      style={{ background: page.includes("floor") ? color : "" }}
+                      style={{
+                        background: page.includes("floor") ? color : "",
+                      }}
                     >
                       {tables}
                     </span>
@@ -148,7 +157,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
               <Menu.Item key="4">
                 <div className="px-4 py-2">
                   <div>
-                    <span className="icon" >
+                    <span className="icon">
                       <CircleStackIcon width={20} />
                     </span>
                     <span className="label text-black">Data Sources</span>
@@ -160,31 +169,37 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                   <div>
                     <span
                       className="icon"
-                      style={{ background: page.includes("devices") ? color : "" }} >
+                      style={{
+                        background: page.includes("devices") ? color : "",
+                      }}
+                    >
                       <DevicePhoneMobileIcon width={20} />
                     </span>
                     <span className="label text-black">Devices</span>
                   </div>
                 </Link>
               </Menu.Item>
-              {
-                user?.role === 'Admin' && <Menu.Item key="11">
+              {user?.role === "Admin" && (
+                <Menu.Item key="11">
                   <Link href="/dashboard/users">
                     <div>
                       <span
                         className="icon"
-                        style={{ background: page.includes("users") ? color : "" }} >
+                        style={{
+                          background: page.includes("users") ? color : "",
+                        }}
+                      >
                         <UserIcon width={20} />
                       </span>
                       <span className="label text-black">Users</span>
                     </div>
                   </Link>
                 </Menu.Item>
-              }
+              )}
             </div>
           </div>
-        </Menu >
-      </div >
+        </Menu>
+      </div>
       <Menu theme="light" mode="inline">
         <div className=" flex flex-col justify-between h-full">
           <div>
@@ -196,7 +211,9 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 <div>
                   <span
                     className="icon"
-                    style={{ background: page.includes("profile") ? color : "" }}
+                    style={{
+                      background: page.includes("profile") ? color : "",
+                    }}
                   >
                     {profile}
                   </span>
@@ -217,7 +234,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
           </div>
         </div>
       </Menu>
-    </div >
+    </div>
   );
 };
 

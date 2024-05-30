@@ -1,8 +1,8 @@
-'use client'
-import React from 'react'
-import withDashboardLayout from '@/hoc/withDashboardLayout'
-import DevicesTable from './DevicesTable'
-import { Card } from 'antd'
+"use client";
+import React from "react";
+import withDashboardLayout from "@/hoc/withDashboardLayout";
+import DevicesTable from "./DevicesTable";
+import { Card } from "antd";
 
 const DeviceMainView = () => {
   return (
@@ -10,7 +10,7 @@ const DeviceMainView = () => {
       <h1 className=" text-3xl font-semibold">Devices</h1>
       <DevicesTable />
     </Card>
-  )
-}
+  );
+};
 
-export default withDashboardLayout(DeviceMainView)
+export default withDashboardLayout(DeviceMainView);

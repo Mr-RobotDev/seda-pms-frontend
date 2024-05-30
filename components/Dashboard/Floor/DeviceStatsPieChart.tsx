@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 
-// Dynamically import ReactApexChart to avoid SSR issues
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 interface ApexChartProps { }

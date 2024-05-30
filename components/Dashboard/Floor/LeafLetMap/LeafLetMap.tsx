@@ -19,7 +19,9 @@ interface LeafLetMapProps {
 }
 
 const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
-  const devicesStats = useSelector((state: RootState) => state.statisticsReducer)
+  const devicesStats = useSelector(
+    (state: RootState) => state.statisticsReducer
+  );
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const [events, setEvents] = useState<DevicesType[]>([]);
   const { token } = useSelector((state: RootState) => state.authReducer);
@@ -80,7 +82,11 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
         reconnect();
       };
 
-      xhr.send(JSON.stringify({ /* Add any required body data here */ }));
+      xhr.send(
+        JSON.stringify({
+          /* Add any required body data here */
+        })
+      );
     };
 
     const reconnect = () => {
@@ -121,16 +127,23 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
 
   useEffect(() => {
     if (devices.length > 0) {
-      const maxTemperature = Math.max(...devices.map(device => device.temperature));
-      const maxRelativeHumidity = Math.max(...devices.map(device => device.relativeHumidity));
+      const maxTemperature = Math.max(
+        ...devices.map((device) => device.temperature)
+      );
+      const maxRelativeHumidity = Math.max(
+        ...devices.map((device) => device.relativeHumidity)
+      );
 
-      if (devicesStats.highestTemperature < maxTemperature || devicesStats.highestRelativeHumidity < maxRelativeHumidity) {
+      if (
+        devicesStats.highestTemperature < maxTemperature ||
+        devicesStats.highestRelativeHumidity < maxRelativeHumidity
+      ) {
         const updatedStats = {
           totalDevices: devicesStats.totalDevices,
           highestTemperature: maxTemperature,
           highestRelativeHumidity: maxRelativeHumidity,
-        }
-        dispatch(setDevicesStats(updatedStats))
+        };
+        dispatch(setDevicesStats(updatedStats));
       }
     }
   }, [dispatch, devices, devicesStats]);
