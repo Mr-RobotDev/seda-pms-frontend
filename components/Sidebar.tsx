@@ -93,7 +93,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 title="Alerts"
                 page={page}
                 isActive={page.includes("alerts")}
-                url={"#"}
+                url={"/dashboard/alerts"}
                 icon={
                   <BellAlertIcon
                     width={25}
@@ -110,18 +110,18 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 key="9"
                 title="Data Sources"
                 page={page}
-                isActive={page.includes("date-source")}
+                isActive={page.includes("data-sources")}
+                url={"/dashboard/data-sources"}
                 icon={
                   <CircleStackIcon
                     width={25}
                     className={`${
-                      page.includes("date-source")
+                      page.includes("data-sources")
                         ? "!text-blue-700 "
                         : "!text-black"
                     }`}
                   />
                 }
-                url={"#"}
               />
               <SidebarMenu
                 key="10"
