@@ -23,7 +23,7 @@ const DevicesTable = () => {
         <div className=" flex flex-row items-center gap-7">
           <div className=" w-5 h-5">
             <Image
-              src={type === "cold" ? "/snowflake.png" : "/thermometer-1.png"}
+              src={type === "cold" ? "/snowflake.png" : "/thermometer.png"}
               alt="icon"
               width={100}
               height={100}
@@ -94,7 +94,10 @@ const DevicesTable = () => {
       render: (_, { id }) => {
         return (
           <div className=" flex flex-row gap-2">
-            <Link href={`/dashboard/devices/${id}/activity-logs`}>
+            <Link
+              href={`/dashboard/devices/${id}/activity-logs`}
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="group px-2 py-1 text-blue-500 hover:text-blue-600 duration-150 transition-all transform rounded-md flex flex-row gap-2">
                 Activity Logs
                 <ArrowUpRightIcon

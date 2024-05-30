@@ -156,7 +156,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
   ];
 
   const customThermometerIcon = new Icon({
-    iconUrl: "/thermometer-1.png",
+    iconUrl: "/thermometer.png",
     iconSize: [25, 25],
   });
 
