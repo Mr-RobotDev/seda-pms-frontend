@@ -41,7 +41,7 @@ body {
   height: 100vh;
   overflow: auto;
   margin: 0;
-  padding: 33px 20px;
+  /* padding: 33px 20px; */
 }
 .layout-dashboard .ant-layout-sider.sider-primary .brand img {
   height: 30px;

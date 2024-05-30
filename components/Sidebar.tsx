@@ -142,7 +142,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
               />
               {user?.role === "Admin" && (
                 <SidebarMenu
-                  key="10"
+                  key="11"
                   title="Users"
                   page={page}
                   isActive={page.includes("users")}

@@ -535,25 +535,32 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                 </Link>
               </div>
               <div className="flex justify-end">
-                <div className=" flex flex-row gap-3 items-center justify-center">
+                <div className=" flex flex-row gap-3 items-center justify-center w-full md:w-auto">
                   <div
-                    className={`flex-row gap-3 items-center ${
-                      currentPreset === "Custom" ? "flex" : "hidden"
-                    }`}
+                    className={`flex-row gap-3 items-center justify-between md:justify-end w-full ${currentPreset === "Custom" ? "flex" : "hidden"
+                      }`}
                   >
                     <p className="!m-0 font-semibold">Date Range</p>
                     <RangePicker
+                    className="hidden md:flex"
                       onChange={handleRangeChange}
                       defaultValue={range}
                     />
                   </div>
-                  <Dropdown overlay={menu} placement="bottomRight" arrow>
+                  <Dropdown overlay={menu} placement="bottomRight" arrow className="flex ml-auto">
                     <Button className="w-36 flex flex-row gap-2 items-center">
                       <CalendarIcon width={20} />
                       <p className="!m-0">{currentPreset}</p>
                     </Button>
                   </Dropdown>
                 </div>
+              </div>
+              <div className={` justify-end md:hidden ${currentPreset === "Custom" ? "flex" : "hidden"}`}>
+                <RangePicker
+                className=" w-full"
+                  onChange={handleRangeChange}
+                  defaultValue={range}
+                />
               </div>
               <div className=" w-full">
                 {graphloading ? (
