@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import withDashboardLayout from "@/hoc/withDashboardLayout";
 import axiosInstance from "@/lib/axiosInstance";
-import { DatePicker, Spin, Tag } from "antd";
+import { Card, DatePicker, Spin, Tag } from "antd";
 import toast from "react-hot-toast";
 import dayjs, { Dayjs } from "dayjs";
 import { formatDateTime, formatToTitleCase } from "@/lib/helperfunctions";
@@ -269,7 +269,7 @@ const DeviceActivityLogView = ({ id }: DeviceActivityLogViewProps) => {
 
   return (
     device && (
-      <div>
+      <Card>
         <div className=" flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
           <h1 className="text-3xl font-semibold !mb-4 md:!mb-0">
             {device.name} Activity Logs
@@ -297,7 +297,7 @@ const DeviceActivityLogView = ({ id }: DeviceActivityLogViewProps) => {
             {loading && <Spin />}
           </div>
         </div>
-      </div>
+      </Card>
     )
   );
 };

@@ -18,7 +18,9 @@ const UserPage = (props: any) => {
 
   return (
     <>
-      {user?.role === 'Admin' && id && <UserActivityLog id={id} />}
+      {user?.role === 'Admin' && id &&
+        <UserActivityLog id={id} />
+      }
     </>
   )
 

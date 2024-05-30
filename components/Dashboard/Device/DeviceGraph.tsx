@@ -380,7 +380,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
     </div>
   ) : (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 px-3 md:px-8 lg:px-16 mx-auto mb-14">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mx-auto mb-14 ">
         <div className=" h-full">
           <Card bordered={false} className="criclebox h-full">
             <div className=" text-2xl flex flex-row justify-between">
@@ -512,7 +512,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         </div>
       </div>
       <div>
-        <div className="px-3 md:px-16 mx-auto">
+        <div className=" mx-auto">
           <Card>
             <div className="flex flex-col gap-2">
               <div className=" flex flex-row items-center gap-3 justify-end">

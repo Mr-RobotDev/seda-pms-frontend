@@ -1,7 +1,7 @@
 import MainFloorView from "@/components/Dashboard/Floor/MainFloorView";
 
 const FloorPage = () => {
-  return <MainFloorView />;
+  return <MainFloorView />
 };
 
 export default FloorPage;

@@ -18,7 +18,7 @@ const UsersPage = () => {
 
   return (
     <div>
-      {user?.role === 'Admin' && <UserMainView />}
+      {user?.role === 'Admin' && <UserMainView /> }
     </div>
   )
 }

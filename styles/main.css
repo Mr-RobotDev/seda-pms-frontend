@@ -783,6 +783,7 @@ ul.ant-menu.ant-menu-root.ant-menu-inline.ant-menu-light.left-nav
 }
 .ant-layout {
   background: #f7f5f5;
+  padding: 10px;
 }
 .pageheader {
   display: flex;

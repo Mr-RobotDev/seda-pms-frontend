@@ -67,7 +67,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             trigger={null}
             width={250}
             theme="light"
-            className={`sider-primary ant-layout-sider-primary !p-0 ${
+            className={`sider-primary ant-layout-sider-primary ${
               sidenavType === "#fff" ? "active-route" : ""
             }`}
             style={{ background: sidenavType }}
