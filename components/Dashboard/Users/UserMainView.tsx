@@ -1,21 +1,35 @@
-'use client'
-import React, { useEffect, useState } from 'react'
-import withDashboardLayout from '@/hoc/withDashboardLayout'
-import { Button, Modal, Table, TableProps, Tag, Form, Input, Select, Card } from 'antd';
-import axiosInstance from '@/lib/axiosInstance';
-import { CheckIcon } from '@heroicons/react/20/solid';
-import { XMarkIcon } from '@heroicons/react/20/solid';
-import { User } from '@/type'
-import toast from 'react-hot-toast';
+"use client";
+import React, { useEffect, useState } from "react";
+import withDashboardLayout from "@/hoc/withDashboardLayout";
+import {
+  Button,
+  Modal,
+  Table,
+  TableProps,
+  Tag,
+  Form,
+  Input,
+  Select,
+  Card,
+} from "antd";
+import axiosInstance from "@/lib/axiosInstance";
+import { User } from "@/type";
+import toast from "react-hot-toast";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
+import { UserSwitchOutlined } from "@ant-design/icons";
+import { formatToTitleCase } from "@/lib/helperfunctions";
 
 const initialUserState: User = {
-  id: '',
-  firstName: '',
-  lastName: '',
-  email: '',
-  password: '',
-  role: 'User'
-}
+  id: "",
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  role: "User",
+  organization: "Origin Smart",
+};
 
 const formItemLayout = {
   labelCol: {
@@ -30,53 +44,85 @@ const formItemLayout = {
 
 const UserMainView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [users, setUsers] = useState<User[]>([])
-  const [user, setUser] = useState<User>(initialUserState)
-  const [form] = Form.useForm()
+  const [users, setUsers] = useState<User[]>([]);
+  const [user, setUser] = useState<User>(initialUserState);
+  const [form] = Form.useForm();
 
-
-  const columns: TableProps<any>['columns'] = [
+  const columns: TableProps<any>["columns"] = [
     {
-      title: 'First Name',
-      dataIndex: 'firstName',
-      key: 'firstName',
-    },
-    {
-      title: 'Last Name',
-      dataIndex: 'lastName',
-      key: 'lastName',
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-    },
-    {
-      title: 'Role',
-      key: 'role',
-      dataIndex: 'role',
-      render: (_, { role, id }) => {
-        let color = role === 'User' ? 'geekblue' : 'volcano';
+      title: "User",
+      dataIndex: "user",
+      render: (_, { firstName, profile, lastName }) => {
         return (
-          <div className='flex'>
-            <div className='w-16'>
-              <Tag color={color}>
-                {role.toUpperCase()}
-              </Tag>
+          <div className="flex gap-2 items-center">
+            <div className=" w-12 h-12">
+              <Image
+                src={profile ? profile : "/dummyAvatar.png"}
+                alt="User avatar"
+                className="w-full h-full object-cover rounded-full"
+                unoptimized
+                width={100}
+                height={100}
+              />
             </div>
-            <p onClick={() => changeUserRole(id, role)} className='!text-blue-500 !text-xs hover:underline duration-200 transition-all transform cursor-pointer flex items-end'>Change Role</p>
+            <div>
+              <p className="!text-sm !text-[#000000e0]">
+                {firstName + " " + lastName}
+              </p>
+            </div>
           </div>
         );
       },
     },
     {
-      title: 'Active',
-      key: 'isActive',
-      dataIndex: 'isActive',
-      render: (_, { isActive }) => {
-        let component = isActive ? <CheckIcon width={20} /> : <XMarkIcon width={20} />;
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Organization",
+      key: "organization",
+      dataIndex: "organization",
+    },
+    {
+      title: "Role",
+      key: "role",
+      dataIndex: "role",
+      render: (_, { role }) => {
+        let color = role === "User" ? "geekblue" : "volcano";
         return (
-          <span>{component}</span>
+          <div className="flex">
+            <div className="w-16">
+              <Tag color={color}>{formatToTitleCase(role)}</Tag>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      dataIndex: "aactions",
+      render: (_, { id, role }) => {
+        return (
+          <div className=" flex flex-row gap-4 items-center">
+            <p
+              onClick={() => changeUserRole(id, role)}
+              className="!text-blue-500 hover:text-blue-600 duration-200 transition-all transform cursor-pointer flex flex-row gap-2 items-center"
+            >
+              <span>Change Role</span>
+              <UserSwitchOutlined />
+            </p>
+            <Link target="_blank" href={`/dashboard/users/${id}/activity-logs`}>
+              <div className="group px-2 py-1 text-blue-500 hover:text-blue-600 duration-150 transition-all transform rounded-md flex flex-row gap-1">
+                Activity Logs
+                <ArrowUpRightIcon
+                  width={16}
+                  className="transform transition-transform duration-150"
+                />
+              </div>
+            </Link>
+          </div>
         );
       },
     },
@@ -87,46 +133,47 @@ const UserMainView = () => {
   };
 
   const changeUserRole = async (userId: string, role: string) => {
-
-    const newRole = role === 'User' ? 'Admin' : 'User'
+    const newRole = role === "User" ? "Admin" : "User";
     try {
-      const response = await axiosInstance.patch(`/users/${userId}/update-role`, { role: newRole });
+      const response = await axiosInstance.patch(
+        `/users/${userId}/update-role`,
+        { role: newRole }
+      );
       if (response.status === 200) {
         setUsers((prevState) => {
-          return prevState.map(user =>
+          return prevState.map((user) =>
             user.id === userId ? { ...user, role: newRole } : user
           );
         });
-        toast.success('User role changed successfully');
+        toast.success("User role changed successfully");
       } else {
-        toast.error('Error changing user role');
+        toast.error("Error changing user role");
       }
     } catch (error) {
-      console.log('error ->', error);
-      toast.error('Error changing user role');
+      console.log("error ->", error);
+      toast.error("Error changing user role");
     }
-
-  }
+  };
 
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
       setUser(values);
-      console.log(values)
+      console.log(values);
 
       // Make an API call to create the object
-      const response = await axiosInstance.post('/users', values);
+      const response = await axiosInstance.post("/users", values);
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         // Assuming the API returns the new user object
         setUsers((prevUsers) => [...prevUsers, response.data]);
-        toast.success('User created successfully')
+        toast.success("User created successfully");
         setIsModalOpen(false);
       } else {
-        console.log('Error creating user:', response);
+        console.log("Error creating user:", response);
       }
     } catch (error) {
-      console.log('Validate Failed:', error);
+      console.log("Validate Failed:", error);
     }
   };
 
@@ -137,24 +184,24 @@ const UserMainView = () => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axiosInstance.get('/users')
+        const response = await axiosInstance.get("/users");
         if (response.status === 200) {
-          setUsers(response.data.results)
-          console.log(response)
+          setUsers(response.data.results);
+          console.log(response);
         } else {
-          console.log('error ->', response)
+          console.log("error ->", response);
         }
       } catch (error: any) {
-        console.log('error ->', error)
+        console.log("error ->", error);
       } finally {
-        setIsModalOpen(false)
+        setIsModalOpen(false);
       }
-    })()
-  }, [])
+    })();
+  }, []);
 
   const handlePagination = (page: number) => {
-    console.log(page)
-  }
+    console.log(page);
+  };
 
   const handleChange = (changedValues: any, allValues: any) => {
     setUser(allValues);
@@ -163,9 +210,11 @@ const UserMainView = () => {
   return (
     <Card>
       <h1 className="text-3xl font-semibold">Users</h1>
-      <div className='p-4 md:px-16'>
-        <div className='flex justify-end mb-5'>
-          <Button onClick={showModal} type='default'>Add New User</Button>
+      <div className="p-4 md:px-16">
+        <div className="flex justify-end mb-5">
+          <Button onClick={showModal} type="default">
+            Add New User
+          </Button>
         </div>
         <Table
           columns={columns}
@@ -196,7 +245,7 @@ const UserMainView = () => {
             <Form.Item
               label="First Name"
               name="firstName"
-              rules={[{ required: true, message: 'First name is required' }]}
+              rules={[{ required: true, message: "First name is required" }]}
             >
               <Input />
             </Form.Item>
@@ -204,7 +253,7 @@ const UserMainView = () => {
             <Form.Item
               label="Last Name"
               name="lastName"
-              rules={[{ required: true, message: 'Last name is required' }]}
+              rules={[{ required: true, message: "Last name is required" }]}
             >
               <Input />
             </Form.Item>
@@ -212,7 +261,7 @@ const UserMainView = () => {
             <Form.Item
               label="Email"
               name="email"
-              rules={[{ required: true, message: 'Email is required' }]}
+              rules={[{ required: true, message: "Email is required" }]}
             >
               <Input type="email" />
             </Form.Item>
@@ -220,22 +269,33 @@ const UserMainView = () => {
             <Form.Item
               label="Password"
               name="password"
-              rules={[{ required: true, message: 'Please add the password' }]}
+              rules={[{ required: true, message: "Please add the password" }]}
             >
               <Input type="password" />
             </Form.Item>
 
-            <Form.Item label="Role" name="role">
-              <Select defaultValue="User">
+            <Form.Item label="Role" name="role" initialValue="User">
+              <Select>
                 <Select.Option value="User">User</Select.Option>
                 <Select.Option value="Admin">Admin</Select.Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              label="Organization"
+              name="organization"
+              initialValue="Origin Smart"
+            >
+              <Select>
+                <Select.Option value="Origin Smart">Origin Smart</Select.Option>
+                <Select.Option value="Seda">Seda</Select.Option>
               </Select>
             </Form.Item>
           </Form>
         </div>
       </Modal>
     </Card>
-  )
-}
+  );
+};
 
-export default withDashboardLayout(UserMainView)
+export default withDashboardLayout(UserMainView);

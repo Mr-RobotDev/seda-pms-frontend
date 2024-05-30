@@ -1,17 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  Row,
-  Col,
-  Button,
-  List,
-  Avatar,
-  Drawer,
-  Typography,
-  Switch,
-} from "antd";
-import { Cog8ToothIcon } from "@heroicons/react/16/solid";
+import { Row, Col, Button, Drawer, Typography, Switch } from "antd";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
@@ -89,12 +79,12 @@ const Header: React.FC<HeaderProps> = ({
         <Col
           span={24}
           md={18}
-          className=" !flex !items-center gap-3 !justify-start"
+          className=" !flex !items-center gap-3 !justify-start !p-0"
         >
           <div className=" flex items-start justify-start lg:hidden">
-            <Button type="link" className="sidebar-toggler" onClick={onPress}>
+            <div className="sidebar-toggler" onClick={onPress}>
               {toggler}
-            </Button>
+            </div>
           </div>
           <Drawer
             className="settings-drawer"

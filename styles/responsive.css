@@ -13,15 +13,10 @@
   .layout-dashboard .ant-layout-footer {
     margin: 0 0 20px 20px;
   }
-  .layout-dashboard .ant-layout-sider.sider-primary {
-    margin: 20px 0 0 20px;
-    padding: 13px 20px;
-    height: calc(100vh - 20px);
-  }
   .layout-dashboard .ant-layout {
     width: auto;
     flex-shrink: 1;
-    margin-left: 270px;
+    margin-left: 250px;
   }
   .layout-dashboard .header-control .sidebar-toggler {
     display: none;

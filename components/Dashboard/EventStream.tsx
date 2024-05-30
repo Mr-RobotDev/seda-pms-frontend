@@ -1,7 +1,7 @@
-'use client'
-import { RootState } from '@/app/store/store';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+"use client";
+import { RootState } from "@/app/store/store";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 interface DeviceLocation {
   lat: number;
@@ -19,7 +19,7 @@ interface DeviceEvent {
 
 const EventStream: React.FC = () => {
   const [events, setEvents] = useState<DeviceEvent[]>([]);
-  const { token } = useSelector((state: RootState) => state.authReducer)
+  const { token } = useSelector((state: RootState) => state.authReducer);
 
   useEffect(() => {
     let abortController = new AbortController();
@@ -28,22 +28,27 @@ const EventStream: React.FC = () => {
     const connect = () => {
       abortController = new AbortController();
       xhr = new XMLHttpRequest();
-      xhr.open('POST', 'https://api.sedaems.originsmartcontrols.com/v1/events/stream', true);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.setRequestHeader('Authorization', `Bearer ${token}`); // Add the authorization header
+      xhr.open(
+        "POST",
+        "https://api.sedaems.originsmartcontrols.com/v1/events/stream",
+        true
+      );
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`); // Add the authorization header
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 3) {
           // The response is streaming
           const text = xhr.responseText;
-          const eventsArray = text.split('\n')
-            .filter((line) => line.trim() !== '' && line.startsWith('data: '))
+          const eventsArray = text
+            .split("\n")
+            .filter((line) => line.trim() !== "" && line.startsWith("data: "))
             .map((line) => {
               const jsonString = line.substring(6); // Remove the "data: " prefix
               try {
                 return JSON.parse(jsonString);
               } catch (error) {
-                console.error('JSON parse error:', error, jsonString);
+                console.error("JSON parse error:", error, jsonString);
                 return null;
               }
             })
@@ -54,11 +59,15 @@ const EventStream: React.FC = () => {
       };
 
       xhr.onerror = () => {
-        console.error('Fetch error:', xhr.statusText);
+        console.error("Fetch error:", xhr.statusText);
         reconnect();
       };
 
-      xhr.send(JSON.stringify({ /* Add any required body data here */ }));
+      xhr.send(
+        JSON.stringify({
+          /* Add any required body data here */
+        })
+      );
     };
 
     const reconnect = () => {
@@ -81,8 +90,12 @@ const EventStream: React.FC = () => {
       <ul>
         {events.map((event, index) => (
           <li key={index}>
-            <p>Temperature: <strong>{event.temperature}</strong></p>
-            <p>Relative Humidity: <strong>{event.relativeHumidity}</strong></p>
+            <p>
+              Temperature: <strong>{event.temperature}</strong>
+            </p>
+            <p>
+              Relative Humidity: <strong>{event.relativeHumidity}</strong>
+            </p>
           </li>
         ))}
       </ul>

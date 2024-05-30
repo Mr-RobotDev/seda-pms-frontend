@@ -7,7 +7,6 @@ import { login } from "@/app/store/slice/authSlice";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
-import useBrowserDetect from "@/hooks/useBrowseDetect";
 
 const { useToken } = theme;
 const { Title } = Typography;
@@ -15,20 +14,17 @@ const { Title } = Typography;
 interface FormValues {
   email: string;
   password: string;
-  userAgent: string;
 }
 
 export default function App() {
   const { token } = useToken();
   const searchParams = useSearchParams();
-  const browser = useBrowserDetect();
   const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const next = searchParams.get("next");
 
   const onFinish = async (values: FormValues) => {
-    values.userAgent = browser;
     setLoading(true);
     try {
       const response = await axiosInstance.post("/auth/login", values);

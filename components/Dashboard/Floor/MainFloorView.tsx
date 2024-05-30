@@ -13,22 +13,24 @@ import DeviceStatsPieChart from "./DeviceStatsPieChart";
 
 const MainFloorView = () => {
   const dispatch = useDispatch();
-  const deviceStats = useSelector((state: RootState) => state.statisticsReducer)
-  const [error, setError] = useState(false)
+  const deviceStats = useSelector(
+    (state: RootState) => state.statisticsReducer
+  );
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const response = await axiosInstance.get("/devices/stats");
         if (response.status === 200) {
-          dispatch(setDevicesStats(response.data))
+          dispatch(setDevicesStats(response.data));
         } else {
-          setError(true)
+          setError(true);
           toast.error("Error fetching devices stats");
         }
       } catch (error) {
         console.log("error->", error);
-        setError(true)
+        setError(true);
         toast.error("Error fetching devices stats");
       }
     })();
@@ -37,49 +39,44 @@ const MainFloorView = () => {
   return (
     <>
       <h1 className=" text-3xl font-semibold">Floor</h1>
-      {
-        error ?
-          <h1 className=" text-2xl font-semibold mt-20 text-center">Error Loading the Resources</h1>
-          : <div>
+      {error ? (
+        <h1 className=" text-2xl font-semibold mt-20 text-center">
+          Error Loading the Resources
+        </h1>
+      ) : (
+        <div>
+          {deviceStats.totalDevices === 0 ? (
+            <div className="  w-full h-full flex justify-center items-center">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <>
+              <DevicesStats />
+              <Row className="rowgap-vbox" gutter={[24, 0]}>
+                <Col
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={16}
+                  xl={16}
+                  className="mb-24 md:mb-0"
+                >
+                  <Card>
+                    <LeafLetMap />
+                  </Card>
+                </Col>
 
-            {deviceStats.totalDevices === 0 ?
-              <div className="  w-full h-full flex justify-center items-center">
-                <Spin size="large" />
-              </div>
-              :
-              <>
-                <DevicesStats />
-                <Row className="rowgap-vbox" gutter={[24, 0]}>
-                  <Col
-                    xs={24}
-                    sm={24}
-                    md={24}
-                    lg={16}
-                    xl={16}
-                    className="mb-24 md:mb-0"
-                  >
-                    <Card>
-                      <LeafLetMap />
-                    </Card>
-                  </Col>
-
-                  <Col
-                    xs={24}
-                    sm={24}
-                    md={24}
-                    lg={8}
-                    xl={8}
-                  >
-                    <Card className="!p-0">
-                      <h2 className=" text-xl font-semibold">Devices Status</h2>
-                      <DeviceStatsPieChart />
-                    </Card>
-                  </Col>
-                </Row>
-              </>
-            }
-          </div>
-      }
+                <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+                  <Card className="!p-0">
+                    <h2 className=" text-xl font-semibold">Devices Status</h2>
+                    <DeviceStatsPieChart />
+                  </Card>
+                </Col>
+              </Row>
+            </>
+          )}
+        </div>
+      )}
     </>
   );
 };

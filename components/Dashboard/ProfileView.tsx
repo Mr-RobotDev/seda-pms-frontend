@@ -2,16 +2,7 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
-import {
-  Row,
-  Col,
-  Card,
-  Button,
-  Descriptions,
-  Modal,
-  Input,
-  Upload,
-} from "antd";
+import { Row, Col, Card, Button, Input } from "antd";
 import Image from "next/image";
 import withDashboardLayout from "@/hoc/withDashboardLayout";
 import axiosInstance from "@/lib/axiosInstance";
@@ -20,7 +11,6 @@ import {
   updateProfileImage,
   updateUserDetails,
 } from "@/app/store/slice/authSlice";
-import { UploadOutlined } from "@ant-design/icons";
 import { PencilIcon } from "@heroicons/react/16/solid";
 
 interface formDataType {
@@ -142,27 +132,25 @@ const ProfileView = () => {
                 </label>
               </div>
               <div className="mt-8 relative w-64 h-64 md:w-48 md:h-48 xl:w-64 xl:h-64 rounded-full overflow-hidden">
-                {user.profile ?
-                  (
-                    <Image
-                      src={user.profile}
-                      alt="User avatar"
-                      className="w-full h-full object-cover rounded-full"
-                      unoptimized
-                      width={100}
-                      height={100}
-                    />
-                  )
-                  :
+                {user.profile ? (
                   <Image
-                    src='/dummyAvatar.png'
+                    src={user.profile}
                     alt="User avatar"
                     className="w-full h-full object-cover rounded-full"
                     unoptimized
                     width={100}
                     height={100}
                   />
-                }
+                ) : (
+                  <Image
+                    src="/dummyAvatar.png"
+                    alt="User avatar"
+                    className="w-full h-full object-cover rounded-full"
+                    unoptimized
+                    width={100}
+                    height={100}
+                  />
+                )}
               </div>
             </Card>
           </Col>

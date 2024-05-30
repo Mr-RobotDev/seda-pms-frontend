@@ -1,5 +1,5 @@
 "use client";
-import React, { ComponentType, ReactNode } from "react";
+import React, { ComponentType } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 
 function withDashboardLayout<T extends {}>(

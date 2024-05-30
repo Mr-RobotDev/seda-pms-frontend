@@ -59,7 +59,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         } `}
       >
         <Layout
-          className={`layout-dashboard ${
+          className={`layout-dashboard !p-0 ${
             pathname === "rtl" ? "layout-dashboard-rtl" : ""
           }`}
         >
@@ -85,7 +85,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         trigger={null}
         width={250}
         theme="light"
-        className={`sider-primary ant-layout-sider-primary ${
+        className={`sider-primary ant-layout-sider-primary !p-0 ${
           sidenavType === "#fff" ? "active-route" : ""
         }`}
         style={{ background: sidenavType }}
