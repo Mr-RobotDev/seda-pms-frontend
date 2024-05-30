@@ -1,6 +1,6 @@
 'use client'
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Col, DatePicker, Row, Spin, Button, Dropdown, Menu, Divider } from 'antd';
+import { Card, DatePicker, Spin, Button, Dropdown, Menu, Divider } from 'antd';
 import axiosInstance from '@/lib/axiosInstance';
 import dayjs, { Dayjs } from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -10,11 +10,10 @@ import Image from 'next/image';
 import CountUp from 'react-countup';
 import dynamic from 'next/dynamic';
 import { CalendarIcon } from '@heroicons/react/20/solid';
-
-const ApexCharts = dynamic(() => import('react-apexcharts'), { ssr: false });
 import ReactApexChart from 'react-apexcharts';
-import { SignalIcon, SignalSlashIcon } from '@heroicons/react/16/solid';
+import { ArrowUpRightIcon, SignalIcon, SignalSlashIcon } from '@heroicons/react/16/solid';
 import FileDownloadButton from '../Floor/FileDownloadButton';
+import Link from 'next/link';
 
 dayjs.extend(isBetween);
 
@@ -192,7 +191,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
     if (deviceOem) {
       try {
         setGraphLoading(true)
-        const response = await axiosInstance.get(`/events?oem=${deviceOem}&from=${from}&to=${to}&limit=1000`);
+        const response = await axiosInstance.get(`/events?oem=${deviceOem}&from=${from}&to=${to}`);
         if (response.status === 200) {
           const sortedData = response.data.results.sort((a: DataPoint, b: DataPoint) => {
             return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
@@ -309,13 +308,28 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   };
 
   const menu = (
-    <Menu>
-      {['Today', 'Yesterday', 'This Week', 'Last Week', 'Last 3 Days', 'Last 7 Days', 'Last 30 Days'].map((preset) => (
+    <Menu className=' w-36'>
+      {['Today', 'Yesterday'].map((preset) => (
         <Menu.Item key={preset} onClick={() => handleDatePreset(preset)} style={{ fontWeight: preset === currentPreset ? 'bold' : 'normal' }}>
           {preset}
         </Menu.Item>
       ))}
-      <Divider className=' h-[1px] bg-[#111111] !m-0' />
+      <Divider className=' h-[1px] bg-gray-100 !m-0' />
+
+      {['This Week', 'Last Week'].map((preset) => (
+        <Menu.Item key={preset} onClick={() => handleDatePreset(preset)} style={{ fontWeight: preset === currentPreset ? 'bold' : 'normal' }}>
+          {preset}
+        </Menu.Item>
+      ))}
+      <Divider className=' h-[1px] bg-gray-100 !m-0' />
+      {['Last 3 Days', 'Last 7 Days', 'Last 30 Days'].map((preset) => (
+        <Menu.Item key={preset} onClick={() => handleDatePreset(preset)} style={{ fontWeight: preset === currentPreset ? 'bold' : 'normal' }}>
+          {preset}
+        </Menu.Item>
+      ))}
+
+
+      <Divider className=' h-[1px] bg-gray-100 !m-0' />
       <Menu.Item key='custom' onClick={() => setCurrentPreset('Custom')}>
         Custom
       </Menu.Item>
@@ -404,15 +418,25 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         <div>
           <div className='px-3 md:px-16 mx-auto'>
             <div className='flex flex-col gap-2'>
+              <div className=' flex flex-row items-center gap-3 justify-end'>
+                <FileDownloadButton oem={deviceOem} from={range[0].format('YYYY-MM-DD')} to={range[1].format('YYYY-MM-DD')} />
+                <Link href={`/dashboard/devices/${id}/activity-logs`} target='_blank'>
+                  <Button className=' flex flex-row items-center justify-center gap-3 w-36'>
+                    Activity Logs
+                    <div>
+                      <ArrowUpRightIcon width={16} className='transform transition-transform duration-150 group-hover:translate-x-1' />
+                    </div>
+                  </Button>
+                </Link>
+              </div>
               <div className='flex justify-end'>
                 <div className=' flex flex-row gap-3 items-center justify-center'>
                   <div className={`flex-row gap-3 items-center ${currentPreset === 'Custom' ? 'flex' : 'hidden'}`} >
                     <p className='!m-0 font-semibold'>Date Range</p>
                     <RangePicker onChange={handleRangeChange} defaultValue={range} />
                   </div>
-                  <FileDownloadButton oem={deviceOem} from={range[0].format('YYYY-MM-DD')} to={range[1].format('YYYY-MM-DD')}/>
                   <Dropdown overlay={menu} placement="bottomRight" arrow>
-                    <Button className=' flex flex-row gap-2 items-center'>
+                    <Button className='w-36 flex flex-row gap-2 items-center'>
                       <CalendarIcon width={20} />
                       <p className='!m-0'>{currentPreset}</p>
                     </Button>

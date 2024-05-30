@@ -9,8 +9,8 @@ import { formatDateTime, formatToTitleCase } from '@/lib/helperfunctions';
 import './UserTable.css';
 import Link from 'next/link';
 import { useTimeAgo } from 'next-timeago';
-import { ArrowLeftStartOnRectangleIcon, EyeIcon, PresentationChartBarIcon } from '@heroicons/react/16/solid';
-import { ArrowLeftEndOnRectangleIcon } from '@heroicons/react/20/solid';
+import { ArrowLeftStartOnRectangleIcon,ArrowLeftEndOnRectangleIcon, EyeIcon, PresentationChartBarIcon } from '@heroicons/react/16/solid';
+
 
 const { RangePicker } = DatePicker;
 
@@ -20,7 +20,7 @@ interface UserActivityLogProps {
 
 const paginationInitialState = {
   current: 1,
-  pageSize: 10,
+  pageSize: 50,
   total: 0,
 }
 
@@ -38,6 +38,7 @@ interface ActivityLog {
     name: string;
     id: string;
   }
+  userAgent: string;
 }
 
 const UserActivityLog = ({ id }: UserActivityLogProps) => {
@@ -59,7 +60,7 @@ const UserActivityLog = ({ id }: UserActivityLogProps) => {
 
   const actionIcons: { [key: string]: any } = {
     'viewed': <EyeIcon width={20} className=' text-white' />,
-    'logged in': <ArrowLeftEndOnRectangleIcon width={20} className=' text-white' />,
+    'logged in': <ArrowLeftEndOnRectangleIcon width={20} className=' text-white rotate-180' />,
     'logged out': <ArrowLeftStartOnRectangleIcon width={20} className=' text-white' />,
     'default': <PresentationChartBarIcon width={20} className=' text-white' />,
   }
@@ -180,6 +181,10 @@ const UserActivityLog = ({ id }: UserActivityLogProps) => {
                 <div className='flex flex-col md:flex-row md:items-center gap-1'>
                   <p className='!mb-0'>{item.user.firstName + ' ' + item.user.lastName}</p>
                   <p className='!mb-0'><strong>{item.action}</strong></p>
+
+                  {item.userAgent && <p className='!mb-0'>on <strong>{item.userAgent}</strong></p>}
+
+
                   {item.page && <p className='!mb-0'>{formatToTitleCase(item.page)}</p>}
                   {item.device &&
                     <Link target='_blank' className='text-blue-500' href={`/dashboard/devices/${item.device.id}`}>

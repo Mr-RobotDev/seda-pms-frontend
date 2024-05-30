@@ -1,7 +1,7 @@
 "use client";
 import { RootState } from "@/app/store/store";
 import { DevicePhoneMobileIcon } from "@heroicons/react/16/solid";
-import { Row, Col, Card, Typography } from "antd";
+import { Card } from "antd";
 import CountUp from "react-countup";
 import { useSelector } from "react-redux";
 

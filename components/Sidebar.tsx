@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { Menu, Button } from "antd";
+import React from "react";
+import { Menu } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogoutOutlined } from "@ant-design/icons";
@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      key={0}
+      key={12}
     >
       <path
         d="M9 2C8.44772 2 8 2.44772 8 3C8 3.55228 8.44772 4 9 4H11C11.5523 4 12 3.55228 12 3C12 2.44772 11.5523 2 11 2H9Z"
@@ -181,18 +181,6 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                   </Link>
                 </Menu.Item>
               }
-              {/* <Menu.Item key="10">
-                <Link href="/dashboard/activity-logs">
-                  <div>
-                    <span
-                      className="icon"
-                      style={{ background: page.includes("activity-logs") ? color : "" }} >
-                      <DevicePhoneMobileIcon width={20} />
-                    </span>
-                    <span className="label text-black">Activity Logs</span>
-                  </div>
-                </Link>
-              </Menu.Item> */}
             </div>
           </div>
         </Menu >

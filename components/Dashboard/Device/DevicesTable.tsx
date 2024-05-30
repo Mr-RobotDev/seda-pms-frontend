@@ -6,11 +6,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { DevicesType } from '@/type';
 import SimSignal from './SimSignal';
-import { formatDate } from '@/lib/helperfunctions';
 import { useTimeAgo } from 'next-timeago';
 import { formatToTitleCase } from '@/lib/helperfunctions';
 import Link from 'next/link';
-import { ArrowRightIcon } from '@heroicons/react/16/solid';
+import { ArrowUpRightIcon } from '@heroicons/react/16/solid';
 
 const DevicesTable = () => {
   const [devices, setDevices] = useState<DevicesType[]>([])
@@ -91,16 +90,11 @@ const DevicesTable = () => {
       render: (_, { id }) => {
         return (
           <div className=' flex flex-row gap-2'>
-            <Link href={`/dashboard/devices/${id}`}>
-              <div className=' inline px-2 py-1 bg-slate-500 hover:bg-slate-600 duration-150 transition-all transform rounded-md text-white'>
-                Show Details
-              </div>
-            </Link>
             <Link href={`/dashboard/devices/${id}/activity-logs`}>
-            <div className='group px-2 py-1 text-blue-500 hover:text-blue-600 duration-150 transition-all transform rounded-md flex flex-row gap-2'>
-              Activity Logs
-              <ArrowRightIcon width={16} className='transform transition-transform duration-150 group-hover:translate-x-1' />
-            </div>
+              <div className='group px-2 py-1 text-blue-500 hover:text-blue-600 duration-150 transition-all transform rounded-md flex flex-row gap-2'>
+                Activity Logs
+                <ArrowUpRightIcon width={16} className='transform transition-transform duration-150 group-hover:translate-x-1' />
+              </div>
             </Link>
           </div>
         );
@@ -126,7 +120,7 @@ const DevicesTable = () => {
   const onRowClick = (record: DevicesType) => {
     return {
       onClick: () => {
-        router.push(``)
+        router.push(`/dashboard/devices/${record.id}`)
       }
     }
   }
@@ -139,6 +133,8 @@ const DevicesTable = () => {
         scroll={{ x: 500 }}
         loading={devices.length === 0}
         className='cursor-pointer'
+        onRow={onRowClick}
+
       />
     </div>
   )

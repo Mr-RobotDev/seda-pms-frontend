@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { useTimeAgo } from 'next-timeago';
 import { EyeIcon, PresentationChartBarIcon } from '@heroicons/react/16/solid';
 import { ArrowLeftEndOnRectangleIcon } from '@heroicons/react/20/solid';
+import { DevicesType } from '@/type';
 
 const { RangePicker } = DatePicker;
 
@@ -43,6 +44,7 @@ const DeviceActivityLogView = ({ id }: DeviceActivityLogViewProps) => {
   const [current, setCurrent] = useState(paginationInitialState.current);
   const [pageSize, setPageSize] = useState(paginationInitialState.pageSize);
   const [total, setTotal] = useState(paginationInitialState.total);
+  const [device, setDeivce] = useState<DevicesType>()
   const { TimeAgo } = useTimeAgo();
   const initialFetchRef = useRef(true);
 
@@ -135,6 +137,20 @@ const DeviceActivityLogView = ({ id }: DeviceActivityLogViewProps) => {
     }
   }, [current, fetchLogs, pageSize]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axiosInstance.get(`/devices/${id}`)
+        if (response.status === 200) {
+          setDeivce(response.data)
+        }
+      } catch (error: any) {
+        console.log('Error getting device')
+      }
+    })()
+  }, [id])
+
+
   const getRelativeDateTag = (date: Dayjs) => {
     const now = dayjs();
     if (date.isSame(now, 'day')) {
@@ -202,9 +218,9 @@ const DeviceActivityLogView = ({ id }: DeviceActivityLogViewProps) => {
   }
 
   return (
-    <div>
+    device && <div>
       <div className=' flex flex-col md:flex-row justify-between items-start md:items-center mb-10'>
-        <h1 className="text-3xl font-semibold !mb-4 md:!mb-0">Device Activity Logs</h1>
+        <h1 className="text-3xl font-semibold !mb-4 md:!mb-0">{device.name} Activity Logs</h1>
         <div className="flex flex-col md:flex-row gap-3 items-start md:items-center">
           <p className="mb-0 font-semibold">Date Range: </p>
           <RangePicker onChange={handleRangeChange} showTime defaultValue={range} />

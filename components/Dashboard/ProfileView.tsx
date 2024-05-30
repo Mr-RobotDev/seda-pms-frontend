@@ -7,10 +7,7 @@ import {
   Col,
   Card,
   Button,
-  Descriptions,
-  Modal,
   Input,
-  Upload,
 } from "antd";
 import Image from "next/image";
 import withDashboardLayout from "@/hoc/withDashboardLayout";
@@ -20,7 +17,6 @@ import {
   updateProfileImage,
   updateUserDetails,
 } from "@/app/store/slice/authSlice";
-import { UploadOutlined } from "@ant-design/icons";
 import { PencilIcon } from "@heroicons/react/16/solid";
 
 interface formDataType {

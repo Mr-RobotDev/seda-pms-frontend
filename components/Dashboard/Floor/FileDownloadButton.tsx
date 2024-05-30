@@ -48,11 +48,11 @@ const FileDownloadButton = ({ from, to, oem }: FileDownloadButtonProps) => {
     <div>
       <Button
         type="primary"
-        icon={<DownloadOutlined />}
         onClick={handleDownload}
         disabled={loading}
+        className=''
       >
-        {loading ? <Spin /> : 'Download Events CSV'}
+        <span>{loading ? <Spin size='small' className=' mr-2' /> : <DownloadOutlined className=' mr-2' />}Export Events</span>
       </Button>
     </div>
   );

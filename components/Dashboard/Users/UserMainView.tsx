@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react'
 import withDashboardLayout from '@/hoc/withDashboardLayout'
 import { Button, Modal, Table, TableProps, Tag, Form, Input, Select, Card } from 'antd';
 import axiosInstance from '@/lib/axiosInstance';
-import { CheckIcon } from '@heroicons/react/20/solid';
-import { XMarkIcon } from '@heroicons/react/20/solid';
 import { User } from '@/type'
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRightIcon } from '@heroicons/react/16/solid';
+import { ArrowUpRightIcon } from '@heroicons/react/16/solid';
+import { UserSwitchOutlined } from '@ant-design/icons';
+
 
 const initialUserState: User = {
   id: '',
@@ -69,10 +69,15 @@ const UserMainView = () => {
       key: 'email',
     },
     {
+      title: 'Organization',
+      key: 'organization',
+      dataIndex: 'organization',
+    },
+    {
       title: 'Role',
       key: 'role',
       dataIndex: 'role',
-      render: (_, { role, id }) => {
+      render: (_, { role }) => {
         let color = role === 'User' ? 'geekblue' : 'volcano';
         return (
           <div className='flex'>
@@ -81,39 +86,28 @@ const UserMainView = () => {
                 {role.toUpperCase()}
               </Tag>
             </div>
-            <p onClick={() => changeUserRole(id, role)} className='!text-blue-500 !text-xs hover:underline duration-200 transition-all transform cursor-pointer flex items-end'>Change Role</p>
           </div>
         );
       },
     },
     {
-      title: 'Active',
-      key: 'isActive',
-      dataIndex: 'isActive',
-      render: (_, { isActive }) => {
-        let component = isActive ? <CheckIcon width={20} /> : <XMarkIcon width={20} />;
-        return (
-          <span>{component}</span>
-        );
-      },
-    },
-    {
-      title: 'Organization',
-      key: 'organization',
-      dataIndex: 'organization',
-    },
-    {
       title: 'Actions',
       key: 'actions',
       dataIndex: 'aactions',
-      render: (_, { id }) => {
+      render: (_, { id, role }) => {
         return (
-          <Link href={`/dashboard/users/${id}/activity-logs`}>
-            <div className='group px-2 py-1 text-blue-500 hover:text-blue-600 duration-150 transition-all transform rounded-md flex flex-row gap-2'>
-              Activity Logs
-              <ArrowRightIcon width={16} className='transform transition-transform duration-150 group-hover:translate-x-1' />
-            </div>
-          </Link>
+          <div className=' flex flex-row gap-4 items-center'>
+            <p onClick={() => changeUserRole(id, role)} className='!text-blue-500 hover:text-blue-600 duration-200 transition-all transform cursor-pointer flex flex-row gap-2 items-center'>
+              <span>Change Role</span>
+              <UserSwitchOutlined />
+            </p>
+            <Link href={`/dashboard/users/${id}/activity-logs`}>
+              <div className='group px-2 py-1 text-blue-500 hover:text-blue-600 duration-150 transition-all transform rounded-md flex flex-row gap-1'>
+                Activity Logs
+                <ArrowUpRightIcon width={16} className='transform transition-transform duration-150' />
+              </div>
+            </Link>
+          </div>
         );
       },
     },
@@ -154,7 +148,7 @@ const UserMainView = () => {
       // Make an API call to create the object
       const response = await axiosInstance.post('/users', values);
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         // Assuming the API returns the new user object
         setUsers((prevUsers) => [...prevUsers, response.data]);
         toast.success('User created successfully')
@@ -262,15 +256,15 @@ const UserMainView = () => {
               <Input type="password" />
             </Form.Item>
 
-            <Form.Item label="Role" name="role">
-              <Select defaultValue="User">
+            <Form.Item label="Role" name="role" initialValue="User">
+              <Select>
                 <Select.Option value="User">User</Select.Option>
                 <Select.Option value="Admin">Admin</Select.Option>
               </Select>
             </Form.Item>
 
-            <Form.Item label="Organization" name="organization">
-              <Select defaultValue="Origin Smart">
+            <Form.Item label="Organization" name="organization" initialValue="Origin Smart">
+              <Select>
                 <Select.Option value="Origin Smart">Origin Smart</Select.Option>
                 <Select.Option value="Seda">Seda</Select.Option>
               </Select>

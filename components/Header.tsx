@@ -5,13 +5,10 @@ import {
   Row,
   Col,
   Button,
-  List,
-  Avatar,
   Drawer,
   Typography,
   Switch,
 } from "antd";
-import { Cog8ToothIcon } from "@heroicons/react/16/solid";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
