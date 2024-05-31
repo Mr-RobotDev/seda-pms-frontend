@@ -5,7 +5,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import toast from "react-hot-toast";
-import { DevicesType } from "@/type";
+import { DevicesType, DataPoint } from "@/type";
 import Image from "next/image";
 import CountUp from "react-countup";
 import dynamic from "next/dynamic";
@@ -23,14 +23,6 @@ dayjs.extend(isBetween);
 
 const { RangePicker } = DatePicker;
 
-interface DataPoint {
-  oem: string;
-  eventType: string;
-  temperature: number;
-  relativeHumidity: number;
-  createdAt: string;
-  id: string;
-}
 
 const commonChartOptions = {
   chart: {
