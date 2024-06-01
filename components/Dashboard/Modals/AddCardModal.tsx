@@ -22,10 +22,30 @@ const cardOptions: CardOptionsType = {
     rows: 2,
     cols: 2,
   },
-  FOUR_X_TWO: {
-    key: 'four_x_two',
+  TWO_X_THREE: {
+    key: 'two_x_three',
+    rows: 3,
+    cols: 4,
+  },
+  TWO_X_FOUR: {
+    key: 'two_x_four',
     rows: 4,
     cols: 2,
+  },
+  THREE_X_TWO: {
+    key: 'three_x_two',
+    rows: 2,
+    cols: 4,
+  },
+  THREE_X_THREE: {
+    key: 'three_x_three',
+    rows: 3,
+    cols: 4,
+  },
+  THREE_X_FOUR: {
+    key: 'three_x_four',
+    rows: 4,
+    cols: 4,
   },
 };
 
@@ -44,6 +64,13 @@ const AddCardModal = ({ dashboardId, isVisible, onClose }: AddCardModalProps) =>
   const [cardOption, setCardOption] = useState(cardOptions.TWO_X_TWO);
   const dispatch: AppDispatch = useDispatch();
   const error = useSelector((state: RootState) => state.dashboardReducer.error);
+
+  const resetState = () => {
+    setSelectedRowKeys([]);
+    setSelectedSensors([]);
+    setCardName('');
+    setStep(0);
+  }
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -71,6 +98,7 @@ const AddCardModal = ({ dashboardId, isVisible, onClose }: AddCardModalProps) =>
       if (error) {
         console.log(error);
       } else {
+        resetState()
         onClose()
       }
     }

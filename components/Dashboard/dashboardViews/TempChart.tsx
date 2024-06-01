@@ -41,6 +41,7 @@ const TempChart: React.FC<TemperatureChartProps> = ({ data, eventTypes }) => {
   const options: ApexOptions = {
     chart: {
       type: 'line',
+      group: "no-group",
       toolbar: {
         show: false,
         tools: {
@@ -57,7 +58,7 @@ const TempChart: React.FC<TemperatureChartProps> = ({ data, eventTypes }) => {
     xaxis: {
       type: 'datetime',
       title: {
-        text: 'Created At',
+        text: 'TimeStamp',
       },
     },
     yaxis: {

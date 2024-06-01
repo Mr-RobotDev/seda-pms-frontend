@@ -11,6 +11,7 @@ import Image from "next/image";
 import { PrimaryInput } from "../Input/Input";
 import { updateCard } from "@/app/store/slice/dashboardSlice";
 import toast from "react-hot-toast";
+import SingleDeviceDashCard from "@/components/Dashboard/dashboardViews/SingleDeviceDashCard";
 
 interface CardProps {
   cardObj: DashboardCardType;
@@ -31,39 +32,51 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
   }, [cardObj]);
 
   useEffect(() => {
-    if (Object.keys(eventsMap).length === 0) {
-      const fetchEventsForDevices = async () => {
+    console.log('component updated')
+  }, [])
+
+  useEffect(() => {
+    let isCancelled = false;
+  
+    const fetchEventsForDevices = async () => {
+      if (!isCancelled) {
         setLoading(true);
         const eventsMapTemp: EventsMap = {};
-
-        // Create a list of promises for each device event fetch
-        const fetchPromises = card.devices.map(device => {
+  
+        const fetchPromises = card.devices.map(async device => {
           const { oem, id, name } = device;
-          return axiosInstance.get(`/events`, {
-            params: {
-              oem: oem,
-              from: timeFrame.startDate,
-              to: timeFrame.endDate,
-              eventTypes: card.field,
-            },
-          }).then(response => {
-            eventsMapTemp[id] = { data: response.data.results, name: name };
-          }).catch(error => {
+          try {
+            const response = await axiosInstance.get(`/events`, {
+              params: {
+                oem: oem,
+                from: timeFrame.startDate,
+                to: timeFrame.endDate,
+                eventTypes: card.field,
+              },
+            });
+            if (!isCancelled) {
+              eventsMapTemp[id] = { data: response.data.results, name: name };
+            }
+          } catch (error) {
             console.error(`Error fetching events for device ${id}:`, error);
-          });
+          }
         });
-
-        // Wait for all promises to resolve
-        Promise.all(fetchPromises).then(() => {
+  
+        await Promise.all(fetchPromises);
+        if (!isCancelled) {
           setEventsMap(eventsMapTemp);
           setLoading(false);
-        });
-      };
-
-      fetchEventsForDevices();
-    }
-
-  }, [card, timeFrame, eventsMap]);
+        }
+      }
+    };
+  
+    fetchEventsForDevices();
+  
+    return () => {
+      isCancelled = true;
+    };
+  }, [card, timeFrame.startDate, timeFrame.endDate]);  // Ensure dependencies are stable
+  
 
   const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -174,7 +187,8 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
             </Button>
           </div>
           <div className="flex-grow">
-            {Object.keys(eventsMap).length > 0 && <TempChart data={eventsMap} eventTypes={cardObj.field} />}
+            {Object.keys(eventsMap).length > 0 && cardObj.field.split(',').length === 1 && <TempChart data={eventsMap} eventTypes={cardObj.field} />}
+            {Object.keys(eventsMap).length > 0 && cardObj.field.split(',').length > 1 && <SingleDeviceDashCard data={eventsMap} eventTypes={cardObj.field} />}
           </div>
         </div>
       )}

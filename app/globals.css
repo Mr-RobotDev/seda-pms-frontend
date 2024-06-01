@@ -201,7 +201,7 @@ body{
 .option.grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 20px 20px 20px 4px;
+  grid-template-rows: 20px 20px 20px 20px 4px;
   grid-column-gap: 2px;
   grid-row-gap: 2px;
 }
@@ -233,6 +233,35 @@ body{
   grid-column-start: 1;
   grid-column-end: 3;
 }
+
+.option .card.layout-2-3 {
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+.option .card.layout-3-2 {
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.option .card.layout-3-3 {
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+.option .card.layout-3-4 {
+  grid-row-start: 1;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 5;
+}
+
 .option .card.layout-2-1 {
   grid-column-start: 1;
   grid-column-end: 3;
@@ -249,7 +278,7 @@ body{
   grid-column-start: 1;
   grid-column-end: 5;
 }
-.option .card.layout-4-2 {
+.option .card.layout-2-4 {
   grid-column-start: 1;
   grid-column-end: 5;
   grid-row-start: 1;
