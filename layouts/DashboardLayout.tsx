@@ -120,7 +120,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             />
           </AntHeader>
         )}
-        <Content className="content-ant">{children}</Content>
+        <Content className="content-ant overflow-hidden">{children}</Content>
         {/* <Footer /> */}
       </Layout>
     </Layout>

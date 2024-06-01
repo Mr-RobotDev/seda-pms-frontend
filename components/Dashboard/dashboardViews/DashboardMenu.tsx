@@ -14,13 +14,14 @@ import { SelectSecondary } from '@/components/ui/Select/Select'
 import { ArrowDownIcon } from '@heroicons/react/24/outline';
 import { PrimaryInput } from '@/components/ui/Input/Input'
 import { useRouter } from 'next/navigation';
+import { MdOutlineDashboard } from "react-icons/md";
 
 interface DashboardTypeProps {
   dashboardsList: DashboardType[];
 }
 
 const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
-  const { isLoading, currentDashboard } = useSelector((state: RootState) => state.dashboardReducer);
+  const { isLoading, currentDashboard, dashboardCards } = useSelector((state: RootState) => state.dashboardReducer);
   const [visible, setVisible] = useState(false);
   const [dashboards, setDashboards] = useState(dashboardsList || []);
   const [isCreating, setIsCreating] = useState(false);
@@ -64,11 +65,6 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
                   >
                     <div className="flex flex-col">
                       <span className="!text-sm !text-black">{dashboard.name}</span>
-                      <span className="text-xs text-slate-400 dark:text-slate-400">
-                        {/* {`${dashboard.cards.reduce((acc, card) => {
-                          return acc + card.deviceConfig.devices.length;
-                        }, 0)} sensors - ${dashboard.cards.length || '0'} cards`} */}
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -138,8 +134,7 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
     >
       <div className=' inline-block shadow-lg rounded-lg !bg-white p-1 px-2'>
         <div className=' flex flex-row gap-2'>
-          <SelectSecondary only={currentDashboard.name || 'Select a Dashboard'} />
-          {/* <ArrowDownIcon width={13} /> */}
+          <SelectSecondary only={currentDashboard.name || 'Select a Dashboard'} Icon={<MdOutlineDashboard className=' w-5 h-5' />} />
         </div>
       </div>
     </Popover>

@@ -11,12 +11,14 @@ import { DashboardType } from "@/type";
 import DashboardMenu from "@/components/Dashboard/dashboardViews/DashboardMenu";
 import CustomCard from "../../ui/Card/CustomCard";
 import NoDashboardSelected from "./NoDashboardSelected";
+import { useRouter } from "next/navigation";
 
 const MainDashboardView = () => {
   const dispatch: AppDispatch = useDispatch()
   const [dashboard, setDashboards] = useState<DashboardType>()
-  const [currentDashboard, setCurrentDashboard] = useState<DashboardType>()
-  // const [cards, setDashboardCards] = useState
+  const router = useRouter()
+
+  const { currentDashboard } = useSelector((state: RootState) => state.dashboardReducer)
 
   const { dashboards, isLoading, error, currentDashboard: currentSelectedDashboard, dashboardCards } = useSelector((state: RootState) => state.dashboardReducer)
 
@@ -24,13 +26,14 @@ const MainDashboardView = () => {
     dispatch(getDashboards());
   }, [dispatch]);
 
-
   useEffect(() => {
 
     if (currentSelectedDashboard.id !== '') {
+      router.push(`/dashboard/${currentSelectedDashboard.id}`)
       dispatch(getDashboardCards({ dashboardId: currentSelectedDashboard.id }))
+
     }
-  }, [currentSelectedDashboard, dispatch])
+  }, [currentSelectedDashboard, dispatch, router])
 
 
   const handleLayoutChange = (layout: any, layouts: any) => {

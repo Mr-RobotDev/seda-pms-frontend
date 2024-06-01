@@ -2,16 +2,17 @@ import { AppDispatch, RootState } from "@/app/store/store";
 import { faEllipsisVertical, faSquarePen, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Popover } from "antd";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { EllipsisVerticalIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { EllipsisVerticalIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { deleteCard } from "@/app/store/slice/dashboardSlice";
 
 interface OptionMenuProps {
   cardId: string;
+  setIsRenaming: Dispatch<SetStateAction<boolean>>
 }
 
-const OptionsMenu = ({ cardId }: OptionMenuProps) => {
+const OptionsMenu = ({ cardId, setIsRenaming }: OptionMenuProps) => {
   const dispatch: AppDispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const { currentDashboard } = useSelector((state: RootState) => state.dashboardReducer)
@@ -22,7 +23,20 @@ const OptionsMenu = ({ cardId }: OptionMenuProps) => {
       content={
         <div className="flex flex-col">
           <div
-            className="flex gap-2 p-2 danger-menu transition-all ease-in-out duration-300 rounded-md cursor-pointer hover:bg-blue-50"
+            className="flex gap-2 p-1 hover:bg-hover-primary transition-all ease-in-out duration-300 rounded-md cursor-pointer hover:bg-blue-50"
+            onClick={() => {
+              setVisible(false);
+              setIsRenaming(true);
+            }}
+          >
+            <span className="flex flex-col justify-center">
+              <PencilSquareIcon width={15} />
+            </span>
+            <span className="!text-xs font-medium">Rename Card</span>
+          </div>
+          <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
+          <div
+            className="flex gap-2 p-1 danger-menu transition-all ease-in-out duration-300 rounded-md cursor-pointer hover:bg-blue-50"
             onClick={() => {
               dispatch(deleteCard({ dashboardId: currentDashboard.id, cardId: cardId }));
             }}
@@ -30,7 +44,7 @@ const OptionsMenu = ({ cardId }: OptionMenuProps) => {
             <span className="flex flex-col justify-center">
               <XMarkIcon width={15} />
             </span>
-            <span className="!text-sm font-medium">Remove Card</span>
+            <span className="!text-xs font-medium">Remove Card</span>
           </div>
         </div>
       }

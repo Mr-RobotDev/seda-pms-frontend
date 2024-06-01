@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Responsive, WidthProvider } from 'react-grid-layout';
 const ResponsiveGridLayout = WidthProvider(Responsive);
-import { getDashboardCards, getDashboards } from "@/app/store/slice/dashboardSlice";
+import { getDashboardCards, getDashboards, setCurrentDashboard, updateCard } from "@/app/store/slice/dashboardSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/app/store/store";
 import { DashboardCardType, DashboardType } from "@/type";
@@ -16,16 +16,14 @@ import EmptyDashboard from './EmptyDashboard';
 import { useRouter } from 'next/navigation';
 import AddCardModal from '../Modals/AddCardModal';
 import TimeFrameMenu from './TimeFrameMenu';
+import { Spin } from 'antd';
 
 interface singleDashboardViewProps {
   id: string;
 }
 const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   const dispatch: AppDispatch = useDispatch()
-  const [dashboard, setDashboards] = useState<DashboardType>()
-  const [currentDashboard, setCurrentDashboard] = useState<DashboardType>()
   const router = useRouter()
-  // const [cards, setDashboardCards] = useState
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { dashboards, isLoading, error, currentDashboard: currentSelectedDashboard, dashboardCards } = useSelector((state: RootState) => state.dashboardReducer)
@@ -34,22 +32,44 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
     dispatch(getDashboards());
   }, [dispatch]);
 
-
   useEffect(() => {
-    if (currentSelectedDashboard.id !== '') {
-      dispatch(getDashboardCards({ dashboardId: currentSelectedDashboard.id }))
+    if (id) {
+      console.log()
+      const currentDashboard = dashboards.find(dashboard => dashboard.id === id)
+      dispatch(setCurrentDashboard(currentDashboard))
+      dispatch(getDashboardCards({ dashboardId: id }))
     }
-  }, [currentSelectedDashboard, dispatch])
-
-  useEffect(() => {
-    if (currentSelectedDashboard.id === '') {
-      router.push('/dashboard')
-    }
-  }, [currentSelectedDashboard, router])
+  }, [currentSelectedDashboard, router, id, dashboards, dispatch])
 
 
   const handleLayoutChange = (layout: any, layouts: any) => {
-    console.log(layout, layouts)
+    if (layouts.sm || layouts.xs) return;
+
+    const updatedCards = layout.map((item: any) => {
+      const card = dashboardCards.find((card) => card.id === item.i);
+      if (card) {
+        if (card.x !== item.x || card.y !== item.y || card.rows !== item.w || card.cols !== item.h) {
+          return {
+            ...card,
+            x: item.x,
+            y: item.y,
+            rows: item.w,
+            cols: item.h,
+          };
+        }
+      }
+      return null;
+    });
+
+    updatedCards.forEach((card: DashboardCardType) => {
+      if (!card) return;
+      dispatch(
+        updateCard({
+          dashboardId: currentSelectedDashboard.id,
+          cardObj: card
+        }),
+      );
+    });
   };
 
   const openCreateCardModal = ({ dashboardId }: { dashboardId: string }) => {
@@ -57,17 +77,17 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   }
 
   return (
-    <>
+    currentSelectedDashboard ? <>
       <div>
         <div className=' flex flex-row justify-between items-center'>
           <div className=' flex flex-row gap-3' >
             <DashboardMenu dashboardsList={dashboards} />
-            {currentSelectedDashboard && <TimeFrameMenu />}
+            {currentSelectedDashboard && dashboardCards.length !== 0 &&  <TimeFrameMenu />}
           </div>
-          <div className="flex justify-center mt-3">
+          <div className="flex justify-center md:mt-0 mt-3">
             <span
               onClick={() => setIsModalOpen(true)}
-              className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg p-2 pt-3 px-3 bg-blue-800 text-white hover:bg-hover-primary transition-all ease-in-out duration-300"
+              className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg p-2 px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300"
             >
               Create New Card
             </span>
@@ -99,7 +119,10 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
         isVisible={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         dashboardId={currentSelectedDashboard.id} />
-    </>
+    </> :
+      <div className=' w-full h-full flex justify-center items-center'>
+        <Spin />
+      </div>
   );
 }
 

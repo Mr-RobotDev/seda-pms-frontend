@@ -14,6 +14,7 @@ interface DashboardState {
     list: boolean;
     get: boolean;
     delete: boolean;
+    updateCard: boolean;
   };
   dashboardCards: DashboardCardType[];
   error: string;
@@ -29,6 +30,7 @@ const initialState: DashboardState = {
     list: false,
     get: false,
     delete: false,
+    updateCard: false,
   },
   dashboardCards: [],
   error: '',
@@ -108,6 +110,22 @@ export const createCard = createAsyncThunk('/dashboard/card/create', async ({ da
   }
 
   throw new Error('Failed to create card');
+})
+
+
+export const updateCard = createAsyncThunk('/dashboard/card/update', async({dashboardId, cardObj}: {dashboardId: string, cardObj: DashboardCardType}) => {
+  const response = await axiosInstance.patch(`/dashboards/${dashboardId}/cards/${cardObj.id}`, {
+    name: cardObj.name,
+    x: cardObj.x,
+    y: cardObj.y,
+    rows: cardObj.rows,
+    cols: cardObj.cols,
+  })
+  if (response.status === 200) {
+    return response.data
+  }
+
+  throw new Error('Failed to update card');
 })
 
 const dashboardSlice = createSlice({
@@ -198,6 +216,16 @@ const dashboardSlice = createSlice({
       .addCase(deleteCard.rejected, (state, action) => {
         state.isLoading.delete = false
         state.error = action.error.message?? 'Failed to delete card';
+      })
+      .addCase(updateCard.pending, (state, action) => {
+        state.isLoading.updateCard = true;
+      })
+      .addCase(updateCard.fulfilled, (state, action) => {
+        state.isLoading.updateCard = false;
+      })
+      .addCase(updateCard.rejected, (state, action) => {
+        state.isLoading.updateCard = false;
+        state.error = action.error.message?? 'Failed to Update the card';
       })
   }
 })

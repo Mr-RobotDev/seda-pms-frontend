@@ -2,12 +2,15 @@ import TempChart from "@/components/Dashboard/dashboardViews/TempChart";
 import axiosInstance from "@/lib/axiosInstance";
 import { DashboardCardType } from "@/type";
 import { memo, useEffect, useState } from "react";
-import { Button, Spin } from 'antd';
+import { Button, Spin, Tooltip } from 'antd';
 import { EventsMap, Event, DeviceData } from '@/type';
 import OptionsMenu from "@/components/Dashboard/dashboardViews/OptionMenu";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/app/store/store";
 import Image from "next/image";
+import { PrimaryInput } from "../Input/Input";
+import { updateCard } from "@/app/store/slice/dashboardSlice";
+import toast from "react-hot-toast";
 
 interface CardProps {
   cardObj: DashboardCardType;
@@ -16,47 +19,91 @@ interface CardProps {
 const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
   const [eventsMap, setEventsMap] = useState<EventsMap>({});
   const [loading, setLoading] = useState<boolean>(true);
-  const from = '2024-05-25';
-  const to = '2024-05-26';
-  const eventTypes = cardObj.field;
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [editingName, setEditingName] = useState(cardObj.name);
+  const [card, setCard] = useState<DashboardCardType>(cardObj)
+  const { timeFrame, currentDashboard } = useSelector((state: RootState) => state.dashboardReducer)
 
-  const { timeFrame } = useSelector((state: RootState) => state.dashboardReducer)
-
-  console.log(cardObj)
+  const dispatch: AppDispatch = useDispatch()
 
   useEffect(() => {
-    const fetchEventsForDevices = async () => {
-      setLoading(true);
-      const eventsMapTemp: EventsMap = {};
+    setCard(cardObj);
+  }, [cardObj]);
 
-      for (const device of cardObj.devices) {
-        const { oem, id, name } = device;
-        try {
-          const response = await axiosInstance.get(`/events`, {
+  useEffect(() => {
+    if (Object.keys(eventsMap).length === 0) {
+      const fetchEventsForDevices = async () => {
+        setLoading(true);
+        const eventsMapTemp: EventsMap = {};
+
+        // Create a list of promises for each device event fetch
+        const fetchPromises = card.devices.map(device => {
+          const { oem, id, name } = device;
+          return axiosInstance.get(`/events`, {
             params: {
               oem: oem,
               from: timeFrame.startDate,
               to: timeFrame.endDate,
-              eventTypes: eventTypes,
+              eventTypes: card.field,
             },
+          }).then(response => {
+            eventsMapTemp[id] = { data: response.data.results, name: name };
+          }).catch(error => {
+            console.error(`Error fetching events for device ${id}:`, error);
           });
+        });
 
-          eventsMapTemp[id] = { data: response.data.results, name: name };
-        } catch (error) {
-          console.error(`Error fetching events for device ${id}:`, error);
-        }
-      }
+        // Wait for all promises to resolve
+        Promise.all(fetchPromises).then(() => {
+          setEventsMap(eventsMapTemp);
+          setLoading(false);
+        });
+      };
 
-      setEventsMap(eventsMapTemp);
-      setLoading(false);
-    };
+      fetchEventsForDevices();
+    }
 
-    fetchEventsForDevices();
-  }, [cardObj.devices, from, to, eventTypes, timeFrame]);
+  }, [card, timeFrame, eventsMap]);
 
   const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     e.preventDefault();
+  };
+
+
+  const handleOnCancelClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsRenaming(false);
+    console.log('clicked')
+    setEditingName(card.name);
+  };
+
+  const handleUpdateCard = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    setCard(prevCard => {
+      return {
+        ...prevCard,
+        name: editingName
+      }
+    })
+
+    dispatch(
+      updateCard({
+        dashboardId: currentDashboard.id,
+        cardObj: {
+          ...card,
+          name: editingName
+        }
+      })
+    ).then(() => {
+      toast.success('Updated successfully')
+      setIsRenaming(false);
+    })
+    console.log(editingName)
+
   };
 
   return (
@@ -69,10 +116,10 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
         <div className="flex flex-col w-full h-full bg-white rounded-lg shadow-lg p-3">
           <div className=" flex flex-row justify-between items-center border-b pb-2">
             <div className=" flex flex-row items-center gap-2">
-              <div className=" w-8 h-8 border border-blue-100 rounded-md p-1">
+              <div className=" w-11 h-11 border border-blue-100 rounded-md p-1">
                 <Image
                   src={
-                    cardObj.field === 'temperature'
+                    card.field === 'temperature'
                       ? '/thermometer.png'
                       : "/snowflake.png"
                   }
@@ -83,14 +130,51 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
                   height={100}
                 />
               </div>
-              <p className=" !mb-0 font-semibold text-xl">{cardObj.name}</p>
+              <div className=" flex flex-col">
+                {!isRenaming ? (
+                  <div className="!text-lg font-semibold">{card.name}</div>
+                ) : (
+                  <div className="flex border rounded-md">
+                    <PrimaryInput
+                      placeholder="Dashboard name"
+                      value={editingName}
+                      onChange={(e) => setEditingName(e.target.value)}
+                      className=" !border-t-0 !border-l-0 !border-b-0 !border-r !rounded-none !border-gray-300 "
+                    />
+                    <Tooltip
+                      getTooltipContainer={(triggerNode) => triggerNode.parentNode as HTMLElement}
+                      title={`${editingName.length < 3 ? 'Atleast 3 characters' : ''}`}
+                    >
+                      <span className="flex">
+                        <button
+                          disabled={editingName.length < 3}
+                          onMouseDown={handleUpdateCard}
+                          className="mini-button hover:bg-blue-50 bg-transparent border-l-none px-3 disabled:cursor-not-allowed disabled:opacity-80 hover:bg-hover-primary transition-all ease-in-out duration-300 w-full"
+                        >
+                          Save
+                        </button>
+                      </span>
+                    </Tooltip>
+                    <span className="flex" >
+                      <button
+                        disabled={false}
+                        className="mini-button border-l px-2 bg-transparent border-l-none rounded-e-lg hover:bg-blue-50 !w-full transition-all ease-in-out duration-300"
+                        onMouseDown={handleOnCancelClick}
+                      >
+                        Cancel
+                      </button>
+                    </span>
+                  </div>
+                )}
+                <span className=" text-xs text-slate-400">{card.devices.length} Sensors</span>
+              </div>
             </div>
             <Button onMouseDown={handleOnClick} className="!m-0 !p-0">
-              <OptionsMenu cardId={cardObj.id} />
+              <OptionsMenu cardId={card.id} setIsRenaming={setIsRenaming} />
             </Button>
           </div>
           <div className="flex-grow">
-            <TempChart data={eventsMap} eventTypes={eventTypes} />
+            {Object.keys(eventsMap).length > 0 && <TempChart data={eventsMap} eventTypes={cardObj.field} />}
           </div>
         </div>
       )}

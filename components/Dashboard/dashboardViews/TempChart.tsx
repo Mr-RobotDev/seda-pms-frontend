@@ -65,10 +65,6 @@ const TempChart: React.FC<TemperatureChartProps> = ({ data, eventTypes }) => {
         text: eventTypes,
       },
     },
-    title: {
-      text: `${formatToTitleCase(eventTypes)} Over Time`,
-      align: 'left',
-    },
     stroke: {
       width: 1,
     },
