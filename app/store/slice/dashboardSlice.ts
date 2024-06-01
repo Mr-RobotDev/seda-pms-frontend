@@ -82,6 +82,15 @@ export const deleteDashboard = createAsyncThunk('dashboard/deleteDashboard', asy
   throw new Error('Failed to delete dashboard');
 })
 
+export const updateDashboard = createAsyncThunk('/dashboard/updateDashboard', async ({ dashboardId, dashboardName }: { dashboardId: string, dashboardName: string }) => {
+  const response = await axiosInstance.patch(`/dashboards/${dashboardId}`, { name: dashboardName })
+  if (response.status === 200) {
+    return response.data
+  }
+
+  throw new Error('Failed to update dashboard');
+})
+
 export const deleteCard = createAsyncThunk('dashboard/deleteCard', async ({ dashboardId, cardId }: { dashboardId: string, cardId: string }) => {
   // /dashboards/:dashboard/cards/:card
   const response = await axiosInstance.delete(`/dashboards/${dashboardId}/cards/${cardId}`)
@@ -122,7 +131,7 @@ export const createCard = createAsyncThunk('/dashboard/card/create', async ({ da
 })
 
 
-export const updateCard = createAsyncThunk('/dashboard/card/update', async({dashboardId, cardObj}: {dashboardId: string, cardObj: DashboardCardType}) => {
+export const updateCard = createAsyncThunk('/dashboard/card/update', async ({ dashboardId, cardObj }: { dashboardId: string, cardObj: DashboardCardType }) => {
   const response = await axiosInstance.patch(`/dashboards/${dashboardId}/cards/${cardObj.id}`, {
     name: cardObj.name,
     x: cardObj.x,
@@ -204,10 +213,17 @@ const dashboardSlice = createSlice({
       })
       .addCase(deleteDashboard.fulfilled, (state, action) => {
         state.isLoading.delete = false;
-        state.dashboards = state.dashboards.filter(dashboard => dashboard.id!== action.payload.id)
+        state.dashboards = state.dashboards.filter(dashboard => dashboard.id !== action.payload.id)
 
-        if(state.currentDashboard.id === action.payload.id){
+        if (state.currentDashboard.id === action.payload.id) {
           state.currentDashboard = { name: '', cardsCount: 0, devicesCount: 0, id: '' }
+        }
+      })
+
+      .addCase(updateDashboard.fulfilled, (state, action) => {
+        const index = state.dashboards.findIndex(d => d.id === action.payload.id);
+        if (index !== -1) {
+          state.dashboards[index] = action.payload;  // Update with the confirmed data from the server
         }
       })
 
@@ -229,11 +245,11 @@ const dashboardSlice = createSlice({
       })
       .addCase(deleteCard.fulfilled, (state, action) => {
         state.isLoading.delete = false;
-        state.dashboardCards = state.dashboardCards.filter(card => card.id!== action.payload.id)
+        state.dashboardCards = state.dashboardCards.filter(card => card.id !== action.payload.id)
       })
       .addCase(deleteCard.rejected, (state, action) => {
         state.isLoading.delete = false
-        state.error = action.error.message?? 'Failed to delete card';
+        state.error = action.error.message ?? 'Failed to delete card';
       })
       .addCase(updateCard.pending, (state, action) => {
         state.isLoading.updateCard = true;
@@ -243,7 +259,7 @@ const dashboardSlice = createSlice({
       })
       .addCase(updateCard.rejected, (state, action) => {
         state.isLoading.updateCard = false;
-        state.error = action.error.message?? 'Failed to Update the card';
+        state.error = action.error.message ?? 'Failed to Update the card';
       })
   }
 })

@@ -26,7 +26,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   const router = useRouter()
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { dashboards, isLoading, error, currentDashboard: currentSelectedDashboard, dashboardCards } = useSelector((state: RootState) => state.dashboardReducer)
+  const { dashboards, currentDashboard: currentSelectedDashboard, dashboardCards } = useSelector((state: RootState) => state.dashboardReducer)
 
   useEffect(() => {
     dispatch(getDashboards());
@@ -35,6 +35,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   useEffect(() => {
     if (id) {
       const currentDashboard = dashboards.find(dashboard => dashboard.id === id)
+      console.log('currentDashboard->', currentDashboard)
       if (!currentDashboard){
         router.push('/dashboard')
         return
