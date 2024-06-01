@@ -58,12 +58,12 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 key="6"
                 title="Dashboard"
                 page={page}
-                isActive={page.length === 2 && page.includes("dashboard")}
+                isActive={page.at(-1) === "dashboard"}
                 icon={
                   <AdjustmentsHorizontalIcon
                     width={25}
                     className={` w-7 h-7 ${
-                      page.length === 2 && page.includes("dashboard")
+                      page.at(-1) === "dashboard"
                         ? "!text-blue-700 "
                         : "!text-black"
                     }`}
@@ -184,9 +184,9 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
               }
               url={"/dashboard/profile"}
             />
-            <div key="6" className="!w-auto !rounded-none">
+            <div key="6" className="!w-auto !rounded-none py-2 !px-5">
               <div
-                className="py-2 flex !px-4 flex-row gap-3 mb-2 items-center cursor-pointer hover:bg-blue-50 py-2"
+                className="py-2 flex flex-row gap-3 items-center"
                 onClick={LogoutButtonHandler}
               >
                 <ArrowLeftStartOnRectangleIcon

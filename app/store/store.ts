@@ -12,12 +12,10 @@ import {
 import storage from "redux-persist/lib/storage";
 import authReducer from "./slice/authSlice";
 import statisticsReducer from "./slice/StatisticsSlice"
-import dashboardReducer from "./slice/dashboardSlice"
 
 const rootReducer = combineReducers({
   authReducer,
-  statisticsReducer,
-  dashboardReducer
+  statisticsReducer
 });
 
 const persistConfig = {
