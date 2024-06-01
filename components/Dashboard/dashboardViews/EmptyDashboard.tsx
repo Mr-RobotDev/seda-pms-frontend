@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { RootState } from '@/app/store/store';
 import { useSelector } from 'react-redux';
 import AddCardModal from '../Modals/AddCardModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
 interface EmptyDashboardProps {
   openCreateCardModal?: (args: { dashboardId: string }) => void;
@@ -35,8 +37,9 @@ const EmptyDashboard: React.FC<EmptyDashboardProps> = () => {
           <div className="flex justify-center mt-3">
             <span
               onClick={showModal}
-              className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg p-2 pt-3 px-3 bg-blue-800 text-white hover:bg-hover-primary transition-all ease-in-out duration-300"
+              className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"
             >
+              <FontAwesomeIcon icon={faCirclePlus} />
               Create New Card
             </span>
           </div>

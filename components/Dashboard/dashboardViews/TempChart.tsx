@@ -57,9 +57,6 @@ const TempChart: React.FC<TemperatureChartProps> = ({ data, eventTypes }) => {
     },
     xaxis: {
       type: 'datetime',
-      title: {
-        text: 'TimeStamp',
-      },
     },
     yaxis: {
       title: {

@@ -159,6 +159,20 @@ const CardDetails = ({ setCardOption, cardOption, cardOptions, cardName, setCard
               </div>
               <div className="text-center mt-2 font-light">3 X 4</div>
             </div>
+            <div className="w-1/3 px-4 sm:px-5 py-3 pl-0 box-border">
+              <div
+                className={`option grid border-all-active
+                ${cardOption.key === cardOptions.FOUR_X_FOUR.key ? 'active-box' : ''}
+                `}
+                onClick={() => {
+                  setCardOption(cardOptions.FOUR_X_FOUR);
+                }}
+              >
+                <div className="card selected layout-4-4"></div>
+                
+              </div>
+              <div className="text-center mt-2 font-light">4 X 4</div>
+            </div>
           </div>
         </div>
       </div>

@@ -12,7 +12,7 @@ import { AppDispatch, RootState } from '@/app/store/store';
 
 const headings: { [key: number]: string } = {
   0: 'Select Devices',
-  1: 'Select Sensor',
+  1: 'Select',
   2: 'Set Card Options'
 };
 
@@ -25,7 +25,7 @@ const cardOptions: CardOptionsType = {
   TWO_X_THREE: {
     key: 'two_x_three',
     rows: 3,
-    cols: 4,
+    cols: 2,
   },
   TWO_X_FOUR: {
     key: 'two_x_four',
@@ -35,18 +35,23 @@ const cardOptions: CardOptionsType = {
   THREE_X_TWO: {
     key: 'three_x_two',
     rows: 2,
-    cols: 4,
+    cols: 3,
   },
   THREE_X_THREE: {
     key: 'three_x_three',
     rows: 3,
-    cols: 4,
+    cols: 3,
   },
   THREE_X_FOUR: {
     key: 'three_x_four',
     rows: 4,
-    cols: 4,
+    cols: 3,
   },
+  FOUR_X_FOUR: {
+    key: 'four_x_four',
+    rows: 4,
+    cols: 4,
+  }
 };
 
 interface AddCardModalProps {
@@ -110,12 +115,13 @@ const AddCardModal = ({ dashboardId, isVisible, onClose }: AddCardModalProps) =>
       onOk={handleOk}
       onCancel={onClose}
       width={700}
+
       footer={[
 
       ]}
     >
       <h3 className=' font-semibold text-xl text-center'>{headings[step]}</h3>
-      <div className=' h-[650px] overflow-y-auto'>
+      <div className=' !h-[600px] overflow-y-auto py-3'>
 
         {step === 0 && <DevicesSelector selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys} />}
         {step === 1 && <SensorSelector selectedRowKeys={selectedRowKeys} selectedSensors={selectedSensors} setSelectedSensors={setSelectedSensors} />}

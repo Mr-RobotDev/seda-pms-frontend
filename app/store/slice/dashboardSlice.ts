@@ -168,6 +168,9 @@ const dashboardSlice = createSlice({
       .addCase(getDashboards.fulfilled, (state, action) => {
         state.dashboards = action.payload
         state.isLoading.list = false;
+        if(state.dashboards.length > 0){
+          state.currentDashboard = state.dashboards[0]
+        }
       })
       .addCase(getDashboards.rejected, (state, action) => {
         state.isLoading.list = false
@@ -233,7 +236,6 @@ const dashboardSlice = createSlice({
       .addCase(createCard.fulfilled, (state, action) => {
         state.isLoading.create = false
         state.dashboardCards.push(action.payload)
-        console.log('action.payload->', action.payload)
       })
       .addCase(createCard.rejected, (state, action) => {
         state.isLoading.create = false

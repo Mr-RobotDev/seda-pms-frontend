@@ -43,6 +43,12 @@ const timeFrames = {
     key: 'LAST_30_DAYS',
     title: 'Last 30 days',
   },
+  CUSTOM: {
+    startDate: '',
+    endDate: '',
+    key: 'CUSTOM',
+    title: 'Custom',
+  },
 };
 
 export default timeFrames;

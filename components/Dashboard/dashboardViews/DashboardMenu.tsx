@@ -83,8 +83,11 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
                 </div>
               ) : (
                 <>
-                  <div onClick={() => setDashboard(dashboard)} className="p-2 flex-1 rounded-md cursor-pointer hover:bg-hover-primary flex justify-between gap-3 transition-all ease-in-out duration-300 hover:bg-gray-200">
+                  <div onClick={() => setDashboard(dashboard)} className="p-2 flex-1 rounded-md cursor-pointer hover:bg-hover-primary flex flex-col justify-between gap-1 transition-all ease-in-out duration-300 hover:bg-gray-200">
                     <span className="!text-sm !text-black">{dashboard.name}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-400">
+                      {`${dashboard.devicesCount || '0'} sensors - ${dashboard.cardsCount || '0'} cards`}
+                    </span>
                   </div>
                   <div className='mt-2 group cursor-pointer' onClick={() => handleEditDashboard(dashboard)}>
                     <PencilSquareIcon width={15} className='group-hover:text-blue-600 duration-300 transition-all ease-in-out' />
@@ -99,7 +102,7 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
           <div className="bg-gray-300 my-2" style={{ height: '1px' }}></div>
           <div>
             {!isCreating && (
-              <div onClick={() => setIsCreating(true)} className="flex gap-2 p-2 hover:bg-hover-primary transition-all ease-in-out duration-300 rounded-md cursor-pointer w-full hover:bg-gray-200">
+              <div onClick={() => setIsCreating(true)} className="flex gap-2 p-2 hover:bg-hover-primary transition-all ease-in-out duration-300 rounded-md cursor-pointer w-full hover:bg-gray-200 items-center">
                 <FontAwesomeIcon icon={faCirclePlus} />
                 <span>Create new dashboard</span>
               </div>
@@ -135,7 +138,7 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
       open={visible}
       onOpenChange={(visible) => setVisible(visible)}
     >
-      <div className='inline-block shadow-lg rounded-lg !bg-white p-1 px-2'>
+      <div className='inline-block shadow-sm rounded-lg !bg-white p-1 px-2'>
         <SelectSecondary only={currentDashboard.name || 'Select a Dashboard'} Icon={<MdOutlineDashboard className='w-5 h-5' />} />
       </div>
     </Popover>

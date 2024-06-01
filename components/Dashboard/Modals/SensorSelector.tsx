@@ -39,9 +39,9 @@ const SensorSelector = ({selectedRowKeys, selectedSensors, setSelectedSensors}:S
         }`}
       >
         <div className={`w-12 h-12 border rounded-md p-2 duration-300 transition-all ${selectedSensors.includes('temperature') ? 'bg-blue-100 border-blue-500' : 'bg-gray-50 group-hover:bg-blue-100 group-hover:border-blue-300'}`}>
-          <Image src='/thermometer-1.png' alt='Temperature' width={100} height={100} />
+          <Image src='/thermometer.png' alt='Temperature' width={100} height={100} />
         </div>
-        <p className='!mb-0 text-lg font-semibold'>Temperature Sensors</p>
+        <p className='!mb-0 text-lg font-semibold'>Temperature</p>
       </div>
       <div 
         onClick={() => handleClick('relativeHumidity')} 
@@ -52,7 +52,7 @@ const SensorSelector = ({selectedRowKeys, selectedSensors, setSelectedSensors}:S
         <div className={`w-12 h-12 border rounded-md p-2 duration-300 transition-all ${selectedSensors.includes('relativeHumidity') ? 'bg-blue-100 border-blue-500' : 'bg-gray-50 group-hover:bg-blue-100 group-hover:border-blue-300'}`}>
           <Image src='/snowflake.png' alt='Relative Humidity' width={100} height={100} />
         </div>
-        <p className='!mb-0 text-lg font-semibold'>Relative Humidity Sensors</p>
+        <p className='!mb-0 text-lg font-semibold'>Relative Humidity</p>
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Popover } from 'antd';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,6 +19,15 @@ const TimeFrameMenu = () => {
   const { currentDashboard, timeFrame } = useSelector((state: RootState) => state.dashboardReducer)
 
   const handleTimeFrame = (timeFrame: TimeFrameType) => {
+    if (window && window.history) {
+      const from = timeFrame.startDate
+      const to = timeFrame.endDate
+
+      const url = new URL(window.location.href);
+      url.searchParams.set("from", from);
+      url.searchParams.set("to", to);
+      window.history.replaceState({}, "", url.toString());
+    }
     dispatch(setTimeFrame(timeFrame));
     setVisible(false);
   };
@@ -38,7 +48,7 @@ const TimeFrameMenu = () => {
                     }`}
                 ></span>
               </span>
-              <span className="text-sm font-medium">Today</span>
+              <span className="text-sm font-medium !text-black">Today</span>
             </div>
             <div
               className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
@@ -50,11 +60,11 @@ const TimeFrameMenu = () => {
                     }`}
                 ></span>
               </span>
-              <span className="text-sm font-medium">Yesterday</span>
+              <span className="text-sm font-medium !text-black">Yesterday</span>
             </div>
             <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
             <div>
-              <div className="text-[11px] text-secondary-300 ml-3">Monday - Sunday</div>
+              <div className="text-[11px] text-secondary-300 ml-3 !text-black">Monday - Sunday</div>
               <div
                 className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
                 onClick={() => handleTimeFrame(timeFrames.THIS_WEEK)}
@@ -65,7 +75,7 @@ const TimeFrameMenu = () => {
                       }`}
                   ></span>
                 </span>
-                <span className="text-sm font-medium">This Week</span>
+                <span className="text-sm font-medium !text-black">This Week</span>
               </div>
               <div
                 className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
@@ -77,7 +87,7 @@ const TimeFrameMenu = () => {
                       }`}
                   ></span>
                 </span>
-                <span className="text-sm font-medium">Last Week</span>
+                <span className="text-sm font-medium !text-black">Last Week</span>
               </div>
             </div>
             <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
@@ -92,7 +102,7 @@ const TimeFrameMenu = () => {
                       }`}
                   ></span>
                 </span>
-                <span className="text-sm font-medium">Last 3 days</span>
+                <span className="text-sm font-medium !text-black">Last 3 days</span>
               </div>
               <div
                 className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
@@ -104,7 +114,7 @@ const TimeFrameMenu = () => {
                       }`}
                   ></span>
                 </span>
-                <span className="text-sm font-medium">Last 7 days</span>
+                <span className="text-sm font-medium !text-black">Last 7 days</span>
               </div>
               <div
                 className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
@@ -116,7 +126,7 @@ const TimeFrameMenu = () => {
                       }`}
                   ></span>
                 </span>
-                <span className="text-sm font-medium">Last 30 days</span>
+                <span className="text-sm font-medium !text-black">Last 30 days</span>
               </div>
             </div>
           </div>
@@ -127,7 +137,7 @@ const TimeFrameMenu = () => {
       open={visible}
       onOpenChange={(visible) => setVisible(visible)}
     >
-      <div className=' inline-block shadow-lg rounded-lg !bg-white p-1 px-2'>
+      <div className=' inline-block shadow-sm rounded-lg !bg-white p-1 px-2'>
         <div className=' flex flex-row gap-2'>
           <div className=' flex flex-row gap-2'>
             <SelectSecondary only={timeFrame.title} Icon={<CalendarDaysIcon width={20} />} />

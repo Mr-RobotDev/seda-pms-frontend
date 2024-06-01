@@ -86,9 +86,6 @@ const SingleDeviceDashCard = ({ data, eventTypes }: SingleDeviceDashCardProps) =
       },
       xaxis: {
         type: 'datetime',
-        title: {
-          text: 'TimeStamp',
-        },
       },
       yaxis: {
         title: {
@@ -135,9 +132,6 @@ const SingleDeviceDashCard = ({ data, eventTypes }: SingleDeviceDashCardProps) =
       },
       xaxis: {
         type: 'datetime',
-        title: {
-          text: 'TimeStamp',
-        },
       },
       yaxis: {
         title: {
