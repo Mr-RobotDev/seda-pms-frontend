@@ -1,5 +1,5 @@
 "use client";
-import MainDashboardView from "@/components/Dashboard/MainDashboardView";
+import MainDashboardView from "@/components/Dashboard/dashboardViews/MainDashboardView";
 
 const DashboardPage = () => {
   return (

@@ -1,6 +1,8 @@
 "use client";
 import { Roboto } from "next/font/google";
 import "./globals.css";
+import '/node_modules/react-grid-layout/css/styles.css'
+import '/node_modules/react-resizable/css/styles.css'
 
 import { Provider } from "react-redux";
 import { store, persistor } from "@/app/store/store";
