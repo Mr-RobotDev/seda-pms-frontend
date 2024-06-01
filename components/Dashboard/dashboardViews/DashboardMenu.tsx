@@ -4,14 +4,14 @@ import { Popover, Tooltip, Spin, Card } from 'antd';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { createDashboard, setCurrentDashboard } from '@/app/store/slice/dashboardSlice';
+import { createDashboard, deleteDashboard, setCurrentDashboard } from '@/app/store/slice/dashboardSlice';
 import { AppDispatch, RootState } from '@/app/store/store';
 import { faCirclePlus, faEllipsisVertical, faSquareXmark, faSquarePen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { DashboardType } from '@/type';
 import { SelectSecondary } from '@/components/ui/Select/Select'
-import { ArrowDownIcon } from '@heroicons/react/24/outline';
+import { ArrowDownIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { PrimaryInput } from '@/components/ui/Input/Input'
 import { useRouter } from 'next/navigation';
 import { MdOutlineDashboard } from "react-icons/md";
@@ -49,6 +49,10 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
     setVisible(false);
   }
 
+  const handleDeleteDashboard = (id: string) => {
+    dispatch(deleteDashboard({ dashboardId: id }))
+  }
+
   return (
     <Popover
       getPopupContainer={(triggerNode) => triggerNode.parentNode as HTMLElement}
@@ -57,15 +61,18 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
           {dashboards.length ? (
             dashboards.map((dashboard) => {
               return (
-                <div key={dashboard.id}>
+                <div key={dashboard.id} className=' flex flex-row w-full justify-between gap-2'>
                   <div
                     key={dashboard.id}
                     onClick={() => setDashboard(dashboard)}
-                    className="p-2 rounded-md cursor-pointer hover:bg-hover-primary flex justify-between gap-3 transition-all ease-in-out duration-300 hover:bg-gray-200"
+                    className="p-2 flex-1 rounded-md cursor-pointer hover:bg-hover-primary flex justify-between gap-3 transition-all ease-in-out duration-300 hover:bg-gray-200"
                   >
                     <div className="flex flex-col">
                       <span className="!text-sm !text-black">{dashboard.name}</span>
                     </div>
+                  </div>
+                  <div className=' mt-2 group cursor-pointer' onClick={() => handleDeleteDashboard(dashboard.id)}>
+                    <TrashIcon width={15} className=' group-hover:text-red-600 duration-300 transition-all ease-in-out' />
                   </div>
                 </div>
               );

@@ -26,6 +26,10 @@ const SensorSelector = ({selectedRowKeys, selectedSensors, setSelectedSensors}:S
     });
   };
 
+  useEffect(() => {
+    setSelectedSensors([]);
+  }, [selectedRowKeys, setSelectedSensors]);
+
   return (
     <div className='flex flex-col gap-4 mt-6'>
       <div 

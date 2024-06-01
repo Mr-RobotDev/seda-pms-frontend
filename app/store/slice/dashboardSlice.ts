@@ -73,6 +73,15 @@ export const createDashboard = createAsyncThunk('dashboard/createDashboard', asy
   throw new Error('Failed to create dashboard');
 })
 
+export const deleteDashboard = createAsyncThunk('dashboard/deleteDashboard', async ({ dashboardId }: { dashboardId: string }) => {
+  const response = await axiosInstance.delete(`/dashboards/${dashboardId}`)
+  if (response.status === 200) {
+    return response.data
+  }
+
+  throw new Error('Failed to delete dashboard');
+})
+
 export const deleteCard = createAsyncThunk('dashboard/deleteCard', async ({ dashboardId, cardId }: { dashboardId: string, cardId: string }) => {
   // /dashboards/:dashboard/cards/:card
   const response = await axiosInstance.delete(`/dashboards/${dashboardId}/cards/${cardId}`)
@@ -193,6 +202,15 @@ const dashboardSlice = createSlice({
         state.isLoading.create = false
         state.error = action.error.message ?? 'Failed to create new dashboard';
       })
+      .addCase(deleteDashboard.fulfilled, (state, action) => {
+        state.isLoading.delete = false;
+        state.dashboards = state.dashboards.filter(dashboard => dashboard.id!== action.payload.id)
+
+        if(state.currentDashboard.id === action.payload.id){
+          state.currentDashboard = { name: '', cardsCount: 0, devicesCount: 0, id: '' }
+        }
+      })
+
       .addCase(createCard.pending, (state, action) => {
         state.isLoading.create = true
       })

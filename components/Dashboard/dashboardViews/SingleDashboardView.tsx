@@ -34,8 +34,11 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
 
   useEffect(() => {
     if (id) {
-      console.log()
       const currentDashboard = dashboards.find(dashboard => dashboard.id === id)
+      if (!currentDashboard){
+        router.push('/dashboard')
+        return
+      }
       dispatch(setCurrentDashboard(currentDashboard))
       dispatch(getDashboardCards({ dashboardId: id }))
     }
