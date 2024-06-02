@@ -2,8 +2,6 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 import { ApexOptions } from 'apexcharts';
 import { EventsMap, Event } from '@/type';
-import OptionsMenu from './OptionMenu';
-import { formatToTitleCase } from '@/lib/helperfunctions';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -35,7 +33,7 @@ const transformDataForChart = (data: EventsMap, eventTypes: string): Series[] =>
   });
 };
 
-const TempChart: React.FC<TemperatureChartProps> = ({ data, eventTypes }) => {
+const TemperatureChart: React.FC<TemperatureChartProps> = ({ data, eventTypes }) => {
   const seriesData = transformDataForChart(data, eventTypes);
 
   const options: ApexOptions = {
@@ -60,11 +58,21 @@ const TempChart: React.FC<TemperatureChartProps> = ({ data, eventTypes }) => {
     },
     yaxis: {
       title: {
-        text: eventTypes,
+        text: eventTypes === 'temperature' ? 'Temperature (°C)' : 'Relative Humidity (%)',
       },
     },
     stroke: {
-      width: 1,
+      width: 2,
+      curve: "smooth",
+      colors: ["#808080"],
+    },
+    markers: {
+      size: 4,
+      colors: eventTypes === 'temperature' ? ["#FF0000"] : ["#43A6C6"],
+      strokeWidth: 2,
+      hover: {
+        size: 6,
+      },
     },
   };
 
@@ -74,4 +82,4 @@ const TempChart: React.FC<TemperatureChartProps> = ({ data, eventTypes }) => {
   </>
 };
 
-export default TempChart;
+export default TemperatureChart;

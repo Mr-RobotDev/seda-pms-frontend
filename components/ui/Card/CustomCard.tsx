@@ -1,4 +1,4 @@
-import TempChart from "@/components/Dashboard/dashboardViews/TempChart";
+import TemperatureChart from "@/components/Dashboard/dashboardViews/TemperatureChart";
 import axiosInstance from "@/lib/axiosInstance";
 import { DashboardCardType } from "@/type";
 import { memo, useEffect, useState } from "react";
@@ -187,7 +187,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
             </Button>
           </div>
           <div className="flex-grow">
-            {Object.keys(eventsMap).length > 0 && cardObj.field.split(',').length === 1 && <TempChart data={eventsMap} eventTypes={cardObj.field} />}
+            {Object.keys(eventsMap).length > 0 && cardObj.field.split(',').length === 1 && <TemperatureChart data={eventsMap} eventTypes={cardObj.field} />}
             {Object.keys(eventsMap).length > 0 && cardObj.field.split(',').length > 1 && <SingleDeviceDashCard data={eventsMap} eventTypes={cardObj.field} />}
           </div>
         </div>

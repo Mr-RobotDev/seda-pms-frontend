@@ -1,6 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Card, DatePicker, Spin, Button, Dropdown, Menu, Divider, Popover } from "antd";
+import { Card, DatePicker, Spin, Button, Popover } from "antd";
 import axiosInstance from "@/lib/axiosInstance";
 import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
@@ -8,13 +8,9 @@ import toast from "react-hot-toast";
 import { DevicesType, DataPoint } from "@/type";
 import Image from "next/image";
 import CountUp from "react-countup";
-import dynamic from "next/dynamic";
-import { CalendarIcon } from "@heroicons/react/20/solid";
 import ReactApexChart from "react-apexcharts";
 import {
   ArrowUpRightIcon,
-  SignalIcon,
-  SignalSlashIcon,
 } from "@heroicons/react/16/solid";
 import FileDownloadButton from "../Floor/FileDownloadButton";
 import Link from "next/link";
@@ -24,7 +20,6 @@ import { SelectSecondary } from "@/components/ui/Select/Select";
 dayjs.extend(isBetween);
 
 const { RangePicker } = DatePicker;
-
 
 const commonChartOptions = {
   chart: {
@@ -47,14 +42,14 @@ const commonChartOptions = {
     shared: true,
   },
   stroke: {
-    width: 2, // Set the line thickness
-    curve: "smooth", // Optional: make the line smooth
+    width: 2,
+    curve: "smooth",
     colors: ["#808080"],
   },
   markers: {
-    size: 4, // Size of the points on the line
-    colors: ["#FF0000"], // Optional: custom color for the markers
-    strokeWidth: 2, // Optional: width of the marker border
+    size: 4,
+    colors: ["#FF0000"],
+    strokeWidth: 2,
     hover: {
       size: 6,
     },
@@ -66,7 +61,6 @@ interface DeviceGraphProps {
 }
 
 const DeviceGraph = ({ id }: DeviceGraphProps) => {
-  const [visible, setVisible] = useState(false);
   const [data, setData] = useState<DataPoint[]>([]);
   const [deviceOem, setDeviceOem] = useState<string>("");
   const [deviceData, setDeviceData] = useState<DevicesType>();
@@ -133,7 +127,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
     );
   });
   
-  TemperatureChart.displayName = "TemperatureChart"; // Setting display name
+  TemperatureChart.displayName = "TemperatureChart";
 
   const HumidityChart = React.memo(({ data }: { data: any }) => {
     const options = useMemo(() => ({
@@ -169,9 +163,9 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         },
       ],
       markers: {
-        size: 4, // Size of the points on the line
-        colors: ["#43A6C6"], // Optional: custom color for the markers
-        strokeWidth: 2, // Optional: width of the marker border
+        size: 4,
+        colors: ["#43A6C6"],
+        strokeWidth: 2,
         hover: {
           size: 6,
         },
