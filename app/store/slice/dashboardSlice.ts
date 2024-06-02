@@ -170,7 +170,7 @@ const dashboardSlice = createSlice({
       .addCase(getDashboards.fulfilled, (state, action) => {
         state.dashboards = action.payload
         state.isLoading.list = false;
-        if(state.dashboards.length > 0){
+        if (state.dashboards.length > 0) {
           state.currentDashboard = state.dashboards[0]
         }
       })
@@ -256,6 +256,7 @@ const dashboardSlice = createSlice({
         state.error = action.error.message ?? 'Failed to delete card';
       })
       .addCase(updateCard.pending, (state, action) => {
+        state.error = ''
         state.isLoading.updateCard = true;
       })
       .addCase(updateCard.fulfilled, (state, action) => {

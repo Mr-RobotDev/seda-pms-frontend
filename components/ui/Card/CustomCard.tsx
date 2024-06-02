@@ -108,12 +108,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
           name: editingName
         }
       })
-    ).then(() => {
-      toast.success('Updated successfully')
-      setIsRenaming(false);
-    })
-    console.log(editingName)
-
+    )
   };
 
   return (
@@ -180,7 +175,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
               </div>
             </div>
             {
-              user.role === 'Admin' &&!isRenaming &&
+              user?.role === 'Admin' &&!isRenaming &&
               <Button onMouseDown={handleOnClick} className="!m-0 !p-0">
                 <OptionsMenu cardId={card.id} setIsRenaming={setIsRenaming} />
               </Button>

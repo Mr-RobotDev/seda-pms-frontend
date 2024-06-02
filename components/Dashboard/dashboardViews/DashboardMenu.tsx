@@ -92,7 +92,7 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
                   </div>
 
                   {
-                    user.role === 'Admin' && <>
+                    user?.role === 'Admin' && <>
                       <div className='mt-2 group cursor-pointer' onClick={() => handleEditDashboard(dashboard)}>
                         <PencilSquareIcon width={15} className='group-hover:text-blue-600 duration-300 transition-all ease-in-out' />
                       </div>
@@ -107,7 +107,7 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
           ))}
           <div className="bg-gray-300 my-2" style={{ height: '1px' }}></div>
           <div>
-            {user.role === 'Admin' && !isCreating && (
+            {user?.role === 'Admin' && !isCreating && (
               <div onClick={() => setIsCreating(true)} className="flex gap-2 p-2 hover:bg-hover-primary transition-all ease-in-out duration-300 rounded-md cursor-pointer w-full hover:bg-gray-200 items-center">
                 <FontAwesomeIcon icon={faCirclePlus} />
                 <span>Create new dashboard</span>

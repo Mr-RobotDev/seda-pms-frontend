@@ -17,6 +17,7 @@ import TimeFrameMenu from './TimeFrameMenu';
 import { Spin } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import toast from 'react-hot-toast';
 
 interface singleDashboardViewProps {
   id: string;
@@ -26,12 +27,18 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   const router = useRouter()
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { dashboards, currentDashboard: currentSelectedDashboard, dashboardCards } = useSelector((state: RootState) => state.dashboardReducer)
+  const { error, dashboards, currentDashboard: currentSelectedDashboard, dashboardCards } = useSelector((state: RootState) => state.dashboardReducer)
   const { user } = useSelector((state: RootState) => state.authReducer)
 
   useEffect(() => {
     dispatch(getDashboards());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error('Error updating the location of the card on dashboard');
+    }
+  }, [error]);
 
   useEffect(() => {
     if (id) {
@@ -98,7 +105,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
             {currentSelectedDashboard && dashboardCards.length !== 0 && <TimeFrameMenu />}
           </div>
           {
-            user.role === 'Admin' && <div className="flex justify-center md:mt-0 mb-3">
+            user?.role === 'Admin' && <div className="flex justify-center md:mt-0 mb-3">
               <span
                 onClick={() => setIsModalOpen(true)}
                 className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"

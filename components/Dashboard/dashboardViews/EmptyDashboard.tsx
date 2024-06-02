@@ -32,7 +32,7 @@ const EmptyDashboard: React.FC = () => {
             Create an overview and visualize sensor data by adding cards
           </div>
           {
-            user.role === 'Admin' && <div className="flex justify-center mt-3">
+            user?.role === 'Admin' && <div className="flex justify-center mt-3">
               <span
                 onClick={showModal}
                 className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"
