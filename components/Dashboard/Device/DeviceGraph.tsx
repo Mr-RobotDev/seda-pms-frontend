@@ -1,36 +1,25 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import { Card, DatePicker, Spin, Button, Dropdown, Menu, Divider } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Card, DatePicker, Spin, Button, Popover } from "antd";
 import axiosInstance from "@/lib/axiosInstance";
 import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import toast from "react-hot-toast";
-import { DevicesType } from "@/type";
+import { DevicesType, DataPoint } from "@/type";
 import Image from "next/image";
 import CountUp from "react-countup";
-import dynamic from "next/dynamic";
-import { CalendarIcon } from "@heroicons/react/20/solid";
 import ReactApexChart from "react-apexcharts";
 import {
   ArrowUpRightIcon,
-  SignalIcon,
-  SignalSlashIcon,
 } from "@heroicons/react/16/solid";
 import FileDownloadButton from "../Floor/FileDownloadButton";
 import Link from "next/link";
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
+import { SelectSecondary } from "@/components/ui/Select/Select";
 
 dayjs.extend(isBetween);
 
 const { RangePicker } = DatePicker;
-
-interface DataPoint {
-  oem: string;
-  eventType: string;
-  temperature: number;
-  relativeHumidity: number;
-  createdAt: string;
-  id: string;
-}
 
 const commonChartOptions = {
   chart: {
@@ -53,14 +42,14 @@ const commonChartOptions = {
     shared: true,
   },
   stroke: {
-    width: 2, // Set the line thickness
-    curve: "smooth", // Optional: make the line smooth
+    width: 2,
+    curve: "smooth",
     colors: ["#808080"],
   },
   markers: {
-    size: 4, // Size of the points on the line
-    colors: ["#FF0000"], // Optional: custom color for the markers
-    strokeWidth: 2, // Optional: width of the marker border
+    size: 4,
+    colors: ["#FF0000"],
+    strokeWidth: 2,
     hover: {
       size: 6,
     },
@@ -95,7 +84,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
     }
   }, []);
 
-  const TemperatureChart = ({ data }: { data: any }) => {
+  const TemperatureChart = React.memo(({ data }: { data: any }) => {
     const options = {
       ...commonChartOptions,
       chart: {
@@ -126,6 +115,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         },
       ],
     };
+  
     return (
       <ReactApexChart
         options={options as any}
@@ -135,10 +125,12 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         width={"100%"}
       />
     );
-  };
+  });
+  
+  TemperatureChart.displayName = "TemperatureChart";
 
-  const HumidityChart = ({ data }: { data: any }) => {
-    const options = {
+  const HumidityChart = React.memo(({ data }: { data: any }) => {
+    const options = useMemo(() => ({
       ...commonChartOptions,
       chart: {
         id: "HumidityChart",
@@ -171,14 +163,15 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         },
       ],
       markers: {
-        size: 4, // Size of the points on the line
-        colors: ["#43A6C6"], // Optional: custom color for the markers
-        strokeWidth: 2, // Optional: width of the marker border
+        size: 4,
+        colors: ["#43A6C6"],
+        strokeWidth: 2,
         hover: {
           size: 6,
         },
       },
-    };
+    }), [data]);
+  
     return (
       <ReactApexChart
         options={options as any}
@@ -188,7 +181,9 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         width={"100%"}
       />
     );
-  };
+  });
+  
+  HumidityChart.displayName = "HumidityChart";
 
   const fetchData = useCallback(
     async (from: string, to: string) => {
@@ -335,43 +330,75 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   };
 
   const menu = (
-    <Menu className=" w-36">
-      {["Today", "Yesterday"].map((preset) => (
-        <Menu.Item
-          key={preset}
-          onClick={() => handleDatePreset(preset)}
-          style={{ fontWeight: preset === currentPreset ? "bold" : "normal" }}
+    <div className=" w-[170px]">
+      <div className=" flex flex-col">
+        {["Today", "Yesterday"].map((preset) => (
+          <div
+            key={preset}
+            className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
+            onClick={() => handleDatePreset(preset)}
+          >
+            <span className="flex flex-col justify-center w-[6px]">
+              <span
+                className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${preset === currentPreset ? 'visible' : 'hidden'
+                  }`}
+              ></span>
+            </span>
+            <span className="text-sm font-medium !text-black">{preset}</span>
+          </div>
+        ))}
+        <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
+        <div>
+          <div className="text-[11px] text-secondary-300 ml-3 !text-black">Monday - Sunday</div>
+          {["This Week", "Last Week"].map((preset) => (
+            <div
+              key={preset}
+              className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
+              onClick={() => handleDatePreset(preset)}
+            >
+              <span className="flex flex-col justify-center w-[6px]">
+                <span
+                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${preset === currentPreset ? 'visible' : 'hidden'
+                    }`}
+                ></span>
+              </span>
+              <span className="text-sm font-medium !text-black">{preset}</span>
+            </div>
+          ))}
+        </div>
+        <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
+        <div>
+          {["Last 3 Days", "Last 7 Days", "Last 30 Days"].map((preset) => (
+            <div
+              key={preset}
+              className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
+              onClick={() => handleDatePreset(preset)}
+            >
+              <span className="flex flex-col justify-center w-[6px]">
+                <span
+                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${preset === currentPreset ? 'visible' : 'hidden'
+                    }`}
+                ></span>
+              </span>
+              <span className="text-sm font-medium !text-black">{preset}</span>
+            </div>
+          ))}
+        </div>
+        <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
+        <div
+          className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
+          onClick={() => setCurrentPreset("Custom")}
         >
-          {preset}
-        </Menu.Item>
-      ))}
-      <Divider className=" h-[1px] bg-gray-100 !m-0" />
-
-      {["This Week", "Last Week"].map((preset) => (
-        <Menu.Item
-          key={preset}
-          onClick={() => handleDatePreset(preset)}
-          style={{ fontWeight: preset === currentPreset ? "bold" : "normal" }}
-        >
-          {preset}
-        </Menu.Item>
-      ))}
-      <Divider className=" h-[1px] bg-gray-100 !m-0" />
-      {["Last 3 Days", "Last 7 Days", "Last 30 Days"].map((preset) => (
-        <Menu.Item
-          key={preset}
-          onClick={() => handleDatePreset(preset)}
-          style={{ fontWeight: preset === currentPreset ? "bold" : "normal" }}
-        >
-          {preset}
-        </Menu.Item>
-      ))}
-
-      <Divider className=" h-[1px] bg-gray-100 !m-0" />
-      <Menu.Item key="custom" onClick={() => setCurrentPreset("Custom")}>
-        Custom
-      </Menu.Item>
-    </Menu>
+          <span className="flex flex-col justify-center w-[6px]">
+            <span
+              className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${'Custom' === currentPreset ? 'visible' : 'hidden'
+                }`}
+            ></span>
+          </span>
+          <span className="text-sm font-medium !text-black">Custom</span>
+        </div>
+      </div>
+    </div>
   );
 
   return loading ? (
@@ -513,7 +540,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         <div className=" mx-auto">
           <Card>
             <div className="flex flex-col gap-2">
-              <div className=" flex flex-row items-center gap-3 justify-end">
+              <div className=" flex flex-row items-center justify-end gap-3 ">
                 <FileDownloadButton
                   oem={deviceOem}
                   from={range[0].format("YYYY-MM-DD")}
@@ -523,7 +550,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                   href={`/dashboard/devices/${id}/activity-logs`}
                   target="_blank"
                 >
-                  <Button className=" flex flex-row items-center justify-center gap-3 w-36">
+                  <Button className=" flex flex-row items-center justify-center gap-3" style={{ width: '170px'}}>
                     Activity Logs
                     <div>
                       <ArrowUpRightIcon
@@ -542,22 +569,27 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                   >
                     <p className="!m-0 font-semibold">Date Range</p>
                     <RangePicker
-                    className="hidden md:flex"
+                      className="hidden md:flex"
                       onChange={handleRangeChange}
                       defaultValue={range}
                     />
                   </div>
-                  <Dropdown overlay={menu} placement="bottomRight" arrow className="flex ml-auto">
-                    <Button className="w-36 flex flex-row gap-2 items-center">
-                      <CalendarIcon width={20} />
-                      <p className="!m-0">{currentPreset}</p>
-                    </Button>
-                  </Dropdown>
+                  <Popover
+                    getPopupContainer={(triggerNode) => triggerNode.parentNode as HTMLElement}
+                    content={menu}
+                    trigger="hover"
+                    placement="bottomLeft"
+                    
+                  >
+                    <div className=" flex flex-row items-center border rounded-md shadow-md" style={{ width: '170px'}}>
+                      <SelectSecondary only={currentPreset} Icon={<CalendarDaysIcon width={20} />} />
+                    </div>
+                  </Popover>
                 </div>
               </div>
               <div className={` justify-end md:hidden ${currentPreset === "Custom" ? "flex" : "hidden"}`}>
                 <RangePicker
-                className=" w-full"
+                  className=" w-full"
                   onChange={handleRangeChange}
                   defaultValue={range}
                 />

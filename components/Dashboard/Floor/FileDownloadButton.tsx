@@ -51,6 +51,7 @@ const FileDownloadButton = ({ from, to, oem }: FileDownloadButtonProps) => {
         onClick={handleDownload}
         disabled={loading}
         className=""
+        style={{ width: '170px'}}
       >
         <span>
           {loading ? (

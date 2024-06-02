@@ -136,7 +136,7 @@ const DevicesTable = () => {
   };
 
   return (
-    <div className=" p-4 md:px-16">
+    <div className="mt-8">
       <Table
         columns={columns}
         dataSource={devices}
