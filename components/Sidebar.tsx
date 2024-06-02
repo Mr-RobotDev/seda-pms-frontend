@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Menu } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,22 +19,60 @@ import {
 import axiosInstance from "@/lib/axiosInstance";
 import { RootState } from "@/app/store/store";
 import SidebarMenu from "@/app/ui/SidebarMenu";
+import { activeSidebar } from "@/utils/helper_functions";
 
 interface SidenavProps {
   color: string;
 }
 
 const Sidebar: React.FC<SidenavProps> = ({ color }) => {
-  const page = usePathname().split("/");
+  const page = usePathname();
+  const [activeMenu, setActiveMenu] = useState<string>(activeSidebar(page));
   const dispatch = useDispatch();
   const router = useRouter();
   const { user } = useSelector((state: RootState) => state.authReducer);
+
+  useEffect(() => {
+    setActiveMenu(activeSidebar(page));
+  }, [page]);
 
   const LogoutButtonHandler = async () => {
     await axiosInstance.post("/auth/logout");
     dispatch(logout());
     router.push("/login");
   };
+
+  const menuItems = [
+    { key: "6", title: "Dashboard", url: "/dashboard", menuKey: 'dashboard', icon: AdjustmentsHorizontalIcon },
+    { key: "7", title: "Floor Plan", url: "/dashboard/floor", menuKey: 'floor', icon: ClipboardIcon },
+    { key: "8", title: "Alerts", url: "/dashboard/alerts", menuKey: 'alerts', icon: BellAlertIcon },
+    { key: "9", title: "Data Sources", url: "/dashboard/data-sources", menuKey: 'data-sources', icon: CircleStackIcon },
+    { key: "10", title: "Devices", url: "/dashboard/devices", menuKey: 'devices', icon: DevicePhoneMobileIcon },
+    { key: "11", title: "Users", url: "/dashboard/users", menuKey: 'users', icon: UserIcon, adminOnly: true },
+  ];
+
+  const accountItems = [
+    { key: "5", title: "Profile", url: "/dashboard/profile", menuKey: 'profile', icon: UserIcon },
+  ];
+
+  const renderMenuItems = (items: any[]) =>
+    items.map((item) => {
+      if (item.adminOnly && user?.role !== "Admin") return null;
+      return (
+        <SidebarMenu
+          key={item.key}
+          title={item.title}
+          isActive={activeMenu === item.menuKey}
+          icon={
+            <item.icon
+              width={25}
+              className={`${activeMenu === item.menuKey ? "!text-blue-700" : "!text-black"}`}
+            />
+          }
+          url={item.url}
+        />
+      );
+    });
 
   return (
     <div className="h-full flex flex-col justify-between !bg-white border-r">
@@ -52,146 +90,28 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
         </div>
         <hr />
         <Menu theme="dark" mode="inline">
-          <div className=" flex flex-col justify-between h-full w-full">
-            <div className=" h-full">
-              <SidebarMenu
-                key="6"
-                title="Dashboard"
-                page={page}
-                isActive={page.length === 2 && page.includes("dashboard")}
-                icon={
-                  <AdjustmentsHorizontalIcon
-                    width={25}
-                    className={` w-7 h-7 ${
-                      page.length === 2 && page.includes("dashboard")
-                        ? "!text-blue-700 "
-                        : "!text-black"
-                    }`}
-                  />
-                }
-                url={"/dashboard"}
-              />
-
-              <SidebarMenu
-                key="7"
-                title="Floor Plan"
-                page={page}
-                isActive={page.includes("floor")}
-                icon={
-                  <ClipboardIcon
-                    width={25}
-                    className={`${
-                      page.includes("floor") ? "!text-blue-700 " : "!text-black"
-                    }`}
-                  />
-                }
-                url={"/dashboard/floor"}
-              />
-
-              <SidebarMenu
-                key="8"
-                title="Alerts"
-                page={page}
-                isActive={page.includes("alerts")}
-                url={"/dashboard/alerts"}
-                icon={
-                  <BellAlertIcon
-                    width={25}
-                    className={`${
-                      page.includes("alerts")
-                        ? "!text-blue-700 "
-                        : "!text-black"
-                    }`}
-                  />
-                }
-              />
-
-              <SidebarMenu
-                key="9"
-                title="Data Sources"
-                page={page}
-                isActive={page.includes("data-sources")}
-                url={"/dashboard/data-sources"}
-                icon={
-                  <CircleStackIcon
-                    width={25}
-                    className={`${
-                      page.includes("data-sources")
-                        ? "!text-blue-700 "
-                        : "!text-black"
-                    }`}
-                  />
-                }
-              />
-              <SidebarMenu
-                key="10"
-                title="Devices"
-                page={page}
-                isActive={page.includes("devices")}
-                icon={
-                  <DevicePhoneMobileIcon
-                    width={25}
-                    className={`${
-                      page.includes("devices")
-                        ? "!text-blue-700 "
-                        : "!text-black"
-                    }`}
-                  />
-                }
-                url={"/dashboard/devices"}
-              />
-              {user?.role === "Admin" && (
-                <SidebarMenu
-                  key="11"
-                  title="Users"
-                  page={page}
-                  isActive={page.includes("users")}
-                  icon={
-                    <UserIcon
-                      width={25}
-                      className={`${
-                        page.includes("users")
-                          ? "!text-blue-700 "
-                          : "!text-black"
-                      }`}
-                    />
-                  }
-                  url={"/dashboard/users"}
-                />
-              )}
+          <div className="flex flex-col justify-between h-full w-full">
+            <div className="h-full">
+              {renderMenuItems(menuItems)}
             </div>
           </div>
         </Menu>
       </div>
       <Menu theme="light" mode="inline">
-        <div className=" flex flex-col justify-between h-full">
+        <div className="flex flex-col justify-between h-full">
           <div>
             <Menu.Item className="menu-item-header" key="7">
               Account Pages
             </Menu.Item>
-            <SidebarMenu
-              key="5"
-              title="Profile"
-              page={page}
-              isActive={page.includes("profile")}
-              icon={
-                <UserIcon
-                  width={25}
-                  className={`${
-                    page.includes("profile") ? "!text-blue-700 " : "!text-black"
-                  }`}
-                />
-              }
-              url={"/dashboard/profile"}
-            />
+            {renderMenuItems(accountItems)}
             <div key="6" className="!w-auto !rounded-none">
               <div
-                className="py-2 flex !px-4 flex-row gap-3 mb-2 items-center cursor-pointer hover:bg-blue-50 py-2"
+                className="flex !px-4 flex-row gap-3 mb-2 items-center cursor-pointer hover:bg-blue-50 py-2"
                 onClick={LogoutButtonHandler}
               >
                 <ArrowLeftStartOnRectangleIcon
                   width={25}
-                  className=" !text-black"
+                  className="!text-black"
                 />
                 <span className="label text-black">Log Out</span>
               </div>

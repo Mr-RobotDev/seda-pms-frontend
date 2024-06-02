@@ -1,9 +1,15 @@
 import axiosInstance from '@/lib/axiosInstance';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-// selectors
+interface getEventsPropsType {
+  oem: string;
+  from: string;
+  to: string;
+  page: string;
+  limit: string;
+  eventTypes: 'relativeHumidity' | 'temperature'
+}
 
-// slice
 const eventsSlice = createSlice({
   name: 'events',
   initialState: {
@@ -31,18 +37,6 @@ const eventsSlice = createSlice({
   },
 });
 
-// thunks
-
-
-interface getEventsPropsType {
-  oem: string;
-  from: string;
-  to: string;
-  page: string;
-  limit: string;
-  eventTypes: 'relativeHumidity' | 'temperature'
-}
-
 export const getEvents = createAsyncThunk(
   'events/getEvents',
   async ({ oem, eventTypes, from, to, page = '1', limit = '100' }: getEventsPropsType) => {
@@ -51,8 +45,5 @@ export const getEvents = createAsyncThunk(
   },
 );
 
-// actions
 export const { resetState } = eventsSlice.actions;
-
-// reducer
 export default eventsSlice.reducer;

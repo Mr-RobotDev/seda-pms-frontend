@@ -17,16 +17,17 @@ interface formDataType {
   firstName: string;
   lastName: string;
 }
+
+const initialPasswordState = {
+  password: "",
+  newPassword: "",
+  confirmpassword: "",
+}
+
 const ProfileView = () => {
   const { user } = useSelector((state: RootState) => state.authReducer);
-  const [password, setPassword] = useState({
-    password: "",
-    newPassword: "",
-    confirmpassword: "",
-  });
+  const [password, setPassword] = useState(initialPasswordState);
   const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
-  const [changePasswordShow, setChangePasswordShow] = useState(false);
-  const [isEditable, setIsEditable] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState<formDataType>({
@@ -50,7 +51,6 @@ const ProfileView = () => {
       toast.error("Error updating the records");
     } finally {
       setLoading(false);
-      setIsEditable(false);
     }
   };
 
@@ -68,12 +68,7 @@ const ProfileView = () => {
       );
       if (response.status === 200) {
         toast.success("Password updated Successfully");
-        setChangePasswordShow(false);
-        setPassword({
-          password: "",
-          newPassword: "",
-          confirmpassword: "",
-        });
+        setPassword(initialPasswordState);
       }
     } catch (error) {
       console.log("error->", error);
@@ -132,25 +127,14 @@ const ProfileView = () => {
                 </label>
               </div>
               <div className="mt-8 relative w-64 h-64 md:w-48 md:h-48 xl:w-64 xl:h-64 rounded-full overflow-hidden">
-                {user.profile ? (
-                  <Image
-                    src={user.profile}
-                    alt="User avatar"
-                    className="w-full h-full object-cover rounded-full"
-                    unoptimized
-                    width={100}
-                    height={100}
-                  />
-                ) : (
-                  <Image
-                    src="/dummyAvatar.png"
-                    alt="User avatar"
-                    className="w-full h-full object-cover rounded-full"
-                    unoptimized
-                    width={100}
-                    height={100}
-                  />
-                )}
+                <Image
+                  src={user.profile || "/dummyAvatar.png"}
+                  alt="User avatar"
+                  className="w-full h-full object-cover rounded-full"
+                  unoptimized
+                  width={100}
+                  height={100}
+                />
               </div>
             </Card>
           </Col>
@@ -220,13 +204,6 @@ const ProfileView = () => {
                       type="primary"
                     >
                       Save
-                    </Button>
-                    <Button
-                      className=" w-24"
-                      onClick={() => setIsEditable(false)}
-                      type="default"
-                    >
-                      Cancel
                     </Button>
                   </div>
                 </div>
@@ -301,13 +278,6 @@ const ProfileView = () => {
                       loading={passwordChangeLoading}
                     >
                       Update
-                    </Button>
-                    <Button
-                      className=" w-24"
-                      onClick={() => setChangePasswordShow(false)}
-                      type="default"
-                    >
-                      Cancel
                     </Button>
                   </div>
                 </div>

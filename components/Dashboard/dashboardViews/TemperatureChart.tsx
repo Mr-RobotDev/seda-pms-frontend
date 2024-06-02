@@ -2,25 +2,17 @@ import dynamic from 'next/dynamic';
 import React from 'react';
 import { ApexOptions } from 'apexcharts';
 import { EventsMap, Event } from '@/type';
+import { humidityColors, temperatureColors } from '@/utils/graph'
+import { SeriesType } from '@/type';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
-
-type DataPoint = {
-  x: Date;
-  y: number;
-};
-
-type Series = {
-  name: string;
-  data: DataPoint[];
-};
 
 type TemperatureChartProps = {
   data: EventsMap;
   eventTypes: string;
 };
 
-const transformDataForChart = (data: EventsMap, eventTypes: string): Series[] => {
+const transformDataForChart = (data: EventsMap, eventTypes: string): SeriesType[] => {
   return Object.keys(data).map((deviceId) => {
     const deviceData = data[deviceId];
     return {
@@ -64,16 +56,9 @@ const TemperatureChart: React.FC<TemperatureChartProps> = ({ data, eventTypes })
     stroke: {
       width: 2,
       curve: "smooth",
-      colors: ["#808080"],
+      colors:eventTypes === 'temperature' ? temperatureColors : humidityColors,
     },
-    markers: {
-      size: 4,
-      colors: eventTypes === 'temperature' ? ["#FF0000"] : ["#43A6C6"],
-      strokeWidth: 2,
-      hover: {
-        size: 6,
-      },
-    },
+    colors: eventTypes === 'temperature' ? temperatureColors : humidityColors
   };
 
 

@@ -2,20 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
+import { DevicesType } from "@/type";
 
 interface DeviceDetailsCompProps {
-  device: {
-    id: string;
-    oem: string;
-    name: string;
-    type: string;
-    temperature: number;
-    relativeHumidity: number;
-    location: {
-      lat: number;
-      long: number;
-    };
-  };
+  device: DevicesType
 }
 
 const DeviceDetailsComp = ({ device }: DeviceDetailsCompProps) => {
