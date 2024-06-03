@@ -52,7 +52,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
               },
             });
             if (!isCancelled) {
-              eventsMapTemp[id] = { data: response.data.results, name: name };
+              eventsMapTemp[id] = { data: response.data, name: name };
             }
           } catch (error) {
             console.error(`Error fetching events for device ${id}:`, error);
