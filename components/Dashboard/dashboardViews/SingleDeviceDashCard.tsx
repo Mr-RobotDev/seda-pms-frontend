@@ -5,7 +5,7 @@ import { EventsMap, Event } from "@/type";
 import { SeriesType } from "@/type";
 
 import ReactApexChart from "react-apexcharts";
-import { humidityColors, temperatureColors } from "@/utils/graph";
+import { humidityColors, temperatureColors, commonApexOptions } from "@/utils/graph";
 
 type SingleDeviceDashCardProps = {
   data: EventsMap;
@@ -57,22 +57,11 @@ const SingleDeviceDashCard = ({
 
   const TemperatureChart = ({ data }: { data: any }) => {
     const temperatureOptions: ApexOptions = {
+      ...commonApexOptions,
       chart: {
         type: "line",
         id: "temperatureChartDevice",
         group: "device",
-        toolbar: {
-          show: false,
-          tools: {
-            download: false,
-            selection: false,
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            pan: false,
-            reset: false,
-          },
-        },
       },
       xaxis: {
         type: "datetime",
@@ -88,10 +77,6 @@ const SingleDeviceDashCard = ({
           data,
         },
       ],
-      stroke: {
-        width: 2,
-        curve: "smooth",
-      },
       colors: temperatureColors,
       legend: {
         show: true,
@@ -111,22 +96,11 @@ const SingleDeviceDashCard = ({
 
   const RelativeHumidityChart = ({ data }: { data: any }) => {
     const relativeHmidityOptions: ApexOptions = {
+      ...commonApexOptions,
       chart: {
         type: "line",
         id: "relativeHumidityChartDevice",
         group: "device",
-        toolbar: {
-          show: false,
-          tools: {
-            download: false,
-            selection: false,
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            pan: false,
-            reset: false,
-          },
-        },
       },
       xaxis: {
         type: "datetime",
@@ -142,10 +116,6 @@ const SingleDeviceDashCard = ({
           data,
         },
       ],
-      stroke: {
-        width: 2,
-        curve: "smooth",
-      },
       colors: humidityColors,
       legend: {
         show: true,
