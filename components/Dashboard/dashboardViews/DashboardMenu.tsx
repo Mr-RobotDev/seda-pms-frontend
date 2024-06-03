@@ -18,7 +18,8 @@ interface DashboardTypeProps {
 }
 
 const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
-  const { isLoading, currentDashboard, dashboardCards } = useSelector((state: RootState) => state.dashboardReducer);
+  const { currentDashboard } = useSelector((state: RootState) => state.dashboardReducer);
+  const { user } = useSelector((state: RootState) => state.authReducer)
   const [visible, setVisible] = useState(false);
   const [dashboards, setDashboards] = useState(dashboardsList || []);
   const [isCreating, setIsCreating] = useState(false);
@@ -89,19 +90,24 @@ const DashboardMenu = ({ dashboardsList }: DashboardTypeProps) => {
                       {`${dashboard.devicesCount || '0'} sensors - ${dashboard.cardsCount || '0'} cards`}
                     </span>
                   </div>
-                  <div className='mt-2 group cursor-pointer' onClick={() => handleEditDashboard(dashboard)}>
-                    <PencilSquareIcon width={15} className='group-hover:text-blue-600 duration-300 transition-all ease-in-out' />
-                  </div>
-                  <div className='mt-2 group cursor-pointer' onClick={() => handleDeleteDashboard(dashboard.id)}>
-                    <TrashIcon width={15} className='group-hover:text-red-600 duration-300 transition-all ease-in-out' />
-                  </div>
+
+                  {
+                    user?.role === 'Admin' && <>
+                      <div className='mt-2 group cursor-pointer' onClick={() => handleEditDashboard(dashboard)}>
+                        <PencilSquareIcon width={15} className='group-hover:text-blue-600 duration-300 transition-all ease-in-out' />
+                      </div>
+                      <div className='mt-2 group cursor-pointer' onClick={() => handleDeleteDashboard(dashboard.id)}>
+                        <TrashIcon width={15} className='group-hover:text-red-600 duration-300 transition-all ease-in-out' />
+                      </div>
+                    </>
+                  }
                 </>
               )}
             </div>
           ))}
           <div className="bg-gray-300 my-2" style={{ height: '1px' }}></div>
           <div>
-            {!isCreating && (
+            {user?.role === 'Admin' && !isCreating && (
               <div onClick={() => setIsCreating(true)} className="flex gap-2 p-2 hover:bg-hover-primary transition-all ease-in-out duration-300 rounded-md cursor-pointer w-full hover:bg-gray-200 items-center">
                 <FontAwesomeIcon icon={faCirclePlus} />
                 <span>Create new dashboard</span>

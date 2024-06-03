@@ -6,13 +6,10 @@ import AddCardModal from '../Modals/AddCardModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 
-interface EmptyDashboardProps {
-  openCreateCardModal?: (args: { dashboardId: string }) => void;
-}
-
-const EmptyDashboard: React.FC<EmptyDashboardProps> = () => {
+const EmptyDashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { error, currentDashboard } = useSelector((state: RootState) => state.dashboardReducer)
+  const { user } = useSelector((state: RootState) => state.authReducer)
+  const { currentDashboard } = useSelector((state: RootState) => state.dashboardReducer)
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -34,15 +31,18 @@ const EmptyDashboard: React.FC<EmptyDashboardProps> = () => {
           <div className="!text-sm !text-black font-light text-secondary-300 text-center mt-3">
             Create an overview and visualize sensor data by adding cards
           </div>
-          <div className="flex justify-center mt-3">
-            <span
-              onClick={showModal}
-              className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"
-            >
-              <FontAwesomeIcon icon={faCirclePlus} />
-              Create New Card
-            </span>
-          </div>
+          {
+            user?.role === 'Admin' && <div className="flex justify-center mt-3">
+              <span
+                onClick={showModal}
+                className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"
+              >
+                <FontAwesomeIcon icon={faCirclePlus} />
+                Create New Card
+              </span>
+            </div>
+          }
+
         </div>
         <AddCardModal isVisible={isModalOpen} onClose={() => setIsModalOpen(false)} dashboardId={currentDashboard.id} />
       </div>

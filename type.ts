@@ -1,5 +1,3 @@
-import { Dayjs } from "dayjs";
-
 export interface DevicesType {
   id: string;
   oem: string;
@@ -52,7 +50,6 @@ interface Device {
   id: string;
 }
 
-
 export interface EventType {
   oem: string;
   eventType: string;
@@ -103,3 +100,11 @@ export interface TimeFrameType {
   key: string
   title: string;
 }
+
+export type SeriesType = {
+  name: string;
+  data: Array<{
+    x: Date;
+    y: number;
+  }>;
+};

@@ -1,6 +1,11 @@
 import dayjs from 'dayjs';
+import { TimeFrameType } from '@/type';
 
-const timeFrames = {
+interface TimeFrames {
+  [key: string]: TimeFrameType;
+}
+
+const timeFrames: TimeFrames = {
   TODAY: {
     startDate: dayjs().startOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
     endDate: dayjs().endOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),

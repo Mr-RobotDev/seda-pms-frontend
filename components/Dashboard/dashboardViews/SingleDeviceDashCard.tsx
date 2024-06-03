@@ -1,23 +1,11 @@
 "use client";
-import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import { ApexOptions } from "apexcharts";
 import { EventsMap, Event } from "@/type";
-import OptionsMenu from "./OptionMenu";
-import { formatToTitleCase } from "@/lib/helperfunctions";
+import { SeriesType } from "@/type";
 
 import ReactApexChart from "react-apexcharts";
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-type DataPoint = {
-  x: Date;
-  y: number;
-};
-
-type Series = {
-  name: string;
-  data: DataPoint[];
-};
+import { humidityColors, temperatureColors, commonApexOptions } from "@/utils/graph";
 
 type SingleDeviceDashCardProps = {
   data: EventsMap;
@@ -28,8 +16,8 @@ const SingleDeviceDashCard = ({
   data,
   eventTypes,
 }: SingleDeviceDashCardProps) => {
-  const [temperatureData, setTemperatureData] = useState<Series[]>([]);
-  const [relativeHumidityData, setRelativeHumidityData] = useState<Series[]>(
+  const [temperatureData, setTemperatureData] = useState<SeriesType[]>([]);
+  const [relativeHumidityData, setRelativeHumidityData] = useState<SeriesType[]>(
     []
   );
 
@@ -69,22 +57,11 @@ const SingleDeviceDashCard = ({
 
   const TemperatureChart = ({ data }: { data: any }) => {
     const temperatureOptions: ApexOptions = {
+      ...commonApexOptions,
       chart: {
         type: "line",
         id: "temperatureChartDevice",
         group: "device",
-        toolbar: {
-          show: false,
-          tools: {
-            download: false,
-            selection: false,
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            pan: false,
-            reset: false,
-          },
-        },
       },
       xaxis: {
         type: "datetime",
@@ -100,18 +77,9 @@ const SingleDeviceDashCard = ({
           data,
         },
       ],
-      stroke: {
-        width: 2,
-        curve: "smooth",
-        colors: ["#808080"],
-      },
-      markers: {
-        size: 4,
-        colors: ["#FF0000"],
-        strokeWidth: 2,
-        hover: {
-          size: 6,
-        },
+      colors: temperatureColors,
+      legend: {
+        show: true,
       },
     };
 
@@ -128,22 +96,11 @@ const SingleDeviceDashCard = ({
 
   const RelativeHumidityChart = ({ data }: { data: any }) => {
     const relativeHmidityOptions: ApexOptions = {
+      ...commonApexOptions,
       chart: {
         type: "line",
         id: "relativeHumidityChartDevice",
         group: "device",
-        toolbar: {
-          show: false,
-          tools: {
-            download: false,
-            selection: false,
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            pan: false,
-            reset: false,
-          },
-        },
       },
       xaxis: {
         type: "datetime",
@@ -159,18 +116,9 @@ const SingleDeviceDashCard = ({
           data,
         },
       ],
-      stroke: {
-        width: 2,
-        curve: "smooth",
-        colors: ["#808080"],
-      },
-      markers: {
-        size: 4,
-        colors: ["#43A6C6"],
-        strokeWidth: 2,
-        hover: {
-          size: 6,
-        },
+      colors: humidityColors,
+      legend: {
+        show: true,
       },
     };
 
@@ -189,7 +137,7 @@ const SingleDeviceDashCard = ({
     <div className=" h-full w-full">
       {temperatureData.length > 0 && (
         <div className="w-full !h-1/2">
-          <TemperatureChart data={temperatureData as Series[]} />
+          <TemperatureChart data={temperatureData} />
         </div>
       )}
       {relativeHumidityData.length > 0 && (

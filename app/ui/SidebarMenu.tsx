@@ -2,7 +2,6 @@ import Link from "next/link";
 import React from "react";
 
 interface SidebarMenuProps {
-  page: string[];
   title: string;
   icon: any;
   key: string;

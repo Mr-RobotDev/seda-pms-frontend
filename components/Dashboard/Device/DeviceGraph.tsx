@@ -16,6 +16,7 @@ import FileDownloadButton from "../Floor/FileDownloadButton";
 import Link from "next/link";
 import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import { SelectSecondary } from "@/components/ui/Select/Select";
+import { temperatureColors, humidityColors, commonApexOptions } from "@/utils/graph";
 
 dayjs.extend(isBetween);
 
@@ -44,7 +45,7 @@ const commonChartOptions = {
   stroke: {
     width: 2,
     curve: "smooth",
-    colors: ["#808080"],
+    colors: ["#FF0000"],
   },
   markers: {
     size: 4,
@@ -86,27 +87,18 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
 
   const TemperatureChart = React.memo(({ data }: { data: any }) => {
     const options = {
-      ...commonChartOptions,
+      ...commonApexOptions,
       chart: {
         id: "TemperatureChart",
         group: "device",
-        toolbar: {
-          show: true,
-          tools: {
-            download: false,
-            selection: false,
-            zoom: false,
-            zoomin: true,
-            zoomout: false,
-            pan: false,
-            reset: true,
-          },
-        },
       },
       yaxis: {
         title: {
           text: "Temperature (°C)",
         },
+      },
+      xaxis: {
+        type: "datetime",
       },
       series: [
         {
@@ -114,6 +106,14 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           data,
         },
       ],
+      markers: {
+        size: 4,
+        strokeWidth: 2,
+        hover: {
+          size: 6,
+        },
+      },
+      colors: temperatureColors
     };
   
     return (
@@ -131,22 +131,10 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
 
   const HumidityChart = React.memo(({ data }: { data: any }) => {
     const options = useMemo(() => ({
-      ...commonChartOptions,
+      ...commonApexOptions,
       chart: {
         id: "HumidityChart",
         group: "device",
-        toolbar: {
-          show: true,
-          tools: {
-            download: false,
-            selection: false,
-            zoom: false,
-            zoomin: true,
-            zoomout: false,
-            pan: false,
-            reset: true,
-          },
-        },
       },
       yaxis: {
         title: {
@@ -156,6 +144,9 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           formatter: (value: number) => `${value}%`,
         },
       },
+      xaxis: {
+        type: "datetime",
+      },
       series: [
         {
           name: "Humidity",
@@ -164,12 +155,12 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       ],
       markers: {
         size: 4,
-        colors: ["#43A6C6"],
         strokeWidth: 2,
         hover: {
           size: 6,
         },
       },
+      colors: humidityColors,
     }), [data]);
   
     return (
@@ -194,7 +185,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             `/events?oem=${deviceOem}&from=${from}&to=${to}`
           );
           if (response.status === 200) {
-            const sortedData = response.data.results.sort(
+            const sortedData = response.data.sort(
               (a: DataPoint, b: DataPoint) => {
                 return (
                   new Date(a.createdAt).getTime() -

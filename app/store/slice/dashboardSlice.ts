@@ -21,6 +21,17 @@ interface DashboardState {
   timeFrame: TimeFrameType
 }
 
+interface createCardType {
+  dashboard: string;
+  cardName: string;
+  cols: number;
+  rows: number;
+  x?: number;
+  y?: number;
+  devices: Key[]
+  field: string;
+}
+
 
 const initialState: DashboardState = {
   dashboards: [],
@@ -101,16 +112,7 @@ export const deleteCard = createAsyncThunk('dashboard/deleteCard', async ({ dash
   throw new Error('Failed to Delete dashboard');
 })
 
-interface createCardType {
-  dashboard: string;
-  cardName: string;
-  cols: number;
-  rows: number;
-  x?: number;
-  y?: number;
-  devices: Key[]
-  field: string;
-}
+
 
 export const createCard = createAsyncThunk('/dashboard/card/create', async ({ dashboard, cardName, cols = 2, rows = 2, x = 0, y = 0, devices = [], field }: createCardType) => {
   const response = await axiosInstance.post(`/dashboards/${dashboard}/cards`, {
@@ -168,7 +170,7 @@ const dashboardSlice = createSlice({
       .addCase(getDashboards.fulfilled, (state, action) => {
         state.dashboards = action.payload
         state.isLoading.list = false;
-        if(state.dashboards.length > 0){
+        if (state.dashboards.length > 0) {
           state.currentDashboard = state.dashboards[0]
         }
       })
@@ -254,6 +256,7 @@ const dashboardSlice = createSlice({
         state.error = action.error.message ?? 'Failed to delete card';
       })
       .addCase(updateCard.pending, (state, action) => {
+        state.error = ''
         state.isLoading.updateCard = true;
       })
       .addCase(updateCard.fulfilled, (state, action) => {

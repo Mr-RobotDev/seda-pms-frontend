@@ -34,7 +34,7 @@ const EventStream: React.FC = () => {
         true
       );
       xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.setRequestHeader("Authorization", `Bearer ${token}`); // Add the authorization header
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 3) {
@@ -44,7 +44,7 @@ const EventStream: React.FC = () => {
             .split("\n")
             .filter((line) => line.trim() !== "" && line.startsWith("data: "))
             .map((line) => {
-              const jsonString = line.substring(6); // Remove the "data: " prefix
+              const jsonString = line.substring(6);
               try {
                 return JSON.parse(jsonString);
               } catch (error) {

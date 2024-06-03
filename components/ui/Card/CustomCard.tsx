@@ -24,6 +24,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
   const [editingName, setEditingName] = useState(cardObj.name);
   const [card, setCard] = useState<DashboardCardType>(cardObj)
   const { timeFrame, currentDashboard } = useSelector((state: RootState) => state.dashboardReducer)
+  const { user } = useSelector((state: RootState) => state.authReducer)
 
   const dispatch: AppDispatch = useDispatch()
 
@@ -32,17 +33,13 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
   }, [cardObj]);
 
   useEffect(() => {
-    console.log('component updated')
-  }, [])
-
-  useEffect(() => {
     let isCancelled = false;
-  
+
     const fetchEventsForDevices = async () => {
       if (!isCancelled) {
         setLoading(true);
         const eventsMapTemp: EventsMap = {};
-  
+
         const fetchPromises = card.devices.map(async device => {
           const { oem, id, name } = device;
           try {
@@ -55,13 +52,13 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
               },
             });
             if (!isCancelled) {
-              eventsMapTemp[id] = { data: response.data.results, name: name };
+              eventsMapTemp[id] = { data: response.data, name: name };
             }
           } catch (error) {
             console.error(`Error fetching events for device ${id}:`, error);
           }
         });
-  
+
         await Promise.all(fetchPromises);
         if (!isCancelled) {
           setEventsMap(eventsMapTemp);
@@ -69,14 +66,14 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
         }
       }
     };
-  
+
     fetchEventsForDevices();
-  
+
     return () => {
       isCancelled = true;
     };
   }, [card, timeFrame.startDate, timeFrame.endDate]);  // Ensure dependencies are stable
-  
+
 
   const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -112,11 +109,8 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
         }
       })
     ).then(() => {
-      toast.success('Updated successfully')
       setIsRenaming(false);
     })
-    console.log(editingName)
-
   };
 
   return (
@@ -182,9 +176,12 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
                 <span className=" text-xs text-slate-400">{card.devices.length} Sensors</span>
               </div>
             </div>
-            <Button onMouseDown={handleOnClick} className="!m-0 !p-0">
-              <OptionsMenu cardId={card.id} setIsRenaming={setIsRenaming} />
-            </Button>
+            {
+              user?.role === 'Admin' &&!isRenaming &&
+              <Button onMouseDown={handleOnClick} className="!m-0 !p-0">
+                <OptionsMenu cardId={card.id} setIsRenaming={setIsRenaming} />
+              </Button>
+            }
           </div>
           <div className="flex-grow">
             {Object.keys(eventsMap).length > 0 && cardObj.field.split(',').length === 1 && <TemperatureChart data={eventsMap} eventTypes={cardObj.field} />}
