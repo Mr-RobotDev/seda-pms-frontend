@@ -185,8 +185,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             `/events?oem=${deviceOem}&from=${from}&to=${to}`
           );
           if (response.status === 200) {
-            console.log(response.data)
-            const sortedData = response.data.results.sort(
+            const sortedData = response.data.sort(
               (a: DataPoint, b: DataPoint) => {
                 return (
                   new Date(a.createdAt).getTime() -

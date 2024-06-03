@@ -41,7 +41,7 @@ export const getEvents = createAsyncThunk(
   'events/getEvents',
   async ({ oem, eventTypes, from, to, page = '1', limit = '100' }: getEventsPropsType) => {
     const response = await axiosInstance.get(`/events?oem=${oem}&from=${from}&to=${to}`, { params: {eventTypes: eventTypes}})
-    return response.data.results
+    return response.data
   },
 );
 
