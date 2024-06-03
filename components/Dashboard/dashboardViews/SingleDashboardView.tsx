@@ -7,7 +7,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 import { getDashboardCards, getDashboards, setCurrentDashboard, setTimeFrame, updateCard } from "@/app/store/slice/dashboardSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/app/store/store";
-import { DashboardCardType } from "@/type";
+import { DashboardCardType, TimeFrameType } from "@/type";
 import DashboardMenu from "@/components/Dashboard/dashboardViews/DashboardMenu";
 import CustomCard from "../../ui/Card/CustomCard";
 import EmptyDashboard from './EmptyDashboard';
@@ -18,6 +18,7 @@ import { Spin } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import toast from 'react-hot-toast';
+import timeFrames from '@/utils/time_frames';
 
 interface singleDashboardViewProps {
   id: string;
@@ -47,18 +48,15 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
       const params = new URLSearchParams(window.location.search);
       const from = params.get("from");
       const to = params.get("to");
+      const key = params.get("key");
 
-      if (from && to) {
-        const customTimeFrame = {
-          startDate: '',
-          endDate: '',
-          key: 'CUSTOM',
-          title: 'Custom',
-        }
-        customTimeFrame.startDate = from
-        customTimeFrame.endDate = to
+      if (from && to && key) {
+        const timeFrame = {...timeFrames[key]}
 
-        dispatch(setTimeFrame(customTimeFrame))
+        timeFrame.startDate = from
+        timeFrame.endDate = to
+
+        dispatch(setTimeFrame(timeFrame))
       }
       dispatch(setCurrentDashboard(currentDashboard))
       dispatch(getDashboardCards({ dashboardId: id }))

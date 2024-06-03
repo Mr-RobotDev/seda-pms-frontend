@@ -19,18 +19,23 @@ const TimeFrameMenu = () => {
   const { currentDashboard, timeFrame } = useSelector((state: RootState) => state.dashboardReducer)
 
   const handleTimeFrame = (timeFrame: TimeFrameType) => {
+    dispatch(setTimeFrame(timeFrame));
+    setVisible(false);
+  };
+
+  useEffect(() => {
     if (window && window.history) {
       const from = timeFrame.startDate
       const to = timeFrame.endDate
+      const key = timeFrame.key
 
       const url = new URL(window.location.href);
       url.searchParams.set("from", from);
       url.searchParams.set("to", to);
+      url.searchParams.set("key", key);
       window.history.replaceState({}, "", url.toString());
     }
-    dispatch(setTimeFrame(timeFrame));
-    setVisible(false);
-  };
+  }, [timeFrame])
 
   return (
     <Popover
