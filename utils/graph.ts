@@ -48,7 +48,7 @@ export const commonApexOptions: ApexOptions = {
     size: 3,
     strokeWidth: 2,
     hover: {
-      size: 6,
+      size: 4,
     },
   }
 }

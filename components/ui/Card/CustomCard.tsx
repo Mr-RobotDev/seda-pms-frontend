@@ -108,7 +108,9 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
           name: editingName
         }
       })
-    )
+    ).then(() => {
+      setIsRenaming(false);
+    })
   };
 
   return (
