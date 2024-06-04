@@ -6,46 +6,46 @@ interface TimeFrames {
 }
 
 const timeFrames: TimeFrames = {
-  TODAY: {
+  today: {
     startDate: dayjs().startOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
     endDate: dayjs().endOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
-    key: 'TODAY',
+    key: 'today',
     title: 'Today',
   },
-  YESTERDAY: {
+  yesterday: {
     startDate: dayjs().subtract(1, 'day').startOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
     endDate: dayjs().subtract(1, 'day').endOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
-    key: 'YESTERDAY',
+    key: 'yesterday',
     title: 'Yesterday',
   },
-  THIS_WEEK: {
+  this_week: {
     startDate: dayjs().startOf('week').format('YYYY-MM-DDTHH:mm:ss[Z]'),
     endDate: dayjs().endOf('week').format('YYYY-MM-DDTHH:mm:ss[Z]'),
-    key: 'THIS_WEEK',
+    key: 'this_week',
     title: 'This Week',
   },
-  LAST_WEEK: {
+  last_week: {
     startDate: dayjs().subtract(1, 'week').startOf('week').format('YYYY-MM-DDTHH:mm:ss[Z]'),
     endDate: dayjs().subtract(1, 'week').endOf('week').format('YYYY-MM-DDTHH:mm:ss[Z]'),
-    key: 'LAST_WEEK',
+    key: 'last_week',
     title: 'Last Week',
   },
-  LAST_3_DAYS: {
+  last_3_days: {
     startDate: dayjs().subtract(2, 'day').startOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
     endDate: dayjs().endOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
-    key: 'LAST_3_DAYS',
+    key: 'last_3_days',
     title: 'Last 3 days',
   },
-  LAST_7_DAYS: {
+  last_7_days: {
     startDate: dayjs().subtract(6, 'day').startOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
     endDate: dayjs().endOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
-    key: 'LAST_7_DAYS',
+    key: 'last_7_days',
     title: 'Last 7 days',
   },
-  LAST_30_DAYS: {
+  last_30_days: {
     startDate: dayjs().subtract(29, 'day').startOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
     endDate: dayjs().endOf('day').format('YYYY-MM-DDTHH:mm:ss[Z]'),
-    key: 'LAST_30_DAYS',
+    key: 'last_30_days',
     title: 'Last 30 days',
   },
   CUSTOM: {

@@ -12,6 +12,7 @@ interface PrimaryInputProps {
   autoComplete?: string;
   defaultValue?: string;
   disabled?: boolean;
+  name?: string
 }
 
 const PrimaryInput: React.FC<PrimaryInputProps> = ({
@@ -24,10 +25,12 @@ const PrimaryInput: React.FC<PrimaryInputProps> = ({
   autoComplete = 'off',
   defaultValue,
   disabled = false,
+  name
 }) => {
   return (
     <Input
       type={type}
+      name={name}
       placeholder={placeholder}
       value={value}
       onChange={onChange}

@@ -54,7 +54,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   }, [])
 
   useEffect(() => {
-    if (id) {
+    if (id && !currentSelectedDashboard) {
       const currentDashboard = dashboards.find(dashboard => dashboard.id === id)
 
       const params = new URLSearchParams(window.location.search);
@@ -71,6 +71,9 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
         dispatch(setTimeFrame(timeFrame))
       }
       dispatch(setCurrentDashboard(currentDashboard))
+      dispatch(getDashboardCards({ dashboardId: id }))
+    }else{
+      dispatch(setCurrentDashboard(currentSelectedDashboard))
       dispatch(getDashboardCards({ dashboardId: id }))
     }
   }, [currentSelectedDashboard, router, id, dashboards, dispatch])
@@ -111,8 +114,8 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
       <div>
         <div className=' flex flex-col gap-3 md:flex-row md:gap-0 justify-between items-center'>
           <div className=' flex flex-row gap-3' >
-            <DashboardMenu dashboardsList={dashboards} />
-            {currentSelectedDashboard && dashboardCards.length !== 0 && <TimeFrameMenu />}
+            <DashboardMenu dashboardsList={dashboards} routingFunctionality={true} />
+            {currentSelectedDashboard && dashboardCards.length !== 0 && <TimeFrameMenu functionality={true} />}
           </div>
           {
             user?.role === 'Admin' && <div className="flex justify-center md:mt-0 mb-3">

@@ -14,6 +14,7 @@ import {
   DevicePhoneMobileIcon,
   ArrowLeftStartOnRectangleIcon,
   AdjustmentsHorizontalIcon,
+  ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
 
 import axiosInstance from "@/lib/axiosInstance";
@@ -48,7 +49,8 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
     { key: "8", title: "Alerts", url: "/dashboard/alerts", menuKey: 'alerts', icon: BellAlertIcon },
     { key: "9", title: "Data Sources", url: "/dashboard/data-sources", menuKey: 'data-sources', icon: CircleStackIcon },
     { key: "10", title: "Devices", url: "/dashboard/devices", menuKey: 'devices', icon: DevicePhoneMobileIcon },
-    { key: "11", title: "Users", url: "/dashboard/users", menuKey: 'users', icon: UserIcon, adminOnly: true },
+    { key: "11", title: "Reports", url: "/dashboard/reports", menuKey: 'reports', icon: ClipboardDocumentListIcon },
+    { key: "12", title: "Users", url: "/dashboard/users", menuKey: 'users', icon: UserIcon, adminOnly: true },
   ];
 
   const accountItems = [
