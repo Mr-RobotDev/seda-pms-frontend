@@ -25,6 +25,7 @@ interface singleDashboardViewProps {
 }
 const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   const dispatch: AppDispatch = useDispatch()
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const router = useRouter()
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,6 +41,17 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
       toast.error('Error updating the location of the card on dashboard');
     }
   }, [error]);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsSmallScreen(window.innerWidth < 500);
+    }
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [])
 
   useEffect(() => {
     if (id) {
@@ -97,7 +109,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   return (
     currentSelectedDashboard ? <>
       <div>
-        <div className=' flex flex-row justify-between items-center'>
+        <div className=' flex flex-col gap-3 md:flex-row md:gap-0 justify-between items-center'>
           <div className=' flex flex-row gap-3' >
             <DashboardMenu dashboardsList={dashboards} />
             {currentSelectedDashboard && dashboardCards.length !== 0 && <TimeFrameMenu />}
@@ -124,9 +136,10 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
               margin={[20, 20]}
               rowHeight={160}
               breakpoints={{ '2xl': 1536, xl: 1280, lg: 1024, md: 768, sm: 640, xs: 480 }}
-              cols={{ '2xl': 4, xl: 4, lg: 4, md: 4, sm: 1, xs: 1 }}
+              cols={{ '2xl': 4, xl: 4, lg: 4, md: 4, sm: 2, xs: 2 }}
               resizeHandles={['s', 'w', 'e', 'n', 'sw', 'nw', 'se', 'ne']}
               onLayoutChange={handleLayoutChange}
+              isResizable={!isSmallScreen}
             >
               {dashboardCards.map((card: DashboardCardType) => (
                 <div key={card.id} data-grid={{ x: card.x, y: card.y, w: card.rows, h: card.cols, minW: 2, minH: 2 }}>
