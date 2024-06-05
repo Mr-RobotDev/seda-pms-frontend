@@ -10,13 +10,15 @@ import {
 import { PrimaryInput } from "@/components/ui/Input/Input";
 import { scheduletypeOptions, timeFrameOptions } from "@/utils/form";
 import CustomTags from "./CustomTags";
-import WrappedSelect from "@/components/ui/Select/WrappedSelect";
 import toast from "react-hot-toast";
 import TimeFrameMenu from "../dashboardViews/TimeFrameMenu";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import NoReport from "./NoReport";
 import { validateReportsFormData } from "@/utils/helper_functions";
+import { CheckIcon } from "@heroicons/react/16/solid";
+import { XMarkIcon } from "@heroicons/react/20/solid";
+import ScheduleTypeMenu from "./ScheduleTypeMenu";
 
 interface ReportsTableProps {
   currentDashboard: DashboardType;
@@ -187,7 +189,7 @@ const ReportsTable = ({
       dataIndex: "enabled",
       render: (_, { enabled }) => (
         <div className="flex flex-row gap-4 items-center">
-          <Switch disabled={true} checked={enabled} />
+          {enabled ? <CheckIcon className=" text-green-700" width={20} /> : <XMarkIcon className=" text-red-700" width={20} />}
         </div>
       ),
     },
@@ -218,6 +220,10 @@ const ReportsTable = ({
     const { name, value } = e.target;
     setFormData((prevState) => prevState && { ...prevState, [name]: value });
   };
+
+  const handleScheduleTypeChange = (value: string) => {
+    setFormData((prevState) => prevState && {...prevState, scheduleType: value})
+  }
 
   const handleGoBack = () => {
     setCreateNewReport(false);
@@ -332,7 +338,7 @@ const ReportsTable = ({
   const isWeekdaysScheduleType = formData?.scheduleType === "weekdays";
   const isEverydayScheduleType = formData?.scheduleType === "everyday";
 
-  if (loading && reports.length === 0){
+  if (loading && reports.length === 0) {
     return <div className=" flex justify-center items-center mt-24">
       <Spin />
     </div>
@@ -342,9 +348,8 @@ const ReportsTable = ({
     <div className="mt-6">
       <div>
         <div
-          className={`${
-            showDetailsReport || createNewReport ? "hidden" : "block"
-          }`}
+          className={`${showDetailsReport || createNewReport ? "hidden" : "block"
+            }`}
         >
           {reports.length > 0 ? (
             <div className=" shadow-md p-2 bg-white">
@@ -363,9 +368,8 @@ const ReportsTable = ({
           )}
         </div>
         <div
-          className={`${
-            showDetailsReport || createNewReport ? "block" : "hidden"
-          }`}
+          className={`${showDetailsReport || createNewReport ? "block" : "hidden"
+            }`}
         >
           <div className="container md:px-24">
             <div
@@ -391,7 +395,7 @@ const ReportsTable = ({
                       />
                     </div>
                     {!createNewReport && (
-                      <div className="px-8">
+                      <div className="px-8  h-full ">
                         <p className="font-semibold text-lg !mb-1">Enabled</p>
                         <Switch
                           checked={formData?.enabled}
@@ -420,28 +424,24 @@ const ReportsTable = ({
                 <Card>
                   <div className="flex flex-row justify-between">
                     <p className="font-semibold text-lg">Schedule</p>
-                    <div>
-                      <p className="!mb-1 text-sm">Time Frame </p>
-                      <div className="flex flex-row items-center border rounded-md shadow-md w-[170px]">
-                        <TimeFrameMenu
-                          functionality={false}
-                          initialValue={formData?.timeframe}
-                        />
-                      </div>
+                  </div>
+                  <div className=" flex flex-col items-start mb-6">
+                    <p className="!mb-1 text-sm">Time Frame </p>
+                    <div className="flex flex-row items-center border rounded-md shadow-md w-[170px]">
+                      <TimeFrameMenu
+                        functionality={false}
+                        initialValue={formData?.timeframe}
+                      />
                     </div>
                   </div>
                   <div className="flex items-center">
                     <p className="!mb-1 text-sm">Type </p>
                   </div>
-                  <div className="flex flex-row items-center gap-12">
-                    <WrappedSelect
-                      name="scheduleType"
-                      options={scheduletypeOptions}
-                      className="w-52"
-                      value={formData?.scheduleType as string}
-                      onChange={handleChangeSelect}
-                    />
-                    <div className="flex flex-row flex-wrap justify-between w-full">
+                  <div className="flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-12">
+                  <div className="flex flex-row items-center border rounded-md shadow-md w-[170px] mb-3 md:mb-0">
+                      <ScheduleTypeMenu scheduleType={formData?.scheduleType as string} handleScheduleTypeChange={handleScheduleTypeChange} />
+                    </div>
+                    <div className=" grid grid-cols-3 md:flex md:flex-row md:flex-wrap md:justify-between w-full">
                       {renderCheckboxes()}
                     </div>
                   </div>
@@ -458,7 +458,7 @@ const ReportsTable = ({
                 </Card>
                 <div className=" flex flex-row justify-end mt-4">
                   {!createNewReport && (
-                    <Button onClick={handleUpdateReport} className=" w-32">
+                    <Button type="primary" onClick={handleUpdateReport} className=" w-32">
                       Update
                     </Button>
                   )}

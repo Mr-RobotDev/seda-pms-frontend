@@ -51,6 +51,25 @@ const CustomTags = ({
     const newTags = emails.filter((email) => email !== removedTag);
     console.log(newTags);
     setEmails(newTags);
+
+    if (type === 'email') {
+      setFormData(
+        (prevState) =>
+          prevState && {
+            ...prevState,
+            recipients: [...newTags],
+          }
+      );
+    } else {
+      setFormData(
+        (prevState) =>
+          prevState && {
+            ...prevState,
+            times: [...newTags],
+          }
+      );
+    }
+
   };
 
   const showInput = () => {
@@ -63,10 +82,15 @@ const CustomTags = ({
 
   const handleInputConfirm = () => {
     if (type === "email") {
+
+      if(!inputValue){
+        return;
+      }
+
       const isValidEmail = validateEmail(inputValue);
       if (inputValue && emails.indexOf(inputValue) === -1 && isValidEmail) {
+        console.log('Ypooo!')
         setEmails([...emails, inputValue]);
-        setInputVisible(false);
         setInputValue("");
 
         setFormData(
@@ -108,37 +132,46 @@ const CustomTags = ({
       <div style={{ marginBottom: 16 }}>
         <div className=" flex flex-row flex-wrap gap-2 border-b border-b-blue-300 pb-2">
           {emails.map((email) => (
-            <span
-              key={email}
-              className=" inline-block px-2 py-1 border border-gray-300 rounded-2xl"
-            >
-              <span className=" flex flex-row gap-2">
-                {email}
-                <XCircleIcon
-                  width={20}
-                  className=" cursor-pointer"
-                  onClick={() => handleClose(email)}
-                />
+            <div key={email} className=" my-auto">
+              <span
+
+                className=" inline-block px-2 py-1 border border-gray-300 rounded-2xl"
+              >
+                <span className=" flex flex-row gap-2">
+                  {email}
+                  <XCircleIcon
+                    width={20}
+                    className=" cursor-pointer"
+                    onClick={() => handleClose(email)}
+                  />
+                </span>
               </span>
-            </span>
+            </div>
           ))}
           <div className=" flex items-center justify-center">
-            {inputVisible ? (
-              type === "email" ? (
-                <Input
-                  ref={inputRef}
+
+
+            {
+              type === "email" && (
+                <input
                   type="text"
-                  size="small"
                   style={{ width: 200 }}
                   value={inputValue}
                   onChange={handleInputChange}
                   onBlur={handleInputConfirm}
-                  onPressEnter={handleInputConfirm}
-                  placeholder={
-                    type === "email" ? "example@example.com" : "00:00"
-                  }
+                  onKeyDown={event => {
+                    if (event.key === 'Enter') {
+                      handleInputConfirm();
+                    }
+                  }}
+                  className="!border-none focus:!outline-none"
+                  placeholder={type === "email" ? "+ Add New Email" : "00:00"}
                 />
-              ) : (
+              )
+            }
+
+            {inputVisible ? (
+              type === "time" && (
                 <div className=" flex items-center gap-2">
                   <Select
                     onChange={(value) => setSelectedTime(value)}
@@ -149,21 +182,30 @@ const CustomTags = ({
                   </Select>
                   <button
                     onClick={handleInputConfirm}
-                    className=" px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+                    className=" px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white transform duration-300 transition-all"
                   >
                     Add
+                  </button>
+                  <button
+                    onClick={() => setInputVisible(false)}
+                    className=" px-3 py-1 rounded-md bg-slate-300 hover:bg-slate-400 text-gray-800  transform duration-300 transition-all"
+                  >
+                    Cancel
                   </button>
                 </div>
               )
             ) : (
-              <Tag
-                onClick={showInput}
-                className=" cursor-pointer"
-                style={tagPlusStyle}
-              >
-                <PlusOutlined />{" "}
-                {type === "email" ? "Add New Recipient Email" : "Add Time"}
-              </Tag>
+              type === 'time' && (
+                <Tag
+                  onClick={showInput}
+                  className=" cursor-pointer"
+                  style={tagPlusStyle}
+                >
+                  <PlusOutlined />{" "}
+                  Add Time
+                </Tag>
+              )
+
             )}
           </div>
         </div>

@@ -63,6 +63,7 @@ const SingleDeviceDashCard = ({
     const temperatureOptions: ApexOptions = {
       ...commonApexOptions,
       chart: {
+        ...commonApexOptions.chart,
         type: "line",
         id: "temperatureChartDevice",
         group: "device",
@@ -102,6 +103,7 @@ const SingleDeviceDashCard = ({
     const relativeHmidityOptions: ApexOptions = {
       ...commonApexOptions,
       chart: {
+        ...commonApexOptions.chart,
         type: "line",
         id: "relativeHumidityChartDevice",
         group: "device",

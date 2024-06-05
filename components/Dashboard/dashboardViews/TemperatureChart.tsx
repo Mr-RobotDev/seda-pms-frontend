@@ -39,6 +39,7 @@ const TemperatureChart: React.FC<TemperatureChartProps> = ({
   const options: ApexOptions = {
     ...commonApexOptions,
     chart: {
+      ...commonApexOptions.chart,
       type: "line",
       group: "no-group",
     },

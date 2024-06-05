@@ -71,5 +71,9 @@ export const validateReportsFormData = (formData: ReportsType | null): { isValid
     return { isValid: false, message: "Times should not be empty." };
   }
 
+  if (formData.weekdays.length === 0 && formData.scheduleType === 'custom') {
+    return { isValid: false, message: "At least select one day for Custom Schedule Type" };
+  }
+
   return { isValid: true, message: "Form data is valid." };
 };
