@@ -1,21 +1,33 @@
-import { useState } from 'react';
-import { Popover, Select } from 'antd';
+import { useState } from "react";
+import { Popover, Select } from "antd";
 
-import classes from './Select.module.css';
+import classes from "./Select.module.css";
 
 interface SelectSecondaryProps {
   pre?: string;
   post?: string;
   onClick?: () => void;
   only?: string;
-  Icon?: React.ReactNode;  // Now it can be null, undefined, or a React node
+  Icon?: React.ReactNode; // Now it can be null, undefined, or a React node
   disabled?: boolean;
 }
 
-const SelectSecondary: React.FC<SelectSecondaryProps> = ({ pre = '', post = '', onClick = () => {}, only = '', Icon = null, disabled = false }) => {
+const SelectSecondary: React.FC<SelectSecondaryProps> = ({
+  pre = "",
+  post = "",
+  onClick = () => {},
+  only = "",
+  Icon = null,
+  disabled = false,
+}) => {
   return (
     <>
-      <div className={`${classes.selectionMenu} ${disabled ? classes.disabledSelectionMenu : ''} flex flex-row gap-6`} onClick={onClick}>
+      <div
+        className={`${classes.selectionMenu} ${
+          disabled ? classes.disabledSelectionMenu : ""
+        } flex flex-row gap-6`}
+        onClick={onClick}
+      >
         <div className="flex gap-2">
           {Icon && <div>{Icon}</div>}
           <div className={classes.selectionMenuContent}>
@@ -27,13 +39,13 @@ const SelectSecondary: React.FC<SelectSecondaryProps> = ({ pre = '', post = '', 
             {pre && <span className={classes.divider}>{` / `}</span>}
             {post && (
               <span className={classes.post}>
-                {' '}
+                {" "}
                 <span>{`${post}`}</span>
               </span>
             )}
             {only && (
               <span className={classes.only}>
-                {' '}
+                {" "}
                 <span>{`${only}`}</span>
               </span>
             )}

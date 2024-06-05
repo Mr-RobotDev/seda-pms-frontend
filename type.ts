@@ -108,3 +108,22 @@ export type SeriesType = {
     y: number;
   }>;
 };
+
+
+export interface ReportsType {
+  name: string;
+  timeframe: string;
+  recipients: string[];
+  scheduleType: string;
+  enabled: boolean;
+  dashboard?: Dashboard;
+  weekdays: string[];
+  times: string[];
+  id: string;
+}
+
+interface Dashboard {
+  name: string;
+  devicesCount: number;
+  id: string;
+}

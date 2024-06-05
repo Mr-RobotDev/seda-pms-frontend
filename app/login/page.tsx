@@ -1,14 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button, Form, Input, theme, Typography } from "antd";
+import { Button, Form, Input, Typography } from "antd";
 import { useDispatch } from "react-redux";
 import { login } from "@/app/store/slice/authSlice";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 
-const { useToken } = theme;
 const { Title } = Typography;
 
 interface FormValues {
@@ -17,7 +16,6 @@ interface FormValues {
 }
 
 export default function App() {
-  const { token } = useToken();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
   const router = useRouter();

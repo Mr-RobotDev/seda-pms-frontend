@@ -45,7 +45,7 @@ const initialState: DashboardState = {
   },
   dashboardCards: [],
   error: '',
-  timeFrame: timeFrames.YESTERDAY
+  timeFrame: timeFrames.yesterday
 }
 
 export const getDashboards = createAsyncThunk('dashboard/getDashboards', async () => {
@@ -170,7 +170,7 @@ const dashboardSlice = createSlice({
       .addCase(getDashboards.fulfilled, (state, action) => {
         state.dashboards = action.payload
         state.isLoading.list = false;
-        if (state.dashboards.length > 0) {
+        if (state.dashboards.length > 0 && !state.currentDashboard) {
           state.currentDashboard = state.dashboards[0]
         }
       })

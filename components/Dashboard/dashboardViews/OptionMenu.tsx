@@ -1,21 +1,25 @@
 import { AppDispatch, RootState } from "@/app/store/store";
-import { faEllipsisVertical, faSquarePen, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Popover } from "antd";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { EllipsisVerticalIcon, PencilSquareIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  EllipsisVerticalIcon,
+  PencilSquareIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { deleteCard } from "@/app/store/slice/dashboardSlice";
 
 interface OptionMenuProps {
   cardId: string;
-  setIsRenaming: Dispatch<SetStateAction<boolean>>
+  setIsRenaming: Dispatch<SetStateAction<boolean>>;
 }
 
 const OptionsMenu = ({ cardId, setIsRenaming }: OptionMenuProps) => {
   const dispatch: AppDispatch = useDispatch();
   const [visible, setVisible] = useState(false);
-  const { currentDashboard } = useSelector((state: RootState) => state.dashboardReducer)
+  const { currentDashboard } = useSelector(
+    (state: RootState) => state.dashboardReducer
+  );
 
   return (
     <Popover
@@ -34,11 +38,16 @@ const OptionsMenu = ({ cardId, setIsRenaming }: OptionMenuProps) => {
             </span>
             <span className="!text-xs font-medium">Rename Card</span>
           </div>
-          <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
+          <div
+            className="bg-slate-300 dark:bg-slate-700 my-2"
+            style={{ height: "1px" }}
+          ></div>
           <div
             className="flex gap-2 p-1 danger-menu transition-all ease-in-out duration-300 rounded-md cursor-pointer hover:bg-blue-50"
             onClick={() => {
-              dispatch(deleteCard({ dashboardId: currentDashboard.id, cardId: cardId }));
+              dispatch(
+                deleteCard({ dashboardId: currentDashboard.id, cardId: cardId })
+              );
             }}
           >
             <span className="flex flex-col justify-center">
@@ -62,4 +71,4 @@ const OptionsMenu = ({ cardId, setIsRenaming }: OptionMenuProps) => {
   );
 };
 
-export default OptionsMenu
+export default OptionsMenu;

@@ -14,6 +14,7 @@ import {
   DevicePhoneMobileIcon,
   ArrowLeftStartOnRectangleIcon,
   AdjustmentsHorizontalIcon,
+  ClipboardDocumentListIcon,
 } from "@heroicons/react/24/outline";
 
 import axiosInstance from "@/lib/axiosInstance";
@@ -43,16 +44,66 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
   };
 
   const menuItems = [
-    { key: "6", title: "Dashboard", url: "/dashboard", menuKey: 'dashboard', icon: AdjustmentsHorizontalIcon },
-    { key: "7", title: "Floor Plan", url: "/dashboard/floor", menuKey: 'floor', icon: ClipboardIcon },
-    { key: "8", title: "Alerts", url: "/dashboard/alerts", menuKey: 'alerts', icon: BellAlertIcon },
-    { key: "9", title: "Data Sources", url: "/dashboard/data-sources", menuKey: 'data-sources', icon: CircleStackIcon },
-    { key: "10", title: "Devices", url: "/dashboard/devices", menuKey: 'devices', icon: DevicePhoneMobileIcon },
-    { key: "11", title: "Users", url: "/dashboard/users", menuKey: 'users', icon: UserIcon, adminOnly: true },
+    {
+      key: "6",
+      title: "Dashboard",
+      url: "/dashboard",
+      menuKey: "dashboard",
+      icon: AdjustmentsHorizontalIcon,
+    },
+    {
+      key: "7",
+      title: "Floor Plan",
+      url: "/dashboard/floor",
+      menuKey: "floor",
+      icon: ClipboardIcon,
+    },
+    {
+      key: "8",
+      title: "Alerts",
+      url: "/dashboard/alerts",
+      menuKey: "alerts",
+      icon: BellAlertIcon,
+    },
+    {
+      key: "9",
+      title: "Data Sources",
+      url: "/dashboard/data-sources",
+      menuKey: "data-sources",
+      icon: CircleStackIcon,
+    },
+    {
+      key: "10",
+      title: "Devices",
+      url: "/dashboard/devices",
+      menuKey: "devices",
+      icon: DevicePhoneMobileIcon,
+    },
+    {
+      key: "11",
+      title: "Reports",
+      url: "/dashboard/reports",
+      menuKey: "reports",
+      icon: ClipboardDocumentListIcon,
+    },
+    {
+      key: "12",
+      title: "Users",
+      url: "/dashboard/users",
+      menuKey: "users",
+      icon: UserIcon,
+      adminOnly: true,
+    },
   ];
 
   const accountItems = [
-    { key: "5", title: "Profile", url: "/dashboard/profile", menuKey: 'profile', icon: UserIcon },
+    {
+      key: "5",
+      title: "Profile",
+      url: "/dashboard/profile",
+      menuKey: "profile",
+      icon: UserIcon,
+    },
   ];
 
   const renderMenuItems = (items: any[]) =>
@@ -66,7 +117,9 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
           icon={
             <item.icon
               width={25}
-              className={`${activeMenu === item.menuKey ? "!text-blue-700" : "!text-black"}`}
+              className={`${
+                activeMenu === item.menuKey ? "!text-blue-700" : "!text-black"
+              }`}
             />
           }
           url={item.url}
@@ -91,9 +144,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
         <hr />
         <Menu theme="dark" mode="inline">
           <div className="flex flex-col justify-between h-full w-full">
-            <div className="h-full">
-              {renderMenuItems(menuItems)}
-            </div>
+            <div className="h-full">{renderMenuItems(menuItems)}</div>
           </div>
         </Menu>
       </div>

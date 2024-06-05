@@ -3,18 +3,18 @@ import { Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import axiosInstance from "@/lib/axiosInstance";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { DevicesType, Event } from "@/type";
 import SimSignal from "../Device/SimSignal";
 import { useTimeAgo } from "next-timeago";
-import Link from "next/link";
-
 
 interface DevicesSelectorProps {
   setSelectedRowKeys: (selectedRowKeys: React.Key[]) => void;
   selectedRowKeys: React.Key[];
 }
-const DevicesSelector = ({ selectedRowKeys, setSelectedRowKeys }: DevicesSelectorProps) => {
+const DevicesSelector = ({
+  selectedRowKeys,
+  setSelectedRowKeys,
+}: DevicesSelectorProps) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const { TimeAgo } = useTimeAgo();
 
@@ -73,7 +73,7 @@ const DevicesSelector = ({ selectedRowKeys, setSelectedRowKeys }: DevicesSelecto
   ];
 
   useEffect(() => {
-    if(devices.length === 0){
+    if (devices.length === 0) {
       (async () => {
         try {
           const response = await axiosInstance.get("/devices?page=1&limit=20");
@@ -92,7 +92,9 @@ const DevicesSelector = ({ selectedRowKeys, setSelectedRowKeys }: DevicesSelecto
       onClick: () => {
         const selectedKey = record.id;
         if (selectedRowKeys.includes(selectedKey)) {
-          setSelectedRowKeys(selectedRowKeys.filter((key) => key !== selectedKey));
+          setSelectedRowKeys(
+            selectedRowKeys.filter((key) => key !== selectedKey)
+          );
         } else {
           setSelectedRowKeys([...selectedRowKeys, selectedKey]);
         }
@@ -102,10 +104,14 @@ const DevicesSelector = ({ selectedRowKeys, setSelectedRowKeys }: DevicesSelecto
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: Event[]) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        "selectedRows: ",
+        selectedRows
+      );
     },
     getCheckboxProps: (record: any) => ({
-      disabled: record.name === 'Disabled User', // Column configuration not to be checked
+      disabled: record.name === "Disabled User", // Column configuration not to be checked
       name: record.name,
     }),
   };
@@ -119,7 +125,11 @@ const DevicesSelector = ({ selectedRowKeys, setSelectedRowKeys }: DevicesSelecto
         loading={devices.length === 0}
         className="cursor-pointer"
         onRow={(record) => onRowClick(record)}
-        rowClassName={(record) => (selectedRowKeys.includes(record.id) ? 'ant-table-row-selected !border-2 !border-blue-500' : '')}
+        rowClassName={(record) =>
+          selectedRowKeys.includes(record.id)
+            ? "ant-table-row-selected !border-2 !border-blue-500"
+            : ""
+        }
       />
     </div>
   );

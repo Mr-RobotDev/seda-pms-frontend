@@ -5,7 +5,7 @@ import { ArrowTopRightOnSquareIcon } from "@heroicons/react/20/solid";
 import { DevicesType } from "@/type";
 
 interface DeviceDetailsCompProps {
-  device: DevicesType
+  device: DevicesType;
 }
 
 const DeviceDetailsComp = ({ device }: DeviceDetailsCompProps) => {

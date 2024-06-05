@@ -9,14 +9,16 @@ import { DevicesType, DataPoint } from "@/type";
 import Image from "next/image";
 import CountUp from "react-countup";
 import ReactApexChart from "react-apexcharts";
-import {
-  ArrowUpRightIcon,
-} from "@heroicons/react/16/solid";
+import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import FileDownloadButton from "../Floor/FileDownloadButton";
 import Link from "next/link";
 import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import { SelectSecondary } from "@/components/ui/Select/Select";
-import { temperatureColors, humidityColors, commonApexOptions } from "@/utils/graph";
+import {
+  temperatureColors,
+  humidityColors,
+  commonApexOptions,
+} from "@/utils/graph";
 
 dayjs.extend(isBetween);
 
@@ -113,9 +115,9 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           size: 6,
         },
       },
-      colors: temperatureColors
+      colors: temperatureColors,
     };
-  
+
     return (
       <ReactApexChart
         options={options as any}
@@ -126,43 +128,46 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       />
     );
   });
-  
+
   TemperatureChart.displayName = "TemperatureChart";
 
   const HumidityChart = React.memo(({ data }: { data: any }) => {
-    const options = useMemo(() => ({
-      ...commonApexOptions,
-      chart: {
-        id: "HumidityChart",
-        group: "device",
-      },
-      yaxis: {
-        title: {
-          text: "Humidity (%)",
+    const options = useMemo(
+      () => ({
+        ...commonApexOptions,
+        chart: {
+          id: "HumidityChart",
+          group: "device",
         },
-        labels: {
-          formatter: (value: number) => `${value}%`,
+        yaxis: {
+          title: {
+            text: "Humidity (%)",
+          },
+          labels: {
+            formatter: (value: number) => `${value}%`,
+          },
         },
-      },
-      xaxis: {
-        type: "datetime",
-      },
-      series: [
-        {
-          name: "Humidity",
-          data,
+        xaxis: {
+          type: "datetime",
         },
-      ],
-      markers: {
-        size: 4,
-        strokeWidth: 2,
-        hover: {
-          size: 6,
+        series: [
+          {
+            name: "Humidity",
+            data,
+          },
+        ],
+        markers: {
+          size: 4,
+          strokeWidth: 2,
+          hover: {
+            size: 6,
+          },
         },
-      },
-      colors: humidityColors,
-    }), [data]);
-  
+        colors: humidityColors,
+      }),
+      [data]
+    );
+
     return (
       <ReactApexChart
         options={options as any}
@@ -173,7 +178,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       />
     );
   });
-  
+
   HumidityChart.displayName = "HumidityChart";
 
   const fetchData = useCallback(
@@ -331,16 +336,22 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           >
             <span className="flex flex-col justify-center w-[6px]">
               <span
-                className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${preset === currentPreset ? 'visible' : 'hidden'
-                  }`}
+                className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${
+                  preset === currentPreset ? "visible" : "hidden"
+                }`}
               ></span>
             </span>
             <span className="text-sm font-medium !text-black">{preset}</span>
           </div>
         ))}
-        <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
+        <div
+          className="bg-slate-300 dark:bg-slate-700 my-2"
+          style={{ height: "1px" }}
+        ></div>
         <div>
-          <div className="text-[11px] text-secondary-300 ml-3 !text-black">Monday - Sunday</div>
+          <div className="text-[11px] text-secondary-300 ml-3 !text-black">
+            Monday - Sunday
+          </div>
           {["This Week", "Last Week"].map((preset) => (
             <div
               key={preset}
@@ -349,15 +360,19 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             >
               <span className="flex flex-col justify-center w-[6px]">
                 <span
-                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${preset === currentPreset ? 'visible' : 'hidden'
-                    }`}
+                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${
+                    preset === currentPreset ? "visible" : "hidden"
+                  }`}
                 ></span>
               </span>
               <span className="text-sm font-medium !text-black">{preset}</span>
             </div>
           ))}
         </div>
-        <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
+        <div
+          className="bg-slate-300 dark:bg-slate-700 my-2"
+          style={{ height: "1px" }}
+        ></div>
         <div>
           {["Last 3 Days", "Last 7 Days", "Last 30 Days"].map((preset) => (
             <div
@@ -367,23 +382,28 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             >
               <span className="flex flex-col justify-center w-[6px]">
                 <span
-                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${preset === currentPreset ? 'visible' : 'hidden'
-                    }`}
+                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${
+                    preset === currentPreset ? "visible" : "hidden"
+                  }`}
                 ></span>
               </span>
               <span className="text-sm font-medium !text-black">{preset}</span>
             </div>
           ))}
         </div>
-        <div className="bg-slate-300 dark:bg-slate-700 my-2" style={{ height: '1px' }}></div>
+        <div
+          className="bg-slate-300 dark:bg-slate-700 my-2"
+          style={{ height: "1px" }}
+        ></div>
         <div
           className="flex gap-2 p-2 hover:bg-blue-100 transition-all ease-in-out duration-300 rounded-md cursor-pointer"
           onClick={() => setCurrentPreset("Custom")}
         >
           <span className="flex flex-col justify-center w-[6px]">
             <span
-              className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${'Custom' === currentPreset ? 'visible' : 'hidden'
-                }`}
+              className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${
+                "Custom" === currentPreset ? "visible" : "hidden"
+              }`}
             ></span>
           </span>
           <span className="text-sm font-medium !text-black">Custom</span>
@@ -541,7 +561,10 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                   href={`/dashboard/devices/${id}/activity-logs`}
                   target="_blank"
                 >
-                  <Button className=" flex flex-row items-center justify-center gap-3" style={{ width: '170px'}}>
+                  <Button
+                    className=" flex flex-row items-center justify-center gap-3"
+                    style={{ width: "170px" }}
+                  >
                     Activity Logs
                     <div>
                       <ArrowUpRightIcon
@@ -555,8 +578,9 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               <div className="flex justify-end">
                 <div className=" flex flex-row gap-3 items-center justify-center w-full md:w-auto">
                   <div
-                    className={`flex-row gap-3 items-center justify-between md:justify-end w-full ${currentPreset === "Custom" ? "flex" : "hidden"
-                      }`}
+                    className={`flex-row gap-3 items-center justify-between md:justify-end w-full ${
+                      currentPreset === "Custom" ? "flex" : "hidden"
+                    }`}
                   >
                     <p className="!m-0 font-semibold">Date Range</p>
                     <RangePicker
@@ -566,19 +590,30 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                     />
                   </div>
                   <Popover
-                    getPopupContainer={(triggerNode) => triggerNode.parentNode as HTMLElement}
+                    getPopupContainer={(triggerNode) =>
+                      triggerNode.parentNode as HTMLElement
+                    }
                     content={menu}
                     trigger="hover"
                     placement="bottomLeft"
-                    
                   >
-                    <div className=" flex flex-row items-center border rounded-md shadow-md" style={{ width: '170px'}}>
-                      <SelectSecondary only={currentPreset} Icon={<CalendarDaysIcon width={20} />} />
+                    <div
+                      className=" flex flex-row items-center border rounded-md shadow-md"
+                      style={{ width: "170px" }}
+                    >
+                      <SelectSecondary
+                        only={currentPreset}
+                        Icon={<CalendarDaysIcon width={20} />}
+                      />
                     </div>
                   </Popover>
                 </div>
               </div>
-              <div className={` justify-end md:hidden ${currentPreset === "Custom" ? "flex" : "hidden"}`}>
+              <div
+                className={` justify-end md:hidden ${
+                  currentPreset === "Custom" ? "flex" : "hidden"
+                }`}
+              >
                 <RangePicker
                   className=" w-full"
                   onChange={handleRangeChange}
