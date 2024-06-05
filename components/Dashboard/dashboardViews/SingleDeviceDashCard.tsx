@@ -5,7 +5,11 @@ import { EventsMap, Event } from "@/type";
 import { SeriesType } from "@/type";
 
 import ReactApexChart from "react-apexcharts";
-import { humidityColors, temperatureColors, commonApexOptions } from "@/utils/graph";
+import {
+  humidityColors,
+  temperatureColors,
+  commonApexOptions,
+} from "@/utils/graph";
 
 type SingleDeviceDashCardProps = {
   data: EventsMap;
@@ -17,9 +21,9 @@ const SingleDeviceDashCard = ({
   eventTypes,
 }: SingleDeviceDashCardProps) => {
   const [temperatureData, setTemperatureData] = useState<SeriesType[]>([]);
-  const [relativeHumidityData, setRelativeHumidityData] = useState<SeriesType[]>(
-    []
-  );
+  const [relativeHumidityData, setRelativeHumidityData] = useState<
+    SeriesType[]
+  >([]);
 
   const temperatureDataForChart = (data: EventsMap) => {
     const temperatureData = Object.keys(data).map((deviceId) => {

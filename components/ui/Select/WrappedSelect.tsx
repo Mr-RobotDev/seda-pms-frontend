@@ -1,5 +1,5 @@
-import React from 'react';
-import { Select } from 'antd';
+import React from "react";
+import { Select } from "antd";
 
 interface WrappedSelectProps {
   name: string;
@@ -9,7 +9,13 @@ interface WrappedSelectProps {
   className?: string;
 }
 
-const WrappedSelect: React.FC<WrappedSelectProps> = ({ name, value, options, onChange, className }) => {
+const WrappedSelect: React.FC<WrappedSelectProps> = ({
+  name,
+  value,
+  options,
+  onChange,
+  className,
+}) => {
   const handleChange = (selectedValue: string) => {
     const event = {
       target: {

@@ -1,6 +1,6 @@
-import { Input } from 'antd';
-import { ReactNode } from 'react';
-import classes from './Input.module.css';
+import { Input } from "antd";
+import { ReactNode } from "react";
+import classes from "./Input.module.css";
 
 interface PrimaryInputProps {
   type?: string;
@@ -12,7 +12,7 @@ interface PrimaryInputProps {
   autoComplete?: string;
   defaultValue?: string;
   disabled?: boolean;
-  name?: string
+  name?: string;
 }
 
 const PrimaryInput: React.FC<PrimaryInputProps> = ({
@@ -22,10 +22,10 @@ const PrimaryInput: React.FC<PrimaryInputProps> = ({
   onChange,
   onBlur,
   className,
-  autoComplete = 'off',
+  autoComplete = "off",
   defaultValue,
   disabled = false,
-  name
+  name,
 }) => {
   return (
     <Input
@@ -84,11 +84,11 @@ const PrimaryInputWithIcon: React.FC<PrimaryInputWithIconProps> = ({
   type,
   placeholder,
   value,
-  defaultValue = '',
+  defaultValue = "",
   onChange,
   className,
   icon,
-  autoComplete = 'off',
+  autoComplete = "off",
 }) => {
   return (
     <Input

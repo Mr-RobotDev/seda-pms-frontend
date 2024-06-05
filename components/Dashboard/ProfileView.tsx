@@ -22,7 +22,7 @@ const initialPasswordState = {
   password: "",
   newPassword: "",
   confirmpassword: "",
-}
+};
 
 const ProfileView = () => {
   const { user } = useSelector((state: RootState) => state.authReducer);
