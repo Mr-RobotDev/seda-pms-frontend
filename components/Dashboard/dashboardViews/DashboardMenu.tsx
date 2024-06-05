@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Popover, Tooltip, Spin, Card } from "antd";
+import { Popover } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import {
   createDashboard,
@@ -9,20 +9,11 @@ import {
   setCurrentDashboard,
 } from "@/app/store/slice/dashboardSlice";
 import { AppDispatch, RootState } from "@/app/store/store";
-import {
-  faCirclePlus,
-  faEllipsisVertical,
-  faSquareXmark,
-  faSquarePen,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DashboardType } from "@/type";
 import { SelectSecondary } from "@/components/ui/Select/Select";
-import {
-  ArrowDownIcon,
-  PencilSquareIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { PrimaryInput } from "@/components/ui/Input/Input";
 import { useRouter } from "next/navigation";
 import { MdOutlineDashboard } from "react-icons/md";

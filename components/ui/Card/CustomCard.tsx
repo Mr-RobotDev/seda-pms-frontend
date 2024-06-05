@@ -10,7 +10,6 @@ import { AppDispatch, RootState } from "@/app/store/store";
 import Image from "next/image";
 import { PrimaryInput } from "../Input/Input";
 import { updateCard } from "@/app/store/slice/dashboardSlice";
-import toast from "react-hot-toast";
 import SingleDeviceDashCard from "@/components/Dashboard/dashboardViews/SingleDeviceDashCard";
 
 interface CardProps {

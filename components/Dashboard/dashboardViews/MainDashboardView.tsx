@@ -8,7 +8,6 @@ import {
 } from "@/app/store/slice/dashboardSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/app/store/store";
-import { DashboardType } from "@/type";
 import DashboardMenu from "@/components/Dashboard/dashboardViews/DashboardMenu";
 import NoDashboardSelected from "./NoDashboardSelected";
 import { useRouter } from "next/navigation";

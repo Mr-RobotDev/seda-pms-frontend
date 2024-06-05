@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Popover } from "antd";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector, useDispatch } from "react-redux";
 
 import { SelectSecondary } from "@/components/ui/Select/Select";
@@ -10,7 +8,7 @@ import { setTimeFrame } from "@/app/store/slice/dashboardSlice";
 import timeFrames from "@/utils/time_frames";
 import { RootState } from "@/app/store/store";
 import { TimeFrameType } from "@/type";
-import { ArrowDownIcon, CalendarDaysIcon } from "@heroicons/react/24/outline";
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 
 interface TimeFrameProps {
   functionality: boolean;

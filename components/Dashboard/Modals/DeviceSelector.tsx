@@ -3,11 +3,9 @@ import { Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import axiosInstance from "@/lib/axiosInstance";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { DevicesType, Event } from "@/type";
 import SimSignal from "../Device/SimSignal";
 import { useTimeAgo } from "next-timeago";
-import Link from "next/link";
 
 interface DevicesSelectorProps {
   setSelectedRowKeys: (selectedRowKeys: React.Key[]) => void;

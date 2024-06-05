@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Modal, Button, Divider } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { createCard } from "@/app/store/slice/dashboardSlice";
-import toast from "react-hot-toast";
 import DevicesSelector from "../Modals/DeviceSelector";
 import SensorSelector from "../Modals/SensorSelector";
 import CardDetails from "../Modals/CardDetails";

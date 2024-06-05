@@ -1,5 +1,5 @@
 import { PrimaryInput } from "@/components/ui/Input/Input";
-import React, { useState } from "react";
+import React from "react";
 import { CardLayoutType, CardOptionsType } from "@/type";
 
 interface CardDetailsProps {

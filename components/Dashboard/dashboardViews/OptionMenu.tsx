@@ -1,10 +1,4 @@
 import { AppDispatch, RootState } from "@/app/store/store";
-import {
-  faEllipsisVertical,
-  faSquarePen,
-  faSquareXmark,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Popover } from "antd";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
