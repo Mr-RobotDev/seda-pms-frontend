@@ -14,6 +14,7 @@ interface CustomTagsProps {
   initialData: string[];
   type: string;
   setFormData: React.Dispatch<React.SetStateAction<ReportsType | null>>;
+  isAdmin: boolean;
 }
 
 const options = Array.from({ length: 25 }, (_, index) => {
@@ -29,6 +30,7 @@ const CustomTags = ({
   initialData,
   type,
   setFormData,
+  isAdmin
 }: CustomTagsProps) => {
   const { token } = theme.useToken();
   const [tags, setTags] = useState(initialData);
@@ -65,7 +67,7 @@ const CustomTags = ({
   const handleInputConfirm = () => {
     if (type === "email") {
 
-      if(!inputValue){
+      if (!inputValue) {
         return;
       }
 
@@ -117,76 +119,84 @@ const CustomTags = ({
             <div key={tag} className=" my-auto">
               <span
 
-                className=" inline-block px-2 py-1 border border-gray-300 rounded-2xl"
+                className={` inline-block px-2 py-1 border border-gray-300 rounded-2xl ${isAdmin ? '' : 'opacity-75'}`}
               >
                 <span className=" flex flex-row gap-2">
                   {tag}
-                  <XCircleIcon
-                    width={20}
-                    className=" cursor-pointer"
-                    onClick={() => handleClose(tag)}
-                  />
+                  {
+                    isAdmin &&
+                    <XCircleIcon
+                      width={20}
+                      className=" cursor-pointer"
+                      onClick={() => handleClose(tag)}
+                    />
+                  }
                 </span>
               </span>
             </div>
           ))}
-          <div className=" flex items-center justify-center">
-            {
-              type === "email" && (
-                <input
-                  type="text"
-                  style={{ width: 200 }}
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onBlur={handleInputConfirm}
-                  onKeyDown={event => {
-                    if (event.key === 'Enter') {
-                      handleInputConfirm();
-                    }
-                  }}
-                  className="!border-none focus:!outline-none"
-                  placeholder={type === "email" ? "+ Add New Email" : "00:00"}
-                />
-              )
-            }
-            {inputVisible ? (
-              type === "time" && (
-                <div className=" flex items-center gap-2">
-                  <Select
-                    onChange={(value) => setSelectedTime(value)}
-                    defaultValue="00:00"
-                    style={{ width: 120 }}
-                  >
-                    {options}
-                  </Select>
-                  <button
-                    onClick={handleInputConfirm}
-                    className=" px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white transform duration-300 transition-all"
-                  >
-                    Add
-                  </button>
-                  <button
-                    onClick={() => setInputVisible(false)}
-                    className=" px-3 py-1 rounded-md bg-slate-300 hover:bg-slate-400 text-gray-800  transform duration-300 transition-all"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )
-            ) : (
-              type === 'time' && (
-                <Tag
-                  onClick={showInput}
-                  className=" cursor-pointer"
-                  style={tagPlusStyle}
-                >
-                  <PlusOutlined />{" "}
-                  Add Time
-                </Tag>
-              )
 
-            )}
-          </div>
+          <>
+            {isAdmin &&
+              <div className=" flex items-center justify-center">
+                {
+                  type === "email" && (
+                    <input
+                      type="text"
+                      style={{ width: 200 }}
+                      value={inputValue}
+                      onChange={handleInputChange}
+                      onBlur={handleInputConfirm}
+                      onKeyDown={event => {
+                        if (event.key === 'Enter') {
+                          handleInputConfirm();
+                        }
+                      }}
+                      className="!border-none focus:!outline-none"
+                      placeholder={type === "email" ? "+ Add New Email" : "00:00"}
+                    />
+                  )
+                }
+                {inputVisible ? (
+                  type === "time" && (
+                    <div className=" flex items-center gap-2">
+                      <Select
+                        onChange={(value) => setSelectedTime(value)}
+                        defaultValue="00:00"
+                        style={{ width: 120 }}
+                      >
+                        {options}
+                      </Select>
+                      <button
+                        onClick={handleInputConfirm}
+                        className=" px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white transform duration-300 transition-all"
+                      >
+                        Add
+                      </button>
+                      <button
+                        onClick={() => setInputVisible(false)}
+                        className=" px-3 py-1 rounded-md bg-slate-300 hover:bg-slate-400 text-gray-800  transform duration-300 transition-all"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )
+                ) : (
+                  type === 'time' && (
+                    <Tag
+                      onClick={showInput}
+                      className=" cursor-pointer"
+                      style={tagPlusStyle}
+                    >
+                      <PlusOutlined />{" "}
+                      Add Time
+                    </Tag>
+                  )
+
+                )}
+              </div>
+            }
+          </>
         </div>
       </div>
     </>

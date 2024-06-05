@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, use, useEffect, useState } from "react";
 import { DashboardType, ReportsType } from "@/type";
 import axiosInstance from "@/lib/axiosInstance";
 import { Button, Card, Checkbox, Spin, Switch, Table, TableProps } from "antd";
@@ -46,6 +46,7 @@ const ReportsTable = ({
   const [showDetailsReport, setShowDetailsReport] = useState<ReportsType | null>();
   const [formData, setFormData] = useState<ReportsType | null>(null);
   const { user } = useSelector((state: RootState) => state.authReducer)
+  const isAdmin = user?.role === 'Admin'
   const [loading, setLoading] = useState(false);
   const daysOfWeek = [
     "monday",
@@ -195,7 +196,10 @@ const ReportsTable = ({
         </div>
       ),
     },
-    {
+  ];
+
+  if (isAdmin) {
+    columns.push({
       title: "ACTIONS",
       key: "actions",
       dataIndex: "aactions",
@@ -211,17 +215,12 @@ const ReportsTable = ({
           </div>
         );
       },
-    },
-  ];
+    },)
+  }
 
   const showReportsDetails = (record: ReportsType) => ({
     onClick: () => setShowDetailsReport(record),
   });
-
-  const handleChangeSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => prevState && { ...prevState, [name]: value });
-  };
 
   const handleScheduleTypeChange = (value: string) => {
     setFormData((prevState) => prevState && { ...prevState, scheduleType: value })
@@ -394,12 +393,14 @@ const ReportsTable = ({
                         name="name"
                         value={formData?.name}
                         onChange={onChange}
+                        disabled={!isAdmin}
                       />
                     </div>
                     {!createNewReport && (
                       <div className="px-8  h-full ">
                         <p className="font-semibold text-lg !mb-1">Enabled</p>
                         <Switch
+                          disabled={!isAdmin}
                           checked={formData?.enabled}
                           onChange={handleSwitchChange}
                         />
@@ -417,6 +418,7 @@ const ReportsTable = ({
                       initialData={formData?.recipients}
                       type="email"
                       setFormData={setFormData}
+                      isAdmin={isAdmin}
                     />
                   )}
                 </Card>
@@ -433,6 +435,7 @@ const ReportsTable = ({
                       <TimeFrameMenu
                         functionality={false}
                         initialValue={formData?.timeframe}
+                        isAdmin={isAdmin}
                       />
                     </div>
                   </div>
@@ -441,7 +444,7 @@ const ReportsTable = ({
                   </div>
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-12">
                     <div className="flex flex-row items-center border rounded-md shadow-md w-[170px] mb-3 md:mb-0">
-                      <ScheduleTypeMenu initialScheduleType={formData?.scheduleType} handleScheduleTypeChange={handleScheduleTypeChange} />
+                      <ScheduleTypeMenu isAdmin={isAdmin} initialScheduleType={formData?.scheduleType} handleScheduleTypeChange={handleScheduleTypeChange} />
                     </div>
                     <div className=" grid grid-cols-3 md:flex md:flex-row md:flex-wrap md:justify-between w-full">
                       {renderCheckboxes()}
@@ -454,12 +457,13 @@ const ReportsTable = ({
                         initialData={formData?.times}
                         type="time"
                         setFormData={setFormData}
+                        isAdmin={isAdmin}
                       />
                     )}
                   </div>
                 </Card>
                 <div className=" flex flex-row justify-end mt-4">
-                  {!createNewReport && (
+                  {!createNewReport && isAdmin && (
                     <Button type="primary" onClick={handleUpdateReport} className=" w-32">
                       Update
                     </Button>

@@ -14,6 +14,7 @@ import {
 
 const ReportsMainView = () => {
   const [createNewReport, setCreateNewReport] = useState(false);
+  const { user } = useSelector((state: RootState) => state.authReducer)
   const { dashboards, currentDashboard } = useSelector(
     (state: RootState) => state.dashboardReducer
   );
@@ -40,14 +41,14 @@ const ReportsMainView = () => {
                 routingFunctionality={false}
               />
             </div>
-            {!createNewReport && (
+            {!createNewReport && user?.role === 'Admin' && (
               <div
                 className="flex justify-center"
                 onClick={() => setCreateNewReport(true)}
               >
                 <span className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center">
                   <FontAwesomeIcon icon={faCirclePlus} />
-                  Create New Report
+                  Create Report
                 </span>
               </div>
             )}

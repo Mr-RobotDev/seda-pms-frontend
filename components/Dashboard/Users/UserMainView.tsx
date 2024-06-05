@@ -20,6 +20,8 @@ import Image from "next/image";
 import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import { UserSwitchOutlined } from "@ant-design/icons";
 import { formatToTitleCase } from "@/lib/helperfunctions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
 const initialUserState: User = {
   id: "",
@@ -159,14 +161,9 @@ const UserMainView = () => {
     try {
       const values = await form.validateFields();
       setUser(values);
-      console.log(values);
-
-      // Make an API call to create the object
       const response = await axiosInstance.post("/users", values);
-
       if (response.status === 200) {
-        // Assuming the API returns the new user object
-        setUsers((prevUsers) => [...prevUsers, response.data]);
+        setUsers((prevUsers) => [...prevUsers, response.data.user]);
         toast.success("User created successfully");
         setIsModalOpen(false);
       } else {
@@ -209,13 +206,24 @@ const UserMainView = () => {
 
   return (
     <Card>
-      <h1 className="text-3xl font-semibold">Users</h1>
-      <div className="p-4 md:px-16">
-        <div className="flex justify-end mb-5">
-          <Button onClick={showModal} type="default">
-            Add New User
-          </Button>
+      <div className=" flex flex-row justify-between items-center">
+        <div className=" flex items-center justify-center my-auto">
+          <h1 className="text-3xl font-semibold !mb-0">Users</h1>
         </div>
+        <div>
+          <div
+            className="flex justify-center"
+            onClick={showModal}
+          >
+            <span className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center">
+              <FontAwesomeIcon icon={faCirclePlus} />
+              Add User
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className=" mt-6">
         <Table
           columns={columns}
           dataSource={users}

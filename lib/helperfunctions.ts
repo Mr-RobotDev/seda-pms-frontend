@@ -16,6 +16,9 @@ export const formatDateTime = (isoString: string) => {
 };
 
 export function formatToTitleCase(input: string): string {
+  if(!input){
+    return '';
+  }
   const words = input.trim().split(/\s+/);
 
   const formattedWords = words.map(word => {
