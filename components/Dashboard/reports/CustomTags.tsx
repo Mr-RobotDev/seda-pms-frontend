@@ -11,7 +11,7 @@ import { ReportsType } from "@/type";
 const { Option } = Select;
 
 interface CustomTagsProps {
-  recipientEamils: string[];
+  initialData: string[];
   type: string;
   setFormData: React.Dispatch<React.SetStateAction<ReportsType | null>>;
 }
@@ -26,12 +26,12 @@ const options = Array.from({ length: 25 }, (_, index) => {
 });
 
 const CustomTags = ({
-  recipientEamils,
+  initialData,
   type,
   setFormData,
 }: CustomTagsProps) => {
   const { token } = theme.useToken();
-  const [emails, setEmails] = useState(recipientEamils);
+  const [tags, setTags] = useState(initialData);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<InputRef>(null);
@@ -44,32 +44,14 @@ const CustomTags = ({
   }, [inputVisible]);
 
   useEffect(() => {
-    setEmails(recipientEamils);
-  }, [recipientEamils]);
+    setTags(initialData);
+  }, [initialData]);
 
   const handleClose = (removedTag: string) => {
-    const newTags = emails.filter((email) => email !== removedTag);
+    const newTags = tags.filter((email) => email !== removedTag);
     console.log(newTags);
-    setEmails(newTags);
-
-    if (type === 'email') {
-      setFormData(
-        (prevState) =>
-          prevState && {
-            ...prevState,
-            recipients: [...newTags],
-          }
-      );
-    } else {
-      setFormData(
-        (prevState) =>
-          prevState && {
-            ...prevState,
-            times: [...newTags],
-          }
-      );
-    }
-
+    setTags(newTags);
+    setFormData(prevState => prevState ? { ...prevState, [type === 'email' ? 'recipients' : 'times']: [...newTags] } : null);
   };
 
   const showInput = () => {
@@ -88,16 +70,16 @@ const CustomTags = ({
       }
 
       const isValidEmail = validateEmail(inputValue);
-      if (inputValue && emails.indexOf(inputValue) === -1 && isValidEmail) {
+      if (inputValue && tags.indexOf(inputValue) === -1 && isValidEmail) {
         console.log('Ypooo!')
-        setEmails([...emails, inputValue]);
+        setTags([...tags, inputValue]);
         setInputValue("");
 
         setFormData(
           (prevState) =>
             prevState && {
               ...prevState,
-              recipients: [...emails, inputValue],
+              recipients: [...tags, inputValue],
             }
         );
       } else {
@@ -105,15 +87,15 @@ const CustomTags = ({
       }
     } else {
       const isValidTime = isValidTimeFormat(selectedTime);
-      if (selectedTime && emails.indexOf(selectedTime) === -1 && isValidTime) {
-        setEmails([...emails, selectedTime]);
+      if (selectedTime && tags.indexOf(selectedTime) === -1 && isValidTime) {
+        setTags([...tags, selectedTime]);
         setInputVisible(false);
         setInputValue("");
         setFormData(
           (prevState) =>
             prevState && {
               ...prevState,
-              times: [...emails, selectedTime],
+              times: [...tags, selectedTime],
             }
         );
       } else {
@@ -131,18 +113,18 @@ const CustomTags = ({
     <>
       <div style={{ marginBottom: 16 }}>
         <div className=" flex flex-row flex-wrap gap-2 border-b border-b-blue-300 pb-2">
-          {emails.map((email) => (
-            <div key={email} className=" my-auto">
+          {tags.map((tag) => (
+            <div key={tag} className=" my-auto">
               <span
 
                 className=" inline-block px-2 py-1 border border-gray-300 rounded-2xl"
               >
                 <span className=" flex flex-row gap-2">
-                  {email}
+                  {tag}
                   <XCircleIcon
                     width={20}
                     className=" cursor-pointer"
-                    onClick={() => handleClose(email)}
+                    onClick={() => handleClose(tag)}
                   />
                 </span>
               </span>

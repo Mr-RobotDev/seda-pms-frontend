@@ -43,9 +43,9 @@ const ReportsTable = ({
   createNewReport,
 }: ReportsTableProps) => {
   const [reports, setReports] = useState<ReportsType[]>([]);
-  const [showDetailsReport, setShowDetailsReport] =
-    useState<ReportsType | null>();
+  const [showDetailsReport, setShowDetailsReport] = useState<ReportsType | null>();
   const [formData, setFormData] = useState<ReportsType | null>(null);
+  const { user } = useSelector((state: RootState) => state.authReducer)
   const [loading, setLoading] = useState(false);
   const daysOfWeek = [
     "monday",
@@ -91,9 +91,11 @@ const ReportsTable = ({
 
   useEffect(() => {
     if (createNewReport) {
+      emptyReportState.recipients = [user.email]
+      emptyReportState.scheduleType = 'weekdays'
       setFormData(emptyReportState);
     }
-  }, [createNewReport, setCreateNewReport]);
+  }, [createNewReport, setCreateNewReport, user.email]);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -222,7 +224,7 @@ const ReportsTable = ({
   };
 
   const handleScheduleTypeChange = (value: string) => {
-    setFormData((prevState) => prevState && {...prevState, scheduleType: value})
+    setFormData((prevState) => prevState && { ...prevState, scheduleType: value })
   }
 
   const handleGoBack = () => {
@@ -373,7 +375,7 @@ const ReportsTable = ({
         >
           <div className="container md:px-24">
             <div
-              className="text-blue-500 cursor-pointer flex flex-row gap-2 items-center"
+              className="text-blue-500 cursor-pointer flex flex-row gap-2 items-center !mb-2"
               onClick={handleGoBack}
             >
               <ArrowLeftIcon className="w-3 transition-colors duration-200 hover:text-blue-700" />
@@ -412,7 +414,7 @@ const ReportsTable = ({
                   <p className="font-semibold text-lg">Recipient Emails</p>
                   {formData?.recipients && (
                     <CustomTags
-                      recipientEamils={formData?.recipients}
+                      initialData={formData?.recipients}
                       type="email"
                       setFormData={setFormData}
                     />
@@ -438,8 +440,8 @@ const ReportsTable = ({
                     <p className="!mb-1 text-sm">Type </p>
                   </div>
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-12">
-                  <div className="flex flex-row items-center border rounded-md shadow-md w-[170px] mb-3 md:mb-0">
-                      <ScheduleTypeMenu scheduleType={formData?.scheduleType as string} handleScheduleTypeChange={handleScheduleTypeChange} />
+                    <div className="flex flex-row items-center border rounded-md shadow-md w-[170px] mb-3 md:mb-0">
+                      <ScheduleTypeMenu initialScheduleType={formData?.scheduleType} handleScheduleTypeChange={handleScheduleTypeChange} />
                     </div>
                     <div className=" grid grid-cols-3 md:flex md:flex-row md:flex-wrap md:justify-between w-full">
                       {renderCheckboxes()}
@@ -449,7 +451,7 @@ const ReportsTable = ({
                     <p className="font-semibold text-lg my-6">Time</p>
                     {formData?.times && (
                       <CustomTags
-                        recipientEamils={formData?.times}
+                        initialData={formData?.times}
                         type="time"
                         setFormData={setFormData}
                       />
