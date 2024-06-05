@@ -186,6 +186,13 @@ const ReportsTable = ({ currentDashboard, setCreateNewReport, createNewReport }:
   };
 
   const handleUpdateReport = async () => {
+    const { isValid, message } = validateReportsFormData(formData)
+
+    if(!isValid){
+      toast.error(message)
+      return
+    }
+    
     if (formData) {
       setLoading(true);
       const dataToSend = { ...formData };
