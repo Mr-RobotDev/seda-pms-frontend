@@ -91,11 +91,11 @@ const ReportsTable = ({
 
   useEffect(() => {
     if (createNewReport) {
-      emptyReportState.recipients = [user.email]
+      emptyReportState.recipients = [user?.email]
       emptyReportState.scheduleType = 'weekdays'
       setFormData(emptyReportState);
     }
-  }, [createNewReport, setCreateNewReport, user.email]);
+  }, [createNewReport, setCreateNewReport, user?.email]);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
