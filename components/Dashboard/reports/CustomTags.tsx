@@ -83,7 +83,7 @@ const CustomTags = ({
             }
         );
       } else {
-        toast.error("Cannot add this to the list");
+        toast.error("Please add a valid Email");
       }
     } else {
       const isValidTime = isValidTimeFormat(selectedTime);
@@ -131,8 +131,6 @@ const CustomTags = ({
             </div>
           ))}
           <div className=" flex items-center justify-center">
-
-
             {
               type === "email" && (
                 <input
@@ -151,7 +149,6 @@ const CustomTags = ({
                 />
               )
             }
-
             {inputVisible ? (
               type === "time" && (
                 <div className=" flex items-center gap-2">
