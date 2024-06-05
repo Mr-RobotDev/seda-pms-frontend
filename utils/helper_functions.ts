@@ -1,3 +1,6 @@
+import { ReportsType } from "@/type";
+import toast from "react-hot-toast";
+
 export const activeSidebar = (path: string): string => {
   const routes = [
     { name: 'floor', path: '/dashboard/floor' },
@@ -40,3 +43,33 @@ export const isValidTimeFormat = (time: string): boolean =>  {
 
   return true; 
 }
+
+
+export const validateReportsFormData = (formData: ReportsType | null): { isValid: boolean; message: string } => {
+  if (!formData) {
+    return { isValid: false, message: "Form data is null." };
+  }
+
+  if (!formData.name) {
+    return { isValid: false, message: "Name should not be empty." };
+  }
+
+  if (!formData.recipients || formData.recipients.length === 0) {
+    return { isValid: false, message: "Recipients should not be empty." };
+  }
+
+  if (!formData.scheduleType) {
+    return { isValid: false, message: "ScheduleType should not be empty." };
+  }
+
+  const validScheduleTypes = ["everyday", "weekdays", "custom"];
+  if (!validScheduleTypes.includes(formData.scheduleType)) {
+    return { isValid: false, message: "ScheduleType must be one of the following values: everyday, weekdays, custom." };
+  }
+
+  if (!formData.times || formData.times.length === 0) {
+    return { isValid: false, message: "Times should not be empty." };
+  }
+
+  return { isValid: true, message: "Form data is valid." };
+};

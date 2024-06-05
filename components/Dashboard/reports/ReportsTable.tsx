@@ -12,6 +12,7 @@ import TimeFrameMenu from '../dashboardViews/TimeFrameMenu'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/app/store/store'
 import NoReport from './NoReport'
+import { validateReportsFormData } from '@/utils/helper_functions'
 
 interface ReportsTableProps {
   currentDashboard: DashboardType
@@ -114,6 +115,11 @@ const ReportsTable = ({ currentDashboard, setCreateNewReport, createNewReport }:
       title: "SCHEDULE TYPE",
       key: "scheduleType",
       dataIndex: "scheduleType",
+      render: (_, { scheduleType }) => (
+        <div className="flex flex-row gap-4 items-center">
+          <p className=' !text-black !mb-0'>{scheduletypeOptions.find(option => option.value === scheduleType)?.label}</p>
+        </div>
+      ),
     },
     {
       title: "RECIPIENTS",
@@ -155,7 +161,7 @@ const ReportsTable = ({ currentDashboard, setCreateNewReport, createNewReport }:
           <div className=" flex flex-row gap-4 items-center">
             <p
               onClick={(e) => handleDeleteReport(e, id)}
-              className="!  text-red-400 hover:text-red-600 duration-200 transition-all transform cursor-pointer flex flex-row gap-2 items-center"
+              className="  !text-red-400 hover:!text-red-600 duration-200 transition-all transform cursor-pointer flex flex-row gap-2 items-center"
             >
               <TrashIcon width={20} />
             </p>
@@ -198,13 +204,20 @@ const ReportsTable = ({ currentDashboard, setCreateNewReport, createNewReport }:
         }
       } catch (error) {
         console.log('error->', error)
-      } finally{
+      } finally {
         setLoading(false)
       }
     }
   }
 
   const handleCreateReport = async () => {
+    const { isValid, message } = validateReportsFormData(formData)
+
+    if(!isValid){
+      toast.error(message)
+      return
+    }
+
     if (formData) {
       setLoading(true)
       formData.timeframe = timeFrame.key
@@ -292,10 +305,10 @@ const ReportsTable = ({ currentDashboard, setCreateNewReport, createNewReport }:
                       <p className='font-semibold text-lg !mb-1'>Name</p>
                       <PrimaryInput name="name" value={formData?.name} onChange={onChange} />
                     </div>
-                    <div className='px-8'>
+                    {!createNewReport && <div className='px-8'>
                       <p className='font-semibold text-lg !mb-1'>Enabled</p>
                       <Switch checked={formData?.enabled} onChange={handleSwitchChange} />
-                    </div>
+                    </div>}
                   </div>
                 </Card>
                 <div className='flex items-center justify-center'>
