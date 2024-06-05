@@ -106,7 +106,7 @@ const CustomTags = ({
   return (
     <>
       <div style={{ marginBottom: 16 }}>
-        <div className=" flex flex-row gap-2 border-b border-b-blue-300 pb-2">
+        <div className=" flex flex-row flex-wrap gap-2 border-b border-b-blue-300 pb-2">
           {emails.map((email) => (
             <span
               key={email}

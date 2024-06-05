@@ -332,6 +332,12 @@ const ReportsTable = ({
   const isWeekdaysScheduleType = formData?.scheduleType === "weekdays";
   const isEverydayScheduleType = formData?.scheduleType === "everyday";
 
+  if (loading && reports.length === 0){
+    return <div className=" flex justify-center items-center mt-24">
+      <Spin />
+    </div>
+  }
+
   return (
     <div className="mt-6">
       <div>
@@ -361,7 +367,7 @@ const ReportsTable = ({
             showDetailsReport || createNewReport ? "block" : "hidden"
           }`}
         >
-          <div className="container px-24">
+          <div className="container md:px-24">
             <div
               className="text-blue-500 cursor-pointer flex flex-row gap-2 items-center"
               onClick={handleGoBack}
@@ -435,7 +441,7 @@ const ReportsTable = ({
                       value={formData?.scheduleType as string}
                       onChange={handleChangeSelect}
                     />
-                    <div className="flex flex-row justify-between w-full">
+                    <div className="flex flex-row flex-wrap justify-between w-full">
                       {renderCheckboxes()}
                     </div>
                   </div>

@@ -171,6 +171,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
               resizeHandles={["s", "w", "e", "n", "sw", "nw", "se", "ne"]}
               onLayoutChange={handleLayoutChange}
               isResizable={!isSmallScreen}
+              isDraggable={!isSmallScreen}
             >
               {dashboardCards.map((card: DashboardCardType) => (
                 <div
