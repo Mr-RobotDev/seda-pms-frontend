@@ -15,3 +15,25 @@ export const timeFrameOptions = [
   { label: 'Last 30 Days', value: 'last_30_days' }
 ];
 
+export const triggerWhenOptions = [
+  { label: 'Relative Humidity', value: 'relativeHumidity' },
+  { label: 'Temperature', value: 'temperature' },
+  { label: 'Pressure', value: 'pressure' },
+];
+
+export const triggerRangeTypeOptions = [
+  { label: 'Lower', value: 'lower' },
+  { label: 'Upper', value: 'upper' },
+  { label: 'Outside', value: 'outside' },
+  { label: 'Inside', value: 'inside' },
+];
+
+export const daysOfWeek = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+];

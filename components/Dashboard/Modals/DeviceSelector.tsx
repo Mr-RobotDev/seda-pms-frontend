@@ -6,17 +6,37 @@ import Image from "next/image";
 import { DevicesType, Event } from "@/type";
 import SimSignal from "../Device/SimSignal";
 import { useTimeAgo } from "next-timeago";
+import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/16/solid";
+import toast from "react-hot-toast";
 
 interface DevicesSelectorProps {
-  setSelectedRowKeys: (selectedRowKeys: React.Key[]) => void;
-  selectedRowKeys: React.Key[];
+  setSelectedRowKeys: (selectedRowKeys: string[]) => void;
+  selectedRowKeys: string[];
+  allowSingleDevice?: boolean;
 }
 const DevicesSelector = ({
   selectedRowKeys,
   setSelectedRowKeys,
+  allowSingleDevice
 }: DevicesSelectorProps) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const { TimeAgo } = useTimeAgo();
+
+  const addOrRemoveDeviceIdToTheList = (e: any, id: string) => {
+    e.stopPropagation()
+
+    if(selectedRowKeys.includes(id)){
+      setSelectedRowKeys([])
+      return;
+    }
+
+    if(selectedRowKeys.length === 1 && selectedRowKeys[0] !== ''){
+      toast.error('You Can only have one device')
+      return;
+    }
+
+    setSelectedRowKeys([id]);
+  }
 
   const columns: TableProps<DevicesType>["columns"] = [
     {
@@ -72,11 +92,29 @@ const DevicesSelector = ({
     },
   ];
 
+  const reorderDevices = (devices: DevicesType[]) => {
+    const selectedDevices = devices.filter(device => selectedRowKeys.includes(device.id));
+    const unselectedDevices = devices.filter(device => !selectedRowKeys.includes(device.id));
+    return [...selectedDevices, ...unselectedDevices];
+  };
+
+  if(allowSingleDevice){
+    columns.unshift({
+      title: "Add",
+      dataIndex: "add",
+      render: (_, { id }) => (
+        <div className="flex flex-row items-center" onClick={(e) => addOrRemoveDeviceIdToTheList(e, id)}>
+          {selectedRowKeys.includes(id) ? <MinusCircleIcon width={25} className=" text-red-400" /> : <PlusCircleIcon width={25} className=" text-blue-700" />}
+        </div>
+      ),
+    })
+  }
+
   useEffect(() => {
     if (devices.length === 0) {
       (async () => {
         try {
-          const response = await axiosInstance.get("/devices?page=1&limit=20");
+          const response = await axiosInstance.get("/devices?page=1&limit=50");
           if (response.status === 200) {
             setDevices(response.data.results);
           }
@@ -90,6 +128,7 @@ const DevicesSelector = ({
   const onRowClick = (record: DevicesType) => {
     return {
       onClick: () => {
+        if (allowSingleDevice) return;
         const selectedKey = record.id;
         if (selectedRowKeys.includes(selectedKey)) {
           setSelectedRowKeys(
@@ -102,25 +141,11 @@ const DevicesSelector = ({
     };
   };
 
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: Event[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record: any) => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
-
   return (
     <div className="mt-8">
       <Table
         columns={columns}
-        dataSource={devices}
+        dataSource={reorderDevices(devices)}
         scroll={{ x: 500 }}
         loading={devices.length === 0}
         className="cursor-pointer"

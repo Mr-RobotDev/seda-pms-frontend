@@ -64,7 +64,7 @@ const AddCardModal = ({
   isVisible,
   onClose,
 }: AddCardModalProps) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
   const [cardName, setCardName] = useState("");

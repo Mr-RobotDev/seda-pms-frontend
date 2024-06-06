@@ -127,3 +127,31 @@ interface Dashboard {
   devicesCount: number;
   id: string;
 }
+
+export interface AlertDataType {
+  name: string;
+  device: string ;
+  recipients: string[];
+  trigger: Trigger;
+  scheduleType: string;
+  weekdays: string[];
+  enabled: boolean;
+  id: string;
+}
+
+interface Trigger {
+  field: string;
+  range: Range;
+}
+
+interface Range {
+  lower: number;
+  upper: number;
+  type: string;
+}
+
+interface Device {
+  name: string;
+  lastUpdated: string;
+  id: string;
+}
