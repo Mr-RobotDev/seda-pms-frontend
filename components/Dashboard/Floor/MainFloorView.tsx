@@ -38,7 +38,7 @@ const MainFloorView = () => {
 
   return (
     <>
-      <h1 className=" text-3xl font-semibold">Floor</h1>
+      <h1 className=" text-3xl font-semibold">Floor Plan</h1>
       {error ? (
         <h1 className=" text-2xl font-semibold mt-20 text-center">
           Error Loading the Resources

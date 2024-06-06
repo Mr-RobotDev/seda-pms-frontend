@@ -28,6 +28,16 @@ export const triggerRangeTypeOptions = [
   { label: 'Inside', value: 'inside' },
 ];
 
+export const userRoleOptions = [
+  { label: 'User', value: 'User' },
+  { label: 'Admin', value: 'Admin' },
+];
+
+export const userOrganizationOptions = [
+  { label: 'Origin Smart', value: 'Origin Smart' },
+  { label: 'Seda', value: 'Seda' },
+]
+
 export const daysOfWeek = [
   "monday",
   "tuesday",

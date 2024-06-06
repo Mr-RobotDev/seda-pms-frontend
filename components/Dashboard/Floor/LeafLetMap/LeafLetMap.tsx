@@ -177,7 +177,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
   return (
     <div
       style={{ width: "100%" }}
-      className="w-full h-[500px] md:max-h-[600px] 2xl:h-[800px]"
+      className="w-full h-[500px] md:max-h-[670px] 2xl:h-[900px]"
     >
       <MapContainer
         center={[51.5014, -0.083]}

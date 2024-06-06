@@ -420,3 +420,12 @@ body{
   width: 0 !important;
   height: 0 !important;
 }
+
+.custom-form-item .ant-form-item-label {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.custom-form-item .ant-form-item-control {
+  margin-bottom: 0;
+}
