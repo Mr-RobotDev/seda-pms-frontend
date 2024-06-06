@@ -1,9 +1,9 @@
 import DeviceMainView from "@/components/Dashboard/Device/DeviceMainView";
 
-const DevicesPage = () => {
-  return(
-    <DeviceMainView />
-  )
+export const metadata = {
+  title: 'All Devices'
 }
+
+const DevicesPage = () => <DeviceMainView />
 
 export default DevicesPage

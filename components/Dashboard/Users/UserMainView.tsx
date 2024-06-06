@@ -24,6 +24,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import CustomMenu from "@/components/ui/Menu/CustomMenu";
 import { userOrganizationOptions, userRoleOptions } from "@/utils/form";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { useRouter } from "next/navigation";
 
 const initialUserState: User = {
   id: "",
@@ -51,6 +54,8 @@ const UserMainView = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [user, setUser] = useState<User>(initialUserState);
   const [form] = Form.useForm();
+  const { user: loggedInUser } = useSelector((state: RootState) => state.authReducer)
+  const router = useRouter()
 
   const columns: TableProps<any>["columns"] = [
     {
@@ -182,6 +187,12 @@ const UserMainView = () => {
   };
 
   useEffect(() => {
+    if(loggedInUser && loggedInUser?.role !== 'Admin'){
+      router.push('/dashboard/floor')
+    }
+  }, [router, loggedInUser])
+
+  useEffect(() => {
     (async () => {
       try {
         const response = await axiosInstance.get("/users");
@@ -204,7 +215,7 @@ const UserMainView = () => {
   };
 
   return (
-    <Card>
+    loggedInUser?.role === 'Admin' && <Card>
       <div className=" flex flex-row justify-between items-center">
         <div className=" flex items-center justify-center my-auto">
           <h1 className="text-3xl font-semibold !mb-0">Users</h1>
