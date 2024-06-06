@@ -242,12 +242,14 @@ const ReportsTable = ({
     if (formData) {
       setLoading(true);
       const dataToSend = { ...formData };
-      dataToSend.timeframe = timeFrame.key;
+      delete dataToSend.id
       delete dataToSend.dashboard;
+
+      dataToSend.timeframe = timeFrame.key;
 
       try {
         const response = await axiosInstance.patch(
-          `/dashboards/${currentDashboard.id}/reports/${dataToSend.id}`,
+          `/dashboards/${currentDashboard.id}/reports/${formData.id}`,
           dataToSend
         );
         if (response.status === 200) {
@@ -262,8 +264,9 @@ const ReportsTable = ({
         } else {
           console.log("error ->", response);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.log("error->", error);
+        toast.error(error.response.data.message[0]);
       } finally {
         setLoading(false);
       }
@@ -280,6 +283,9 @@ const ReportsTable = ({
 
     if (formData) {
       setLoading(true);
+      delete formData.enabled
+      delete formData.id
+
       formData.timeframe = timeFrame.key;
       try {
         const response = await axiosInstance.post(
@@ -294,8 +300,9 @@ const ReportsTable = ({
         } else {
           console.log("error ->", response);
         }
-      } catch (e) {
-        console.log(e);
+      } catch (error: any) {
+        console.log(error);
+        toast.error(error.response.data.message[0]);
       } finally {
         setLoading(false);
       }

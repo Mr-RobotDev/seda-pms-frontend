@@ -118,11 +118,11 @@ export interface ReportsType {
   timeframe: string;
   recipients: string[];
   scheduleType: string;
-  enabled: boolean;
+  enabled?: boolean;
   dashboard?: Dashboard;
   weekdays: string[];
   times: string[];
-  id: string;
+  id?: string;
 }
 
 interface Dashboard {
