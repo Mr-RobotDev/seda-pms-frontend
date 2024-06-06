@@ -183,11 +183,10 @@ const UserMainView = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    setUser(initialUserState)
   };
 
   useEffect(() => {
-    if(loggedInUser && loggedInUser?.role !== 'Admin'){
+    if (loggedInUser && loggedInUser?.role !== 'Admin') {
       router.push('/dashboard/floor')
     }
   }, [router, loggedInUser])
@@ -259,28 +258,30 @@ const UserMainView = () => {
             variant="filled"
             style={{ maxWidth: 600 }}
           >
-            <Form.Item
-              label="First Name"
-              name="firstName"
-              rules={[{ required: true, message: "First name is required" }]}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              className="custom-form-item"
-            >
-              <Input onChange={(e) => setUser({ ...user, firstName: e.target.value })} value={user.firstName} />
-            </Form.Item>
+            <div className=" grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <Form.Item
+                label="First Name"
+                name="firstName"
+                rules={[{ required: true, message: "First name is required" }]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                className="custom-form-item"
+              >
+                <Input onChange={(e) => setUser({ ...user, firstName: e.target.value })} value={user.firstName} />
+              </Form.Item>
 
 
-            <Form.Item
-              label="Last Name"
-              name="lastName"
-              rules={[{ required: true, message: "Last name is required" }]}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              className="custom-form-item"
-            >
-              <Input onChange={(e) => setUser({ ...user, lastName: e.target.value })} value={user.lastName} />
-            </Form.Item>
+              <Form.Item
+                label="Last Name"
+                name="lastName"
+                rules={[{ required: true, message: "Last name is required" }]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                className="custom-form-item"
+              >
+                <Input onChange={(e) => setUser({ ...user, lastName: e.target.value })} value={user.lastName} />
+              </Form.Item>
+            </div>
 
             <Form.Item
               label="Email"
