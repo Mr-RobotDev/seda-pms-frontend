@@ -8,6 +8,9 @@ import SimSignal from "../Device/SimSignal";
 import { useTimeAgo } from "next-timeago";
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/16/solid";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/store/store";
+import { setDevicesToGlobal } from "@/app/store/slice/devicesSlice";
 
 interface DevicesSelectorProps {
   setSelectedRowKeys: (selectedRowKeys: string[]) => void;
@@ -21,6 +24,7 @@ const DevicesSelector = ({
 }: DevicesSelectorProps) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const { TimeAgo } = useTimeAgo();
+  const dispatch: AppDispatch = useDispatch()
 
   const addOrRemoveDeviceIdToTheList = (e: any, id: string) => {
     e.stopPropagation()
@@ -79,16 +83,23 @@ const DevicesSelector = ({
     },
     {
       title: "Signal",
-      render: (_, { isOffline, signalStrength }) =>
-        !isOffline ? (
-          <div className="flex flex-row items-center">
-            <SimSignal signalStrength={signalStrength} />
-          </div>
-        ) : (
-          <div>
-            <Tag color="error">Offline</Tag>
-          </div>
-        ),
+      render: (_, { isOffline, signalStrength, type }) => (
+        <>
+          {type === 'pressure' ? (
+            <p>-</p>
+          ) : (
+            !isOffline ? (
+              <div className="flex flex-row items-center">
+                <SimSignal signalStrength={signalStrength} />
+              </div>
+            ) : (
+              <div>
+                <Tag color="error">Offline</Tag>
+              </div>
+            )
+          )}
+        </>
+      )
     },
   ];
 
@@ -117,13 +128,14 @@ const DevicesSelector = ({
           const response = await axiosInstance.get("/devices?page=1&limit=50");
           if (response.status === 200) {
             setDevices(response.data.results);
+            dispatch(setDevicesToGlobal(response.data.results))
           }
         } catch (error) {
           console.log(error);
         }
       })();
     }
-  }, [devices]);
+  }, [devices, dispatch]);
 
   const onRowClick = (record: DevicesType) => {
     return {

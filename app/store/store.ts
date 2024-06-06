@@ -13,11 +13,13 @@ import storage from "redux-persist/lib/storage";
 import authReducer from "./slice/authSlice";
 import statisticsReducer from "./slice/StatisticsSlice"
 import dashboardReducer from "./slice/dashboardSlice"
+import devicesReducer from "./slice/devicesSlice"
 
 const rootReducer = combineReducers({
   authReducer,
   statisticsReducer,
-  dashboardReducer
+  dashboardReducer,
+  devicesReducer
 });
 
 const persistConfig = {
