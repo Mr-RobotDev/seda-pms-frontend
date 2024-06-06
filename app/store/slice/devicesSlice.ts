@@ -1,10 +1,11 @@
+import { DevicesType } from "@/type";
 import { createSlice } from "@reduxjs/toolkit";
 
-type DevicesType = {
+type SingleDeviceType = {
   devices: DevicesType[]
 }
 
-const initialState: DevicesType = {
+const initialState: SingleDeviceType = {
   devices: []
 }
 

@@ -43,7 +43,6 @@ const TemperatureChart: React.FC<TemperatureChartProps> = ({
   eventTypes,
 }) => {
   const seriesData = transformDataForChart(data, eventTypes);
-  console.log('seriesData-->', data)
 
   const options: ApexOptions = {
     ...commonApexOptions,
