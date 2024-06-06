@@ -93,35 +93,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <Sidebar color={sidenavColor} />
       </Sider>
       <Layout>
-        {fixed ? (
-          <Affix>
-            <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-              <Header
-                placement="left"
-                onPress={openDrawer}
-                name={pathname}
-                subName={pathname}
-                handleSidenavColor={handleSidenavColor}
-                handleSidenavType={handleSidenavType}
-                handleFixedNavbar={handleFixedNavbar}
-              />
-            </AntHeader>
-          </Affix>
-        ) : (
-          <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-            <Header
-              placement="left"
-              onPress={openDrawer}
-              name={pathname}
-              subName={pathname}
-              handleSidenavColor={handleSidenavColor}
-              handleSidenavType={handleSidenavType}
-              handleFixedNavbar={handleFixedNavbar}
-            />
-          </AntHeader>
-        )}
         <Content className="content-ant">{children}</Content>
-        {/* <Footer /> */}
       </Layout>
     </Layout>
   );

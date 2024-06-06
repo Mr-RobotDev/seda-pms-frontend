@@ -4,6 +4,7 @@ import { RootState } from '@/app/store/store'
 import { AlertDataType, DevicesType } from '@/type'
 import { useSelector } from 'react-redux'
 import SingleAlertDetailsView from '@/components/Dashboard/alerts/SingleAlertDetailsView'
+import withDashboardLayout from '@/hoc/withDashboardLayout'
 
 const AlertsCreatePage = () => {
   const { user } = useSelector((state: RootState) => state.authReducer)
@@ -46,4 +47,4 @@ const AlertsCreatePage = () => {
   )
 }
 
-export default AlertsCreatePage
+export default withDashboardLayout(AlertsCreatePage)

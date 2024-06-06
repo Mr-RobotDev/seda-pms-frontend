@@ -16,30 +16,25 @@ interface DevicesSelectorProps {
   setSelectedRowKeys: (selectedRowKeys: string[]) => void;
   selectedRowKeys: string[];
   allowSingleDevice?: boolean;
+  deviceType?: string;
 }
+
 const DevicesSelector = ({
   selectedRowKeys,
   setSelectedRowKeys,
-  allowSingleDevice
+  allowSingleDevice,
+  deviceType
 }: DevicesSelectorProps) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
+  const [loading, setLoading] = useState(false)
   const { TimeAgo } = useTimeAgo();
   const dispatch: AppDispatch = useDispatch()
 
   const addOrRemoveDeviceIdToTheList = (e: any, id: string) => {
     e.stopPropagation()
 
-    if(selectedRowKeys.includes(id)){
-      setSelectedRowKeys([])
-      return;
-    }
-
-    if(selectedRowKeys.length === 1 && selectedRowKeys[0] !== ''){
-      toast.error('You Can only have one device')
-      return;
-    }
-
     setSelectedRowKeys([id]);
+
   }
 
   const columns: TableProps<DevicesType>["columns"] = [
@@ -50,7 +45,7 @@ const DevicesSelector = ({
         <div className="flex flex-row items-center gap-7">
           <div className="w-5 h-5">
             <Image
-              src={type === "cold" ? "/snowflake.png" : "/thermometer.png"}
+              src={type === "cold" ? "/snowflake.png" : (type === 'pressure' ? '/pressure.png' : "/humidity.png")}
               alt="icon"
               width={100}
               height={100}
@@ -122,20 +117,25 @@ const DevicesSelector = ({
   }
 
   useEffect(() => {
-    if (devices.length === 0) {
-      (async () => {
-        try {
-          const response = await axiosInstance.get("/devices?page=1&limit=50");
-          if (response.status === 200) {
-            setDevices(response.data.results);
-            dispatch(setDevicesToGlobal(response.data.results))
-          }
-        } catch (error) {
-          console.log(error);
+    (async () => {
+      try {
+        setLoading(true);
+        const params: any = { page: 1, limit: 50 };
+        if (deviceType) {
+          params.type = deviceType === 'pressure' ? 'pressure' : 'humidity,cold';
         }
-      })();
-    }
-  }, [devices, dispatch]);
+        const response = await axiosInstance.get("/devices", { params });
+        if (response.status === 200) {
+          setDevices(response.data.results);
+          dispatch(setDevicesToGlobal(response.data.results));
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [dispatch, deviceType]);
 
   const onRowClick = (record: DevicesType) => {
     return {
@@ -157,9 +157,9 @@ const DevicesSelector = ({
     <div className="mt-8">
       <Table
         columns={columns}
-        dataSource={reorderDevices(devices)}
+        dataSource={devices}
         scroll={{ x: 500 }}
-        loading={devices.length === 0}
+        loading={loading}
         className="cursor-pointer"
         onRow={(record) => onRowClick(record)}
         rowClassName={(record) =>
@@ -172,4 +172,4 @@ const DevicesSelector = ({
   );
 };
 
-export default memo(DevicesSelector);
+export default DevicesSelector;

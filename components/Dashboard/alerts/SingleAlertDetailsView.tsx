@@ -356,7 +356,12 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
       >
         <p className="font-semibold text-lg !mb-0 text-center">Select the Device</p>
         <div className='!h-[600px] overflow-y-auto py-3'>
-          <DeviceSelector allowSingleDevice={true} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys} />
+          <DeviceSelector 
+            allowSingleDevice={true} 
+            selectedRowKeys={selectedRowKeys} 
+            setSelectedRowKeys={setSelectedRowKeys}
+            deviceType={formData.trigger.field}
+            />
         </div>
         {selectedRowKeys.length === 1 &&
           <div className=' flex justify-end mt-3'>
@@ -368,4 +373,4 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
   )
 }
 
-export default withDashboardLayout(SingleAlertDetailsView)
+export default SingleAlertDetailsView

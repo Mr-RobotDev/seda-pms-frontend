@@ -4,6 +4,7 @@ import SingleAlertDetailsView from '@/components/Dashboard/alerts/SingleAlertDet
 import { AlertDataType, DevicesType } from '@/type';
 import axiosInstance from '@/lib/axiosInstance';
 import { Spin } from 'antd';
+import withDashboardLayout from '@/hoc/withDashboardLayout';
 
 const fetchAlertRecord = async (id: string) => {
   const response = await axiosInstance.get(`/alerts/${id}`)
@@ -51,4 +52,4 @@ const SingleAlertPage = ({ params }: { params: { id: string } }) => {
 };
 
 export const fetchCache = 'force-no-store';
-export default SingleAlertPage;
+export default withDashboardLayout(SingleAlertPage);
