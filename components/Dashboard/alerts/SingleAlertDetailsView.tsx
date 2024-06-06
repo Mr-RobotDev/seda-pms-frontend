@@ -179,7 +179,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
       toast.error(message);
       return;
     }
-    
+
     if (formData) {
       setLoading(true);
       const dataToSend = { ...formData };
@@ -323,6 +323,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
               <div className="flex flex-row items-center  mb-3 md:mb-0">
                 <PrimaryInput
                   name="lower"
+                  disabled={formData.trigger.range.type === 'upper'}
                   value={formData.trigger.range.lower?.toString()}
                   onChange={handleChange}
                   className='!h-[49px]'
@@ -334,6 +335,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
               <p className="!mb-1 text-sm">Upper ({typeAndUnits[formData.trigger.field]})</p>
               <div className="flex flex-row items-center  mb-3 md:mb-0">
                 <PrimaryInput
+                  disabled={formData.trigger.range.type === 'lower'}
                   name="upper"
                   value={formData.trigger.range.upper?.toString()}
                   onChange={handleChange}
@@ -382,12 +384,12 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
       >
         <p className="font-semibold text-lg !mb-0 text-center">Select the Device</p>
         <div className='!h-[600px] overflow-y-auto py-3'>
-          <DeviceSelector 
-            allowSingleDevice={true} 
-            selectedRowKeys={selectedRowKeys} 
+          <DeviceSelector
+            allowSingleDevice={true}
+            selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
             deviceType={formData.trigger.field}
-            />
+          />
         </div>
         {selectedRowKeys.length === 1 &&
           <div className=' flex justify-end mt-3'>
