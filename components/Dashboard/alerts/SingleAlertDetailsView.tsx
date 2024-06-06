@@ -18,6 +18,7 @@ import DeviceDetail from './DeviceDetail'
 import axiosInstance from '@/lib/axiosInstance'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import { validateAlertFormData } from '@/utils/helper_functions'
 
 interface SingleAlertDetailsViewProps {
   alert: AlertDataType
@@ -137,9 +138,17 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
   }
 
   const handleUpdateAlert = async () => {
+    const { isValid, message } = validateAlertFormData(formData);
+
+    if (!isValid) {
+      toast.error(message);
+      return;
+    }
+
     if (formData) {
       setLoading(true);
       const dataToSend = { ...formData };
+      delete dataToSend.id;
 
       try {
         const response = await axiosInstance.patch(
@@ -163,9 +172,26 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
   }
 
   const handleCreateNewAlert = async () => {
+
+    const { isValid, message } = validateAlertFormData(formData);
+
+    if (!isValid) {
+      toast.error(message);
+      return;
+    }
+    
     if (formData) {
       setLoading(true);
       const dataToSend = { ...formData };
+      delete dataToSend.enabled;
+      delete dataToSend.id
+
+      const { isValid, message } = validateAlertFormData(formData);
+
+      if (!isValid) {
+        toast.error(message);
+        return;
+      }
 
       try {
         const response = await axiosInstance.post(

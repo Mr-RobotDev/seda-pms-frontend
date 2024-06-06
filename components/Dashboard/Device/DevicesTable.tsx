@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { DevicesType } from "@/type";
 import SimSignal from "./SimSignal";
 import { useTimeAgo } from "next-timeago";
-import { formatToTitleCase } from "@/lib/helperfunctions";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
 

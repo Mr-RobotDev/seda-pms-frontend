@@ -5,7 +5,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { Card, DatePicker, Spin, Tag } from "antd";
 import toast from "react-hot-toast";
 import dayjs, { Dayjs } from "dayjs";
-import { formatDateTime, formatToTitleCase } from "@/lib/helperfunctions";
+import { formatDateTime, formatToTitleCase } from "@/utils/helper_functions";
 import "./UserTable.css";
 import Link from "next/link";
 import { useTimeAgo } from "next-timeago";

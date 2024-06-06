@@ -5,7 +5,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { Card, DatePicker, Spin, Tag } from "antd";
 import toast from "react-hot-toast";
 import dayjs, { Dayjs } from "dayjs";
-import { formatDateTime, formatToTitleCase } from "@/lib/helperfunctions";
+import { formatDateTime, formatToTitleCase } from "@/utils/helper_functions";
 import "../../Users/UserTable.css";
 import Image from "next/image";
 import { useTimeAgo } from "next-timeago";
@@ -218,10 +218,9 @@ const DeviceActivityLogView = ({ id }: DeviceActivityLogViewProps) => {
                   </div>
                 ) : (
                   <div
-                    className={`w-10 h-10 rounded-full mr-5 flex justify-center items-center ${
-                      actionTailwindColorMapping[item.action] ||
+                    className={`w-10 h-10 rounded-full mr-5 flex justify-center items-center ${actionTailwindColorMapping[item.action] ||
                       actionTailwindColorMapping["default"]
-                    }`}
+                      }`}
                   >
                     {actionIcons[item.action] || actionIcons["default"]}
                   </div>
@@ -251,12 +250,10 @@ const DeviceActivityLogView = ({ id }: DeviceActivityLogViewProps) => {
                   )}
                   <p className="!mb-0">
                     at{" "}
-                    <strong>{`${
-                      formatDateTime(item.createdAt).formattedDate
-                    }`}</strong>{" "}
-                    <span>{`${
-                      formatDateTime(item.createdAt).formattedTime
-                    }`}</span>
+                    <strong>{`${formatDateTime(item.createdAt).formattedDate
+                      }`}</strong>{" "}
+                    <span>{`${formatDateTime(item.createdAt).formattedTime
+                      }`}</span>
                   </p>
                 </div>
               </div>

@@ -19,7 +19,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import { UserSwitchOutlined } from "@ant-design/icons";
-import { formatToTitleCase } from "@/lib/helperfunctions";
+import { formatToTitleCase } from "@/utils/helper_functions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import CustomMenu from "@/components/ui/Menu/CustomMenu";

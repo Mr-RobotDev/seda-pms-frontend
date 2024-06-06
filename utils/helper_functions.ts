@@ -1,5 +1,5 @@
-import { ReportsType } from "@/type";
-import toast from "react-hot-toast";
+import { AlertDataType, ReportsType } from "@/type";
+import dayjs from 'dayjs';
 
 export const activeSidebar = (path: string): string => {
   const routes = [
@@ -27,7 +27,7 @@ export const validateEmail = (email: string): boolean => {
   return emailPattern.test(email);
 }
 
-export const isValidTimeFormat = (time: string): boolean =>  {
+export const isValidTimeFormat = (time: string): boolean => {
   const timeRegex: RegExp = /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]$/;
   if (!timeRegex.test(time)) {
     return false;
@@ -41,7 +41,7 @@ export const isValidTimeFormat = (time: string): boolean =>  {
     return false;
   }
 
-  return true; 
+  return true;
 }
 
 
@@ -77,3 +77,53 @@ export const validateReportsFormData = (formData: ReportsType | null): { isValid
 
   return { isValid: true, message: "Form data is valid." };
 };
+
+
+export const validateAlertFormData = (formData: AlertDataType | null): { isValid: boolean, message: string } => {
+  if (!formData) {
+    return { isValid: false, message: "Form data is null." };
+  }
+
+  if (!formData.name) {
+    return { isValid: false, message: "Name should not be empty." };
+  }
+
+  if (!formData.device) {
+    return { isValid: false, message: "Device should not be empty." };
+  }
+
+  return { isValid: true, message: "Form data is valid." };
+}
+
+
+
+export const formatDate = (date: Date): string => {
+  const day = date.getDate().toString().padStart(2, '0');
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+  return `${day} ${month}, ${year}`;
+};
+
+export const formatDateTime = (isoString: string) => {
+  const dateObj = dayjs(isoString);
+  const formattedDate = dateObj.format('DD MMM, YYYY');
+  const formattedTime = dateObj.format('h:mm A');
+  return { formattedDate, formattedTime };
+};
+
+export function formatToTitleCase(input: string): string {
+  if (!input) {
+    return '';
+  }
+  const words = input.trim().split(/\s+/);
+
+  const formattedWords = words.map(word => {
+    if (word.length > 0) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }
+    return word;
+  });
+
+  return formattedWords.join(' ');
+}

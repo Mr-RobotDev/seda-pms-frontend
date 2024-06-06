@@ -138,8 +138,8 @@ export interface AlertDataType {
   trigger: Trigger;
   scheduleType: string;
   weekdays: string[];
-  enabled: boolean;
-  id: string;
+  enabled?: boolean;
+  id?: string;
 }
 
 interface Trigger {
