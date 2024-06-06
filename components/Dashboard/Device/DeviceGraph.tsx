@@ -19,45 +19,12 @@ import {
   humidityColors,
   commonApexOptions,
 } from "@/utils/graph";
+import DeviceTypeDetail from "./DeviceTypeDetail";
+import PressueChart from "./PressueChart";
 
 dayjs.extend(isBetween);
 
 const { RangePicker } = DatePicker;
-
-const commonChartOptions = {
-  chart: {
-    type: "line",
-    group: "device",
-    zoom: {
-      enabled: true,
-    },
-    animations: {
-      enabled: true,
-    },
-  },
-  xaxis: {
-    type: "datetime",
-  },
-  tooltip: {
-    x: {
-      format: "dd MMM yyyy HH:mm",
-    },
-    shared: true,
-  },
-  stroke: {
-    width: 2,
-    curve: "smooth",
-    colors: ["#FF0000"],
-  },
-  markers: {
-    size: 4,
-    colors: ["#FF0000"],
-    strokeWidth: 2,
-    hover: {
-      size: 6,
-    },
-  },
-};
 
 interface DeviceGraphProps {
   id: string;
@@ -65,7 +32,6 @@ interface DeviceGraphProps {
 
 const DeviceGraph = ({ id }: DeviceGraphProps) => {
   const [data, setData] = useState<DataPoint[]>([]);
-  const [deviceOem, setDeviceOem] = useState<string>("");
   const [deviceData, setDeviceData] = useState<DevicesType>();
   const [range, setRange] = useState<[Dayjs, Dayjs]>([
     dayjs().subtract(3, "day").startOf("day"),
@@ -77,6 +43,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
 
   const [temperatureData, setTemperatureData] = useState<DataPoint[]>([]);
   const [humidityData, setHumidityData] = useState<DataPoint[]>([]);
+  const [pressureData, setPressureData] = useState<DataPoint[]>([]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -181,13 +148,63 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
 
   HumidityChart.displayName = "HumidityChart";
 
+  const PressureChart = React.memo(({ data }: { data: any }) => {
+    const options = useMemo(
+      () => ({
+        ...commonApexOptions,
+        chart: {
+          id: "PressueChart",
+        },
+        yaxis: {
+          title: {
+            text: "Pressure (Pa)",
+          },
+          labels: {
+            formatter: (value: number) => `${value}Pa`,
+          },
+        },
+        xaxis: {
+          type: "datetime",
+        },
+        series: [
+          {
+            name: "Pressure",
+            data,
+          },
+        ],
+        markers: {
+          size: 4,
+          strokeWidth: 2,
+          hover: {
+            size: 6,
+          },
+        },
+        colors: humidityColors,
+      }),
+      [data]
+    );
+
+    return (
+      <ReactApexChart
+        options={options as any}
+        series={options.series}
+        type="line"
+        height={275}
+        width={"100%"}
+      />
+    );
+  });
+
+  PressureChart.displayName = "PressureChart";
+
+
   const fetchData = useCallback(
     async (from: string, to: string) => {
-      if (deviceOem) {
+      if (deviceData) {
         try {
           setGraphLoading(true);
           const response = await axiosInstance.get(
-            `/events?oem=${deviceOem}&from=${from}&to=${to}`
+            `/devices/${deviceData.id}/events?from=${from}&to=${to}`
           );
           if (response.status === 200) {
             const sortedData = response.data.sort(
@@ -209,8 +226,14 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               y: point.relativeHumidity,
             }));
 
+            const pressureData = sortedData.map((point: DataPoint) => ({
+              x: new Date(point.createdAt).getTime(),
+              y: point.pressure
+            }));
+
             setData(sortedData);
             setTemperatureData(tempData);
+            setPressureData(pressureData);
             setHumidityData(humidData);
           }
         } catch (error) {
@@ -221,7 +244,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         }
       }
     },
-    [deviceOem]
+    [deviceData]
   );
 
   useEffect(() => {
@@ -229,7 +252,6 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       try {
         const response = await axiosInstance.get(`/devices/${id}`);
         if (response.status === 200) {
-          setDeviceOem(response.data.oem);
           setDeviceData(response.data);
         } else {
           console.log("error->", response);
@@ -336,9 +358,8 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           >
             <span className="flex flex-col justify-center w-[6px]">
               <span
-                className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${
-                  preset === currentPreset ? "visible" : "hidden"
-                }`}
+                className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${preset === currentPreset ? "visible" : "hidden"
+                  }`}
               ></span>
             </span>
             <span className="text-sm font-medium !text-black">{preset}</span>
@@ -360,9 +381,8 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             >
               <span className="flex flex-col justify-center w-[6px]">
                 <span
-                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${
-                    preset === currentPreset ? "visible" : "hidden"
-                  }`}
+                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${preset === currentPreset ? "visible" : "hidden"
+                    }`}
                 ></span>
               </span>
               <span className="text-sm font-medium !text-black">{preset}</span>
@@ -382,9 +402,8 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             >
               <span className="flex flex-col justify-center w-[6px]">
                 <span
-                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${
-                    preset === currentPreset ? "visible" : "hidden"
-                  }`}
+                  className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${preset === currentPreset ? "visible" : "hidden"
+                    }`}
                 ></span>
               </span>
               <span className="text-sm font-medium !text-black">{preset}</span>
@@ -401,9 +420,8 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         >
           <span className="flex flex-col justify-center w-[6px]">
             <span
-              className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${
-                "Custom" === currentPreset ? "visible" : "hidden"
-              }`}
+              className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${"Custom" === currentPreset ? "visible" : "hidden"
+                }`}
             ></span>
           </span>
           <span className="text-sm font-medium !text-black">Custom</span>
@@ -418,7 +436,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
     </div>
   ) : (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mx-auto mb-14 ">
+      <div className={`gap-3 mx-auto mb-14 ${deviceData?.type === 'pressure' ? 'grid grid-cols-1 md:grid-cols-2' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
         <div className=" h-full">
           <Card bordered={false} className="criclebox h-full">
             <div className=" text-2xl flex flex-row justify-between">
@@ -448,205 +466,158 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             </div>
           </Card>
         </div>
-        <div>
-          <Card bordered={false} className="criclebox h-full">
-            <div className=" text-2xl flex flex-row justify-between">
+
+        {
+          deviceData?.type === 'pressure' ?
+            <DeviceTypeDetail title="Highest Pressure" value={deviceData?.pressure as number} image="/pressure.png" />
+            :
+            <>
+              <DeviceTypeDetail title="Highest Temperature" value={deviceData?.temperature as number} image="/high-temperature.png" />
+              <DeviceTypeDetail title="Highest Humidity" value={deviceData?.relativeHumidity as number} image="/humidity.png" />
               <div>
-                <span className=" text-lg !mb-0">Highest Temperature</span>
-                <div className="text-2xl font-bold">
-                  <span className="!text-3xl !font-bold">
-                    <CountUp
-                      decimals={2}
-                      end={deviceData?.temperature as number}
-                      duration={2}
-                    />
-                  </span>
-                </div>
-              </div>
-              <div className=" w-12 h-12 flex items-center justify-center ml-auto">
-                <Image
-                  src={"/high-temperature.png"}
-                  className=" w-full h-full"
-                  alt="icon"
-                  width={100}
-                  height={100}
-                />
-              </div>
-            </div>
-          </Card>
-        </div>
-        <div>
-          <Card bordered={false} className="criclebox h-full">
-            <div className=" text-2xl flex flex-row justify-between">
-              <div>
-                <span className=" text-lg !mb-0">Highest Humidity</span>
-                <div className="">
-                  <span className="!text-3xl !font-bold">
-                    <CountUp
-                      decimals={2}
-                      end={deviceData?.relativeHumidity as number}
-                      duration={2}
-                    />
-                  </span>
-                </div>
-              </div>
-              <div className=" w-12 h-12 flex items-center justify-center ml-auto">
-                <Image
-                  src={"/humidity.png"}
-                  className=" w-full h-full"
-                  alt="icon"
-                  width={100}
-                  height={100}
-                />
-              </div>
-            </div>
-          </Card>
-        </div>
-        <div>
-          <Card bordered={false} className="criclebox h-full">
-            <div className=" text-2xl flex flex-row justify-between">
-              <div>
-                <span className=" text-lg">
-                  {deviceData?.isOffline ? "Connectivity" : "Signal Strength"}
-                </span>
-                <div className="">
-                  <span className="!text-3xl !font-bold">
-                    {deviceData?.signalStrength && (
-                      <CountUp
-                        end={deviceData?.signalStrength as number}
-                        duration={2}
+                <Card bordered={false} className="criclebox h-full">
+                  <div className=" text-2xl flex flex-row justify-between">
+                    <div>
+                      <span className=" text-lg">
+                        {deviceData?.isOffline ? "Connectivity" : "Signal Strength"}
+                      </span>
+                      <div className="">
+                        <span className="!text-3xl !font-bold">
+                          {deviceData?.signalStrength && (
+                            <CountUp
+                              end={deviceData?.signalStrength as number}
+                              duration={2}
+                            />
+                          )}
+                          {!deviceData?.signalStrength && (
+                            <p className="!text-2xl !font-bold !mb-0 ">Offline</p>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                    <div className=" w-12 h-12 flex items-center justify-center ml-auto">
+                      <Image
+                        src={deviceData?.signalStrength ? '/network-signal.png' : '/offline.png'}
+                        className=" w-full h-full"
+                        alt="icon"
+                        width={100}
+                        height={100}
                       />
-                    )}
-                    {!deviceData?.signalStrength && (
-                      <p className="!text-2xl !font-bold !mb-0 ">Offline</p>
-                    )}
-                  </span>
-                </div>
+                    </div>
+                  </div>
+                </Card>
               </div>
-              <div className=" w-12 h-12 flex items-center justify-center ml-auto">
-                {deviceData?.signalStrength && (
-                  <Image
-                    src={"/network-signal.png"}
-                    className=" w-full h-full"
-                    alt="icon"
-                    width={100}
-                    height={100}
-                  />
-                )}
-                {!deviceData?.signalStrength && (
-                  <Image
-                    src={"/offline.png"}
-                    className=" w-full h-full"
-                    alt="icon"
-                    width={100}
-                    height={100}
-                  />
-                )}
-              </div>
-            </div>
-          </Card>
-        </div>
+            </>
+        }
+
       </div>
-      <div>
-        <div className=" mx-auto">
-          <Card>
-            <div className="flex flex-col gap-2">
-              <div className=" flex flex-row items-center justify-end gap-3 ">
+      <div className=" mx-auto">
+        <Card>
+          <div className="flex flex-col gap-2">
+            <div className=" flex flex-row items-center justify-end gap-3 ">
+              {deviceData &&
                 <FileDownloadButton
-                  oem={deviceOem}
+                  deviceId={deviceData?.id}
                   from={range[0].format("YYYY-MM-DD")}
                   to={range[1].format("YYYY-MM-DD")}
-                />
-                <Link
-                  href={`/dashboard/devices/${id}/activity-logs`}
-                  target="_blank"
+                />}
+              <Link
+                href={`/dashboard/devices/${id}/activity-logs`}
+                target="_blank"
+              >
+                <Button
+                  className=" flex flex-row items-center justify-center gap-3"
+                  style={{ width: "170px" }}
                 >
-                  <Button
-                    className=" flex flex-row items-center justify-center gap-3"
-                    style={{ width: "170px" }}
-                  >
-                    Activity Logs
-                    <div>
-                      <ArrowUpRightIcon
-                        width={16}
-                        className="transform transition-transform duration-150 group-hover:translate-x-1"
-                      />
-                    </div>
-                  </Button>
-                </Link>
-              </div>
-              <div className="flex justify-end">
-                <div className=" flex flex-row gap-3 items-center justify-center w-full md:w-auto">
-                  <div
-                    className={`flex-row gap-3 items-center justify-between md:justify-end w-full ${
-                      currentPreset === "Custom" ? "flex" : "hidden"
-                    }`}
-                  >
-                    <p className="!m-0 font-semibold">Date Range</p>
-                    <RangePicker
-                      className="hidden md:flex"
-                      onChange={handleRangeChange}
-                      defaultValue={range}
+                  Activity Logs
+                  <div>
+                    <ArrowUpRightIcon
+                      width={16}
+                      className="transform transition-transform duration-150 group-hover:translate-x-1"
                     />
                   </div>
-                  <Popover
-                    getPopupContainer={(triggerNode) =>
-                      triggerNode.parentNode as HTMLElement
-                    }
-                    content={menu}
-                    trigger="hover"
-                    placement="bottomLeft"
-                  >
-                    <div
-                      className=" flex flex-row items-center border rounded-md shadow-md"
-                      style={{ width: "170px" }}
-                    >
-                      <SelectSecondary
-                        only={currentPreset}
-                        Icon={<CalendarDaysIcon width={20} />}
-                      />
-                    </div>
-                  </Popover>
+                </Button>
+              </Link>
+            </div>
+            <div className="flex justify-end">
+              <div className=" flex flex-row gap-3 items-center justify-center w-full md:w-auto">
+                <div
+                  className={`flex-row gap-3 items-center justify-between md:justify-end w-full ${currentPreset === "Custom" ? "flex" : "hidden"
+                    }`}
+                >
+                  <p className="!m-0 font-semibold">Date Range</p>
+                  <RangePicker
+                    className="hidden md:flex"
+                    onChange={handleRangeChange}
+                    defaultValue={range}
+                  />
                 </div>
-              </div>
-              <div
-                className={` justify-end md:hidden ${
-                  currentPreset === "Custom" ? "flex" : "hidden"
-                }`}
-              >
-                <RangePicker
-                  className=" w-full"
-                  onChange={handleRangeChange}
-                  defaultValue={range}
-                />
-              </div>
-              <div className=" w-full">
-                {graphloading ? (
-                  <div className="flex justify-center items-center h-full">
-                    <Spin size="large" />
+                <Popover
+                  getPopupContainer={(triggerNode) =>
+                    triggerNode.parentNode as HTMLElement
+                  }
+                  content={menu}
+                  trigger="hover"
+                  placement="bottomLeft"
+                >
+                  <div
+                    className=" flex flex-row items-center border rounded-md shadow-md"
+                    style={{ width: "170px" }}
+                  >
+                    <SelectSecondary
+                      only={currentPreset}
+                      Icon={<CalendarDaysIcon width={20} />}
+                    />
                   </div>
-                ) : data.length === 0 ? (
-                  <div className="flex justify-center items-center h-full">
-                    <p>No data available for the selected date range</p>
-                  </div>
-                ) : (
-                  <>
-                    <div className=" h-[275px]">
-                      {temperatureData.length !== 0 && (
-                        <TemperatureChart data={temperatureData} />
-                      )}
-                    </div>
-                    <div className=" h-[275px]">
-                      {humidityData.length !== 0 && (
-                        <HumidityChart data={humidityData} />
-                      )}
-                    </div>
-                  </>
-                )}
+                </Popover>
               </div>
             </div>
-          </Card>
-        </div>
+            <div
+              className={` justify-end md:hidden ${currentPreset === "Custom" ? "flex" : "hidden"
+                }`}
+            >
+              <RangePicker
+                className=" w-full"
+                onChange={handleRangeChange}
+                defaultValue={range}
+              />
+            </div>
+            <div className=" w-full">
+              {graphloading ? (
+                <div className="flex justify-center items-center h-full">
+                  <Spin size="large" />
+                </div>
+              ) : data.length === 0 ? (
+                <div className="flex justify-center items-center h-full">
+                  <p>No data available for the selected date range</p>
+                </div>
+              ) : (
+                <>
+                  {deviceData?.type !== 'pressure' ?
+                    <div>
+                      <div className=" h-[275px]">
+                        {temperatureData.length !== 0 && (
+                          <TemperatureChart data={temperatureData} />
+                        )}
+                      </div>
+                      <div className=" h-[275px]">
+                        {humidityData.length !== 0 && (
+                          <HumidityChart data={humidityData} />
+                        )}
+                      </div>
+                    </div>
+                    :
+                    <div className=" h-[275px]">
+                      {pressureData.length !== 0 && (
+                        <PressureChart data={pressureData} />
+                      )}
+                    </div>
+                  }
+                </>
+              )}
+            </div>
+          </div>
+        </Card>
       </div>
     </>
   );

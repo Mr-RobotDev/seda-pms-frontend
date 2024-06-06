@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MapContainer, ImageOverlay, Marker, Popup } from "react-leaflet";
+import { MapContainer, ImageOverlay, Marker, Popup, FeatureGroup } from "react-leaflet";
 import { Icon, LatLngBoundsExpression } from "leaflet";
 import axiosInstance from "@/lib/axiosInstance";
 import DeviceDetailsComp from "../../DeviceDetailsComp";
@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
 import { DevicesType } from "@/type";
+import { EditControl } from "react-leaflet-draw"
 
 interface LeafLetMapProps {
   diagram?: string;
@@ -30,7 +31,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axiosInstance.get("/devices?page=1&limit=20");
+        const response = await axiosInstance.get("/devices?page=1&limit=50");
         if (response.status === 200) {
           setDevices(response.data.results);
         }
@@ -53,7 +54,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
         true
       );
       xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.setRequestHeader("Authorization", `Bearer ${token}`); // Add the authorization header
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 3) {
@@ -63,7 +64,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
             .split("\n")
             .filter((line) => line.trim() !== "" && line.startsWith("data: "))
             .map((line) => {
-              const jsonString = line.substring(6); // Remove the "data: " prefix
+              const jsonString = line.substring(6);
               try {
                 return JSON.parse(jsonString);
               } catch (error) {
@@ -122,7 +123,6 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
         })
       );
     }
-    console.log(recentEvent);
   }, [events]);
 
   useEffect(() => {
@@ -165,10 +165,19 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
     iconSize: [25, 25],
   });
 
+  const customPressueIcons = new Icon({
+    iconUrl: "/pressure.png",
+    iconSize: [25, 25],
+  })
+
+  const _onCreate = (e:any) => {
+    console.log(e.layer._latlng);
+  }
+
   return (
     <div
       style={{ width: "100%" }}
-      className="w-full h-[500px] md:max-h-[600px] 2xl:h-[800px]"
+      className="w-full h-[500px] md:max-h-[670px] 2xl:h-[900px]"
     >
       <MapContainer
         center={[51.5014, -0.083]}
@@ -186,7 +195,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
             icon={
               device.type === "cold"
                 ? customColdStorageIcon
-                : customThermometerIcon
+                : (device.type === 'pressure' ? customPressueIcons : customThermometerIcon)
             }
           >
             <Popup>

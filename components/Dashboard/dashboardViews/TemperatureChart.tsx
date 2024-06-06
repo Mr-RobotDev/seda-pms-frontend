@@ -12,6 +12,16 @@ type TemperatureChartProps = {
   eventTypes: string;
 };
 
+const valueToGet = (value: string, event: Event) => {
+  if (value.includes("temperature")) {
+    return event.temperature
+  } else if (value.includes("pressure")) {
+    return event.pressure || 0
+  } else {
+    return event.relativeHumidity
+  }
+}
+
 const transformDataForChart = (
   data: EventsMap,
   eventTypes: string
@@ -22,9 +32,7 @@ const transformDataForChart = (
       name: deviceData.name,
       data: deviceData.data.map((event: Event) => ({
         x: new Date(event.createdAt),
-        y: eventTypes.toLowerCase().includes("temperature")
-          ? event.temperature
-          : event.relativeHumidity,
+        y: valueToGet(eventTypes, event)
       })),
     };
   });
@@ -58,13 +66,20 @@ const TemperatureChart: React.FC<TemperatureChartProps> = ({
 
   return (
     <>
-      <Chart
-        options={options}
-        series={seriesData}
-        type="line"
-        width="100%"
-        height="100%"
-      />
+      {
+        seriesData[0].data.length === 0 ?
+          <div className=" w-full h-full flex justify-center items-center">
+            <p>No Data Available for this Device on this date Range</p>
+          </div>
+          :
+          <Chart
+            options={options}
+            series={seriesData}
+            type="line"
+            width="100%"
+            height="100%"
+          />
+      }
     </>
   );
 };

@@ -4,6 +4,7 @@ export interface DevicesType {
   name: string;
   type: string;
   temperature: number;
+  pressure?: number;
   relativeHumidity: number;
   location: {
     lat: number;
@@ -62,6 +63,7 @@ export interface DataPoint {
   oem: string;
   eventType: string;
   temperature: number;
+  pressure?: number;
   relativeHumidity: number;
   createdAt: string;
   id: string;
@@ -72,12 +74,13 @@ export interface Event {
   eventType: string;
   temperature: number;
   relativeHumidity: number;
+  pressure?: number;
   createdAt: string;
   id: string;
 }
 
 export interface DeviceData {
-  data: Event[];
+  data: any[];
   name: string;
 }
 
@@ -125,5 +128,33 @@ export interface ReportsType {
 interface Dashboard {
   name: string;
   devicesCount: number;
+  id: string;
+}
+
+export interface AlertDataType {
+  name: string;
+  device: string ;
+  recipients: string[];
+  trigger: Trigger;
+  scheduleType: string;
+  weekdays: string[];
+  enabled: boolean;
+  id: string;
+}
+
+interface Trigger {
+  field: string;
+  range: Range;
+}
+
+interface Range {
+  lower: number;
+  upper: number;
+  type: string;
+}
+
+interface Device {
+  name: string;
+  lastUpdated: string;
   id: string;
 }

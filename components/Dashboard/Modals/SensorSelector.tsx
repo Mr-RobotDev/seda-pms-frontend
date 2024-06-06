@@ -2,6 +2,9 @@ import axiosInstance from "@/lib/axiosInstance";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import SensorSelectComponent from "./SensorSelectComponent";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 interface SensorSelectorProps {
   selectedSensors: string[];
@@ -14,6 +17,15 @@ const SensorSelector = ({
   selectedSensors,
   setSelectedSensors,
 }: SensorSelectorProps) => {
+  const { devices } = useSelector((state: RootState) => state.devicesReducer)
+  const [isPressureDevice, setIsPressureDevice] = useState(false)
+  useEffect(() => {
+    if (devices.length > 0) {
+      const pressureDevices = devices.filter(device => device.type === 'pressure').map(device => device.id)
+      const selectedRowKeysSet = new Set(selectedRowKeys);
+      setIsPressureDevice(pressureDevices.some(item => selectedRowKeysSet.has(item)))
+    }
+  }, [devices, selectedRowKeys])
   const handleClick = (field: string) => {
     if (
       selectedRowKeys.length > 1 &&
@@ -21,7 +33,7 @@ const SensorSelector = ({
       !selectedSensors.includes(field)
     ) {
       toast.error("Cannot select Multiple Sensors for more than one devices");
-      return; // Prevent selecting another sensor if one is already selected and selectedRowKeys length is 1
+      return;
     }
 
     setSelectedSensors((prevSensors) => {
@@ -39,54 +51,14 @@ const SensorSelector = ({
 
   return (
     <div className="flex flex-col gap-4 mt-6">
-      <div
-        onClick={() => handleClick("temperature")}
-        className={`flex flex-row items-center border rounded-lg p-3 gap-3 cursor-pointer duration-300 transition-all transform group ${
-          selectedSensors.includes("temperature")
-            ? "bg-blue-100 border-blue-500"
-            : "bg-gray-50 hover:bg-blue-100 hover:border-blue-300"
-        }`}
-      >
-        <div
-          className={`w-12 h-12 border rounded-md p-2 duration-300 transition-all ${
-            selectedSensors.includes("temperature")
-              ? "bg-blue-100 border-blue-500"
-              : "bg-gray-50 group-hover:bg-blue-100 group-hover:border-blue-300"
-          }`}
-        >
-          <Image
-            src="/thermometer.png"
-            alt="Temperature"
-            width={100}
-            height={100}
-          />
-        </div>
-        <p className="!mb-0 text-lg font-semibold">Temperature</p>
-      </div>
-      <div
-        onClick={() => handleClick("relativeHumidity")}
-        className={`flex flex-row items-center border rounded-lg p-3 gap-3 cursor-pointer duration-300 transition-all transform group ${
-          selectedSensors.includes("relativeHumidity")
-            ? "bg-blue-100 border-blue-500"
-            : "bg-gray-50 hover:bg-blue-100 hover:border-blue-300"
-        }`}
-      >
-        <div
-          className={`w-12 h-12 border rounded-md p-2 duration-300 transition-all ${
-            selectedSensors.includes("relativeHumidity")
-              ? "bg-blue-100 border-blue-500"
-              : "bg-gray-50 group-hover:bg-blue-100 group-hover:border-blue-300"
-          }`}
-        >
-          <Image
-            src="/snowflake.png"
-            alt="Relative Humidity"
-            width={100}
-            height={100}
-          />
-        </div>
-        <p className="!mb-0 text-lg font-semibold">Relative Humidity</p>
-      </div>
+      {
+        isPressureDevice ? <SensorSelectComponent title="Pressue" sensorType="pressure" handleClick={handleClick} selectedSensors={selectedSensors} />
+          :
+          <>
+            <SensorSelectComponent title="Temperature" sensorType="temperature" handleClick={handleClick} selectedSensors={selectedSensors} />
+            <SensorSelectComponent title="Relative Humidity" sensorType="relativeHumidity" handleClick={handleClick} selectedSensors={selectedSensors} />
+          </>
+      }
     </div>
   );
 };

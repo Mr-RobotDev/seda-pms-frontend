@@ -6,14 +6,14 @@ import { XCircleIcon } from "@heroicons/react/20/solid";
 import { validateEmail, isValidTimeFormat } from "@/utils/helper_functions";
 import { Select } from "antd";
 import toast from "react-hot-toast";
-import { ReportsType } from "@/type";
+import { AlertDataType, ReportsType } from "@/type";
 
 const { Option } = Select;
 
 interface CustomTagsProps {
   initialData: string[];
   type: string;
-  setFormData: React.Dispatch<React.SetStateAction<ReportsType | null>>;
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
   isAdmin: boolean;
 }
 
@@ -53,7 +53,7 @@ const CustomTags = ({
     const newTags = tags.filter((email) => email !== removedTag);
     console.log(newTags);
     setTags(newTags);
-    setFormData(prevState => prevState ? { ...prevState, [type === 'email' ? 'recipients' : 'times']: [...newTags] } : null);
+    setFormData((prevState: any) => prevState ? { ...prevState, [type === 'email' ? 'recipients' : 'times']: [...newTags] } : null);
   };
 
   const showInput = () => {
@@ -78,7 +78,7 @@ const CustomTags = ({
         setInputValue("");
 
         setFormData(
-          (prevState) =>
+          (prevState: any) =>
             prevState && {
               ...prevState,
               recipients: [...tags, inputValue],
@@ -94,7 +94,7 @@ const CustomTags = ({
         setInputVisible(false);
         setInputValue("");
         setFormData(
-          (prevState) =>
+          (prevState: any) =>
             prevState && {
               ...prevState,
               times: [...tags, selectedTime],

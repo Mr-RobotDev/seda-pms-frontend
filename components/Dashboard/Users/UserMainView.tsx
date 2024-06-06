@@ -22,6 +22,8 @@ import { UserSwitchOutlined } from "@ant-design/icons";
 import { formatToTitleCase } from "@/lib/helperfunctions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import CustomMenu from "@/components/ui/Menu/CustomMenu";
+import { userOrganizationOptions, userRoleOptions } from "@/utils/form";
 
 const initialUserState: User = {
   id: "",
@@ -161,7 +163,7 @@ const UserMainView = () => {
     try {
       const values = await form.validateFields();
       setUser(values);
-      const response = await axiosInstance.post("/users", values);
+      const response = await axiosInstance.post("/users", user);
       if (response.status === 200) {
         setUsers((prevUsers) => [...prevUsers, response.data.user]);
         toast.success("User created successfully");
@@ -176,6 +178,7 @@ const UserMainView = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setUser(initialUserState)
   };
 
   useEffect(() => {
@@ -198,10 +201,6 @@ const UserMainView = () => {
 
   const handlePagination = (page: number) => {
     console.log(page);
-  };
-
-  const handleChange = (changedValues: any, allValues: any) => {
-    setUser(allValues);
   };
 
   return (
@@ -248,57 +247,76 @@ const UserMainView = () => {
             form={form}
             variant="filled"
             style={{ maxWidth: 600 }}
-            onValuesChange={handleChange}
           >
             <Form.Item
               label="First Name"
               name="firstName"
               rules={[{ required: true, message: "First name is required" }]}
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              className="custom-form-item"
             >
-              <Input />
+              <Input onChange={(e) => setUser({ ...user, firstName: e.target.value })} value={user.firstName} />
             </Form.Item>
+
 
             <Form.Item
               label="Last Name"
               name="lastName"
               rules={[{ required: true, message: "Last name is required" }]}
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              className="custom-form-item"
             >
-              <Input />
+              <Input onChange={(e) => setUser({ ...user, lastName: e.target.value })} value={user.lastName} />
             </Form.Item>
 
             <Form.Item
               label="Email"
               name="email"
               rules={[{ required: true, message: "Email is required" }]}
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              className="custom-form-item"
             >
-              <Input type="email" />
+              <Input type="email" onChange={(e) => setUser({ ...user, email: e.target.value })} value={user.email} />
             </Form.Item>
 
             <Form.Item
               label="Password"
               name="password"
               rules={[{ required: true, message: "Please add the password" }]}
+              labelCol={{ span: 24 }}
+              wrapperCol={{ span: 24 }}
+              className="custom-form-item"
             >
-              <Input type="password" />
+              <Input type="password" onChange={(e) => setUser({ ...user, password: e.target.value })} value={user.password} />
             </Form.Item>
 
-            <Form.Item label="Role" name="role" initialValue="User">
-              <Select>
-                <Select.Option value="User">User</Select.Option>
-                <Select.Option value="Admin">Admin</Select.Option>
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              label="Organization"
-              name="organization"
-              initialValue="Origin Smart"
-            >
-              <Select>
-                <Select.Option value="Origin Smart">Origin Smart</Select.Option>
-                <Select.Option value="Seda">Seda</Select.Option>
-              </Select>
-            </Form.Item>
+            <div className=" grid grid-cols-1 sm:grid-cols-2 gap-2 !mb-8">
+              <div>
+                <label>Role</label>
+                <div className="flex flex-row items-center border rounded-md shadow-md lg: mb-3 md:mb-0">
+                  <CustomMenu
+                    isAdmin={true}
+                    handleTypeChange={(value: string) => setUser({ ...user, role: value })}
+                    options={userRoleOptions}
+                    initialValue={user.role}
+                  />
+                </div>
+              </div>
+              <div>
+                <label>Organization</label>
+                <div className="flex flex-row items-center border rounded-md shadow-md lg: mb-3 md:mb-0">
+                  <CustomMenu
+                    isAdmin={true}
+                    handleTypeChange={(value: string) => setUser({ ...user, organization: value })}
+                    options={userOrganizationOptions}
+                    initialValue={user.organization}
+                  />
+                </div>
+              </div>
+            </div>
           </Form>
         </div>
       </Modal>

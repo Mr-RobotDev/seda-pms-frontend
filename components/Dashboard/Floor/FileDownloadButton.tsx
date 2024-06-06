@@ -8,19 +8,18 @@ import axiosInstance from "@/lib/axiosInstance";
 interface FileDownloadButtonProps {
   from: string;
   to: string;
-  oem: string;
+  deviceId: string;
 }
 
-const FileDownloadButton = ({ from, to, oem }: FileDownloadButtonProps) => {
+const FileDownloadButton = ({ from, to, deviceId }: FileDownloadButtonProps) => {
   const [loading, setLoading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState("");
 
   const handleDownload = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get("/events/export", {
+      const response = await axiosInstance.get(`/devices/${deviceId}/events/export`, {
         params: {
-          oem,
           from,
           to,
         },

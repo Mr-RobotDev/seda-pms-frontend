@@ -64,7 +64,7 @@ const AddCardModal = ({
   isVisible,
   onClose,
 }: AddCardModalProps) => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
   const [cardName, setCardName] = useState("");
@@ -72,6 +72,7 @@ const AddCardModal = ({
   const [cardOption, setCardOption] = useState(cardOptions.TWO_X_TWO);
   const dispatch: AppDispatch = useDispatch();
   const error = useSelector((state: RootState) => state.dashboardReducer.error);
+  const { devices } = useSelector((state: RootState) => state.devicesReducer)
 
   const resetState = () => {
     setSelectedRowKeys([]);

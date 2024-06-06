@@ -48,12 +48,6 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (error) {
-      toast.error("Error updating the location of the card on dashboard");
-    }
-  }, [error]);
-
-  useEffect(() => {
     function handleResize() {
       setIsSmallScreen(window.innerWidth < 500);
     }
@@ -83,6 +77,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
 
         dispatch(setTimeFrame(timeFrame));
       }
+      console.log('currentDashboard->', currentDashboard)
       dispatch(setCurrentDashboard(currentDashboard));
       dispatch(getDashboardCards({ dashboardId: id }));
     } else {

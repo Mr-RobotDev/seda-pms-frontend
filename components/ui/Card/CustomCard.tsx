@@ -42,11 +42,10 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
         const eventsMapTemp: EventsMap = {};
 
         const fetchPromises = card.devices.map(async (device) => {
-          const { oem, id, name } = device;
+          const { id, name } = device;
           try {
-            const response = await axiosInstance.get(`/events`, {
+            const response = await axiosInstance.get(`/devices/${device.id}/events`, {
               params: {
-                oem: oem,
                 from: timeFrame.startDate,
                 to: timeFrame.endDate,
                 eventTypes: card.field,

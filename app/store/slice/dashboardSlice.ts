@@ -176,7 +176,6 @@ const dashboardSlice = createSlice({
       })
       .addCase(getDashboards.rejected, (state, action) => {
         state.isLoading.list = false
-        state.error = action.error.message ?? 'Failed to load dashboards';
       })
       .addCase(getDashboard.pending, (state) => {
         state.isLoading.get = true
@@ -187,7 +186,6 @@ const dashboardSlice = createSlice({
       })
       .addCase(getDashboard.rejected, (state, action) => {
         state.isLoading.get = false
-        state.error = action.error.message ?? 'Failed to load dashboard';
       })
       .addCase(getDashboardCards.pending, (state, action) => {
         state.isLoading.get = true
@@ -198,7 +196,6 @@ const dashboardSlice = createSlice({
       })
       .addCase(getDashboardCards.rejected, (state, action) => {
         state.isLoading.get = false
-        state.error = action.error.message ?? 'Failed to load dashboard';
       })
 
 
@@ -214,7 +211,6 @@ const dashboardSlice = createSlice({
       })
       .addCase(createDashboard.rejected, (state, action) => {
         state.isLoading.create = false
-        state.error = action.error.message ?? 'Failed to create new dashboard';
       })
       .addCase(deleteDashboard.fulfilled, (state, action) => {
         state.isLoading.delete = false;
@@ -241,7 +237,6 @@ const dashboardSlice = createSlice({
       })
       .addCase(createCard.rejected, (state, action) => {
         state.isLoading.create = false
-        state.error = action.error.message ?? 'Failed to create new card';
       })
 
       .addCase(deleteCard.pending, (state, action) => {
@@ -253,7 +248,6 @@ const dashboardSlice = createSlice({
       })
       .addCase(deleteCard.rejected, (state, action) => {
         state.isLoading.delete = false
-        state.error = action.error.message ?? 'Failed to delete card';
       })
       .addCase(updateCard.pending, (state, action) => {
         state.error = ''

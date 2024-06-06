@@ -6,17 +6,36 @@ import Image from "next/image";
 import { DevicesType, Event } from "@/type";
 import SimSignal from "../Device/SimSignal";
 import { useTimeAgo } from "next-timeago";
+import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/16/solid";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/app/store/store";
+import { setDevicesToGlobal } from "@/app/store/slice/devicesSlice";
 
 interface DevicesSelectorProps {
-  setSelectedRowKeys: (selectedRowKeys: React.Key[]) => void;
-  selectedRowKeys: React.Key[];
+  setSelectedRowKeys: (selectedRowKeys: string[]) => void;
+  selectedRowKeys: string[];
+  allowSingleDevice?: boolean;
+  deviceType?: string;
 }
+
 const DevicesSelector = ({
   selectedRowKeys,
   setSelectedRowKeys,
+  allowSingleDevice,
+  deviceType
 }: DevicesSelectorProps) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
+  const [loading, setLoading] = useState(false)
   const { TimeAgo } = useTimeAgo();
+  const dispatch: AppDispatch = useDispatch()
+
+  const addOrRemoveDeviceIdToTheList = (e: any, id: string) => {
+    e.stopPropagation()
+
+    setSelectedRowKeys([id]);
+
+  }
 
   const columns: TableProps<DevicesType>["columns"] = [
     {
@@ -26,7 +45,7 @@ const DevicesSelector = ({
         <div className="flex flex-row items-center gap-7">
           <div className="w-5 h-5">
             <Image
-              src={type === "cold" ? "/snowflake.png" : "/thermometer.png"}
+              src={type === "cold" ? "/snowflake.png" : (type === 'pressure' ? '/pressure.png' : "/humidity.png")}
               alt="icon"
               width={100}
               height={100}
@@ -59,37 +78,69 @@ const DevicesSelector = ({
     },
     {
       title: "Signal",
-      render: (_, { isOffline, signalStrength }) =>
-        !isOffline ? (
-          <div className="flex flex-row items-center">
-            <SimSignal signalStrength={signalStrength} />
-          </div>
-        ) : (
-          <div>
-            <Tag color="error">Offline</Tag>
-          </div>
-        ),
+      render: (_, { isOffline, signalStrength, type }) => (
+        <>
+          {type === 'pressure' ? (
+            <p>-</p>
+          ) : (
+            !isOffline ? (
+              <div className="flex flex-row items-center">
+                <SimSignal signalStrength={signalStrength} />
+              </div>
+            ) : (
+              <div>
+                <Tag color="error">Offline</Tag>
+              </div>
+            )
+          )}
+        </>
+      )
     },
   ];
 
+  const reorderDevices = (devices: DevicesType[]) => {
+    const selectedDevices = devices.filter(device => selectedRowKeys.includes(device.id));
+    const unselectedDevices = devices.filter(device => !selectedRowKeys.includes(device.id));
+    return [...selectedDevices, ...unselectedDevices];
+  };
+
+  if(allowSingleDevice){
+    columns.unshift({
+      title: "Add",
+      dataIndex: "add",
+      render: (_, { id }) => (
+        <div className="flex flex-row items-center" onClick={(e) => addOrRemoveDeviceIdToTheList(e, id)}>
+          {selectedRowKeys.includes(id) ? <MinusCircleIcon width={25} className=" text-red-400" /> : <PlusCircleIcon width={25} className=" text-blue-700" />}
+        </div>
+      ),
+    })
+  }
+
   useEffect(() => {
-    if (devices.length === 0) {
-      (async () => {
-        try {
-          const response = await axiosInstance.get("/devices?page=1&limit=20");
-          if (response.status === 200) {
-            setDevices(response.data.results);
-          }
-        } catch (error) {
-          console.log(error);
+    (async () => {
+      try {
+        setLoading(true);
+        const params: any = { page: 1, limit: 50 };
+        if (deviceType) {
+          params.type = deviceType === 'pressure' ? 'pressure' : 'humidity,cold';
         }
-      })();
-    }
-  }, [devices]);
+        const response = await axiosInstance.get("/devices", { params });
+        if (response.status === 200) {
+          setDevices(response.data.results);
+          dispatch(setDevicesToGlobal(response.data.results));
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [dispatch, deviceType]);
 
   const onRowClick = (record: DevicesType) => {
     return {
       onClick: () => {
+        if (allowSingleDevice) return;
         const selectedKey = record.id;
         if (selectedRowKeys.includes(selectedKey)) {
           setSelectedRowKeys(
@@ -102,27 +153,13 @@ const DevicesSelector = ({
     };
   };
 
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: Event[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record: any) => ({
-      disabled: record.name === "Disabled User", // Column configuration not to be checked
-      name: record.name,
-    }),
-  };
-
   return (
     <div className="mt-8">
       <Table
         columns={columns}
         dataSource={devices}
         scroll={{ x: 500 }}
-        loading={devices.length === 0}
+        loading={loading}
         className="cursor-pointer"
         onRow={(record) => onRowClick(record)}
         rowClassName={(record) =>
@@ -135,4 +172,4 @@ const DevicesSelector = ({
   );
 };
 
-export default memo(DevicesSelector);
+export default DevicesSelector;

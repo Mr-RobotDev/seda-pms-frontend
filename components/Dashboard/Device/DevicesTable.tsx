@@ -17,24 +17,23 @@ const DevicesTable = () => {
 
   const columns: TableProps<DevicesType>["columns"] = [
     {
-      title: "Type",
+      title: "TYPE",
       dataIndex: "type",
       render: (_, { type }) => (
         <div className=" flex flex-row items-center gap-7">
           <div className=" w-5 h-5">
             <Image
-              src={type === "cold" ? "/snowflake.png" : "/thermometer.png"}
+              src={type === "cold" ? "/snowflake.png" : (type === 'pressure' ? '/pressure.png' : "/humidity.png")}
               alt="icon"
               width={100}
               height={100}
             />
           </div>
-          <p className="!text-black">{formatToTitleCase(type)}</p>
         </div>
       ),
     },
     {
-      title: "Name",
+      title: "NAME",
       render: (_, { type, name }) => (
         <div className=" flex flex-row items-center">
           <p className=" !text-black">{name}</p>
@@ -43,25 +42,18 @@ const DevicesTable = () => {
     },
 
     {
-      title: "Temperature (°C)",
-      dataIndex: "temperature",
-      render: (_, { temperature }) => (
+      title: 'STATE',
+      dataIndex: 'state',
+      render: (_, { type, temperature, relativeHumidity, pressure }) => (
         <div>
-          <p className="!text-black">{temperature.toFixed(2)} °C</p>
+          {
+            type === 'pressure' ? <p className="!text-black">{pressure?.toFixed(2)} Pa</p> : <p className="!text-black"> {relativeHumidity.toFixed(2)} %RH AT {temperature?.toFixed(2)} °C</p>
+          }
         </div>
       ),
     },
     {
-      title: "Relative Humidity (%)",
-      key: "relativeHumidity",
-      render: (_, { relativeHumidity }) => (
-        <div>
-          <p className="!text-black">{relativeHumidity.toFixed(2)} %</p>
-        </div>
-      ),
-    },
-    {
-      title: "Last Updated",
+      title: "LAST UPDATED",
       key: "lastUpdated",
       render: (_, { lastUpdated }) =>
         lastUpdated ? (
@@ -75,20 +67,27 @@ const DevicesTable = () => {
         ),
     },
     {
-      title: "Signal",
-      render: (_, { isOffline, signalStrength }) =>
-        !isOffline ? (
-          <div className=" flex flex-row items-center">
-            <SimSignal signalStrength={signalStrength} />
-          </div>
-        ) : (
-          <div>
-            <Tag color="error">Offline</Tag>
-          </div>
-        ),
-    },
+      title: "SIGNAL",
+      render: (_, { isOffline, signalStrength, type }) => (
+        <>
+          {type === 'pressure' ? (
+            <p>-</p>
+          ) : (
+            !isOffline ? (
+              <div className="flex flex-row items-center">
+                <SimSignal signalStrength={signalStrength} />
+              </div>
+            ) : (
+              <div>
+                <Tag color="error">Offline</Tag>
+              </div>
+            )
+          )}
+        </>
+      )
+    },    
     {
-      title: "Actions",
+      title: "ACTIONS",
       key: "actions",
       dataIndex: "aactions",
       render: (_, { id }) => {
@@ -117,7 +116,7 @@ const DevicesTable = () => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axiosInstance.get("/devices?page=1&limit=20");
+        const response = await axiosInstance.get("/devices?page=1&limit=50");
         if (response.status === 200) {
           setDevices(response.data.results);
         }
