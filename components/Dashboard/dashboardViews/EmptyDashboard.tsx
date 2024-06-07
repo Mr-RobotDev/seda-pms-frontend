@@ -8,7 +8,7 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 
 const EmptyDashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user } = useSelector((state: RootState) => state.authReducer);
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer);
   const { currentDashboard } = useSelector(
     (state: RootState) => state.dashboardReducer
   );
@@ -35,7 +35,7 @@ const EmptyDashboard: React.FC = () => {
           <div className="!text-sm !text-black font-light text-secondary-300 text-center mt-3">
             Create an overview and visualize sensor data by adding cards
           </div>
-          {user?.role === "Admin" && (
+          {isAdmin && (
             <div className="flex justify-center mt-3">
               <span
                 onClick={showModal}

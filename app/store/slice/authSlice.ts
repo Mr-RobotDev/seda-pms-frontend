@@ -6,12 +6,14 @@ type AuthState = {
   isAuthenticated: boolean;
   user: any;
   token: string;
+  isAdmin: boolean;
 };
 
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
   token: "",
+  isAdmin: false,
 };
 
 const authSlice = createSlice({
@@ -23,6 +25,7 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.user = user;
       state.token = token;
+      state.isAdmin = user.role === 'Admin'
 
       localStorage.setItem("token", token);
       axiosInstance.defaults.headers.Authorization = "Bearer " + token;

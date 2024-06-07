@@ -31,7 +31,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
   const [activeMenu, setActiveMenu] = useState<string>(activeSidebar(page));
   const dispatch = useDispatch();
   const router = useRouter();
-  const { user } = useSelector((state: RootState) => state.authReducer);
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer);
 
   useEffect(() => {
     setActiveMenu(activeSidebar(page));
@@ -108,7 +108,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
 
   const renderMenuItems = (items: any[]) =>
     items.map((item) => {
-      if (item.adminOnly && user?.role !== "Admin") return null;
+      if (item.adminOnly && !isAdmin) return null;
       return (
         <SidebarMenu
           key={item.key}

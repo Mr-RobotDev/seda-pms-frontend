@@ -45,8 +45,7 @@ const ReportsTable = ({
   const [reports, setReports] = useState<ReportsType[]>([]);
   const [showDetailsReport, setShowDetailsReport] = useState<ReportsType | null>();
   const [formData, setFormData] = useState<ReportsType | null>(null);
-  const { user } = useSelector((state: RootState) => state.authReducer)
-  const isAdmin = user?.role === 'Admin'
+  const { user, isAdmin } = useSelector((state: RootState) => state.authReducer)
   const [loading, setLoading] = useState(false);
   const daysOfWeek = [
     "monday",

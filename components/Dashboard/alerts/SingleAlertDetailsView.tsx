@@ -42,8 +42,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
   const [loading, setLoading] = useState(false)
   const [deviceChanged, setDeviceChanged] = useState(false)
   const router = useRouter()
-  const { user } = useSelector((state: RootState) => state.authReducer)
-  const isAdmin = user?.role === 'Admin'
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer)
   const isCustomScheduleType = formData?.scheduleType === "custom";
   const isWeekdaysScheduleType = formData?.scheduleType === "weekdays";
   const isEverydayScheduleType = formData?.scheduleType === "everyday";
@@ -255,6 +254,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
                   name="name"
                   value={formData?.name}
                   onChange={handleChange}
+                  disabled={!isAdmin}
                 />
               </div>
               {!creatingNewAlert && <div className="px-8 h-full">
@@ -262,6 +262,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
                 <Switch
                   checked={formData?.enabled}
                   onChange={handleSwitchChange}
+                  disabled={!isAdmin}
                 />
               </div>}
             </div>
@@ -323,7 +324,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
               <div className="flex flex-row items-center  mb-3 md:mb-0">
                 <PrimaryInput
                   name="lower"
-                  disabled={formData.trigger.range.type === 'upper'}
+                  disabled={formData.trigger.range.type === 'upper' || !isAdmin}
                   value={formData.trigger.range.lower?.toString()}
                   onChange={handleChange}
                   className='!h-[49px]'
@@ -335,7 +336,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
               <p className="!mb-1 text-sm">Upper ({typeAndUnits[formData.trigger.field]})</p>
               <div className="flex flex-row items-center  mb-3 md:mb-0">
                 <PrimaryInput
-                  disabled={formData.trigger.range.type === 'lower'}
+                  disabled={formData.trigger.range.type === 'lower' || !isAdmin}
                   name="upper"
                   value={formData.trigger.range.upper?.toString()}
                   onChange={handleChange}
@@ -353,7 +354,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
           <div className=' flex flex-row justify-between items-center'>
             <p className="font-semibold text-lg !mb-0">Device</p>
             <div>
-              <Button onClick={() => setIsVisible(true)}>Select the Device</Button>
+              {isAdmin && <Button onClick={() => setIsVisible(true)}>Select the Device</Button>}
             </div>
           </div>
           {deviceChanged && <p>The device associated with this alert has been changed. Please update the record to fetch the latest device data.</p>}
@@ -362,17 +363,16 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
           </div>}
         </Card>
         <div className=" flex flex-row justify-end mt-4">
-          {
-            creatingNewAlert ? (
-              <Button type="primary" onClick={handleCreateNewAlert} className=" w-32">
-                Create
-              </Button>
-            ) : (
-              <Button type="primary" onClick={handleUpdateAlert} className=" w-32">
-                Update
-              </Button>
-            )
-          }
+          {!creatingNewAlert && isAdmin && (
+            <Button type="primary" onClick={handleUpdateAlert} className=" w-32">
+              Update
+            </Button>
+          )}
+          {creatingNewAlert && (
+            <Button type="primary" onClick={handleCreateNewAlert} className=" w-32">
+              Create
+            </Button>
+          )}
         </div>
       </Spin>
       <Modal

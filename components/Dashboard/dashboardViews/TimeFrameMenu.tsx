@@ -15,7 +15,7 @@ interface TimeFrameProps {
   isAdmin?: boolean;
 }
 
-const TimeFrameMenu = ({ functionality, initialValue, isAdmin = true}: TimeFrameProps) => {
+const TimeFrameMenu = ({ functionality, initialValue, isAdmin}: TimeFrameProps) => {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
   const { timeFrame } = useSelector((state: RootState) => state.dashboardReducer);

@@ -14,7 +14,7 @@ import {
 
 const ReportsMainView = () => {
   const [createNewReport, setCreateNewReport] = useState(false);
-  const { user } = useSelector((state: RootState) => state.authReducer)
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer)
   const { dashboards, currentDashboard } = useSelector(
     (state: RootState) => state.dashboardReducer
   );
@@ -43,7 +43,7 @@ const ReportsMainView = () => {
                   routingFunctionality={false}
                 />
               </div>
-              {!createNewReport && user?.role === 'Admin' && (
+              {!createNewReport && isAdmin && (
                 <div
                   className="flex justify-center"
                   onClick={() => setCreateNewReport(true)}

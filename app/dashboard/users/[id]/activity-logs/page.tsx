@@ -5,20 +5,20 @@ import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 const UserPage = (props: any) => {
-  const { user } = useSelector((state: RootState) => state.authReducer)
+  const { user, isAdmin } = useSelector((state: RootState) => state.authReducer)
   const router = useRouter()
 
   useEffect(() => {
-    if (user && user?.role !== 'Admin') {
+    if (user && !isAdmin) {
       router.push('/dashboard/floor')
     }
-  }, [router, user])
+  }, [router, user, isAdmin])
 
   const { id } = props.params
 
   return (
     <>
-      {user?.role === 'Admin' && id &&
+      {isAdmin && id &&
         <UserActivityLog id={id} />
       }
     </>

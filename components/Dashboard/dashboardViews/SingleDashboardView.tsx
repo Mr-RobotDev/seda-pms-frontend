@@ -41,7 +41,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
     currentDashboard: currentSelectedDashboard,
     dashboardCards,
   } = useSelector((state: RootState) => state.dashboardReducer);
-  const { user } = useSelector((state: RootState) => state.authReducer);
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer);
 
   useEffect(() => {
     dispatch(getDashboards());
@@ -134,7 +134,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
               <TimeFrameMenu functionality={true} />
             )}
           </div>
-          {user?.role === "Admin" && (
+          {isAdmin && (
             <div className="flex justify-center md:mt-0 mb-3">
               <span
                 onClick={() => setIsModalOpen(true)}
