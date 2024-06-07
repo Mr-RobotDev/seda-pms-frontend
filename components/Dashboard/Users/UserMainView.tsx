@@ -166,8 +166,6 @@ const UserMainView = () => {
 
   const handleOk = async () => {
     try {
-      const values = await form.validateFields();
-      setUser(values);
       delete user.id
       const response = await axiosInstance.post("/users", user);
       if (response.status === 200) {
@@ -179,6 +177,9 @@ const UserMainView = () => {
       }
     } catch (error) {
       console.log("Validate Failed:", error);
+    } finally {
+      setUser(initialUserState);
+      form.resetFields()
     }
   };
 
@@ -227,7 +228,7 @@ const UserMainView = () => {
           >
             <span className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center">
               <FontAwesomeIcon icon={faCirclePlus} />
-              Add User
+              Create New User
             </span>
           </div>
         </div>
