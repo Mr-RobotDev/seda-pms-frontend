@@ -10,7 +10,7 @@ import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/16/solid";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
-import { setDevicesToGlobal } from "@/app/store/slice/devicesSlice";
+import { setDeviceForAlert, setDevicesToGlobal } from "@/app/store/slice/devicesSlice";
 
 interface DevicesSelectorProps {
   setSelectedRowKeys: (selectedRowKeys: string[]) => void;
@@ -32,9 +32,9 @@ const DevicesSelector = ({
 
   const addOrRemoveDeviceIdToTheList = (e: any, id: string) => {
     e.stopPropagation()
-
+    const deviceToStore = devices.find(device => device.id === id)
+    dispatch(setDeviceForAlert(deviceToStore))
     setSelectedRowKeys([id]);
-
   }
 
   const columns: TableProps<DevicesType>["columns"] = [
@@ -97,12 +97,6 @@ const DevicesSelector = ({
       )
     },
   ];
-
-  const reorderDevices = (devices: DevicesType[]) => {
-    const selectedDevices = devices.filter(device => selectedRowKeys.includes(device.id));
-    const unselectedDevices = devices.filter(device => !selectedRowKeys.includes(device.id));
-    return [...selectedDevices, ...unselectedDevices];
-  };
 
   if(allowSingleDevice){
     columns.unshift({

@@ -9,8 +9,8 @@ import { PrimaryInput } from '@/components/ui/Input/Input'
 import CustomTags from '../reports/CustomTags'
 import ScheduleTypeMenu from '../reports/ScheduleTypeMenu'
 import { daysOfWeek, triggerRangeTypeOptions, triggerWhenOptions } from '@/utils/form'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/app/store/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/app/store/store'
 import CustomMenu from '@/components/ui/Menu/CustomMenu'
 import DeviceSelector from '../Modals/DeviceSelector'
 import DeviceDetailsComp from '../DeviceDetailsComp'
@@ -19,6 +19,7 @@ import axiosInstance from '@/lib/axiosInstance'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { validateAlertFormData } from '@/utils/helper_functions'
+import { resetAlertDevice } from '@/app/store/slice/devicesSlice'
 
 interface SingleAlertDetailsViewProps {
   alert: AlertDataType
@@ -37,12 +38,15 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
     ...alert,
     device: device.id
   })
+  const router = useRouter()
+  const dispatch: AppDispatch = useDispatch()
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([device.id]);
   const [isVisible, setIsVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [deviceChanged, setDeviceChanged] = useState(false)
-  const router = useRouter()
+
   const { isAdmin } = useSelector((state: RootState) => state.authReducer)
+  const { deviceForAlert } = useSelector((state: RootState) => state.devicesReducer)
   const isCustomScheduleType = formData?.scheduleType === "custom";
   const isWeekdaysScheduleType = formData?.scheduleType === "weekdays";
   const isEverydayScheduleType = formData?.scheduleType === "everyday";
@@ -166,6 +170,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
         toast.error(error.response.data.message[0]);
       } finally {
         setLoading(false);
+        dispatch(resetAlertDevice())
       }
     }
   }
@@ -209,6 +214,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
         toast.error(error.response.data.message[0]);
       } finally {
         setLoading(false);
+        dispatch(resetAlertDevice())
       }
     }
   }
@@ -357,9 +363,9 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
               {isAdmin && <Button onClick={() => setIsVisible(true)}>Select the Device</Button>}
             </div>
           </div>
-          {deviceChanged && <p>The device associated with this alert has been changed. Please update the record to fetch the latest device data.</p>}
-          {!creatingNewAlert && <div className={`${deviceChanged ? 'opacity-50' : ''}`}>
-            <DeviceDetail device={device} />
+
+          {<div>
+            {(deviceForAlert.id !== '' || device.id !== '') && <DeviceDetail device={deviceChanged || creatingNewAlert ? deviceForAlert : device} />}
           </div>}
         </Card>
         <div className=" flex flex-row justify-end mt-4">
