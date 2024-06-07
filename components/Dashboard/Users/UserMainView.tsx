@@ -168,6 +168,7 @@ const UserMainView = () => {
     try {
       const values = await form.validateFields();
       setUser(values);
+      delete user.id
       const response = await axiosInstance.post("/users", user);
       if (response.status === 200) {
         setUsers((prevUsers) => [...prevUsers, response.data.user]);
