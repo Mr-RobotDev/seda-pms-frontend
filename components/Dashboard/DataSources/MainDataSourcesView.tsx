@@ -8,7 +8,7 @@ const MainDataSourcesView = () => {
     <>
       <h1 className=" text-3xl font-semibold">Data Source</h1>
       <div className=" flex justify-center items-center">
-        <div className=" max-w-[1000px]">
+        <div className="">
           <Image src='/data-source.gif' alt="Comming Soon" className=" w-full h-full" width={100} height={100} />
         </div>
       </div>

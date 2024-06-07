@@ -9,6 +9,18 @@ import "antd/dist/reset.css";
 import "@/styles/main.css";
 import "@/styles/responsive.css";
 
+const toggler = [
+  <svg
+    width="20"
+    height="20"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 448 512"
+    key={0}
+  >
+    <path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path>
+  </svg>,
+];
+
 const { Header: AntHeader, Content, Sider } = Layout;
 
 interface DashboardLayoutProps {
@@ -42,9 +54,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <Layout
-      className={`layout-dashboard ${
-        pathname === "profile" ? "layout-profile" : ""
-      } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
+      className={`layout-dashboard ${pathname === "profile" ? "layout-profile" : ""
+        } ${pathname === "rtl" ? "layout-dashboard-rtl" : ""}`}
     >
       <Drawer
         title={false}
@@ -54,22 +65,19 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         open={visible}
         key={placement === "right" ? "left" : "right"}
         width={250}
-        className={`drawer-sidebar ${
-          pathname === "rtl" ? "drawer-sidebar-rtl" : ""
-        } `}
+        className={`drawer-sidebar ${pathname === "rtl" ? "drawer-sidebar-rtl" : ""
+          } `}
       >
         <Layout
-          className={`layout-dashboard !p-0 ${
-            pathname === "rtl" ? "layout-dashboard-rtl" : ""
-          }`}
+          className={`layout-dashboard !p-0 ${pathname === "rtl" ? "layout-dashboard-rtl" : ""
+            }`}
         >
           <Sider
             trigger={null}
             width={250}
             theme="light"
-            className={`sider-primary ant-layout-sider-primary ${
-              sidenavType === "#fff" ? "active-route" : ""
-            }`}
+            className={`sider-primary ant-layout-sider-primary ${sidenavType === "#fff" ? "active-route" : ""
+              }`}
             style={{ background: sidenavType }}
           >
             <Sidebar color={sidenavColor} />
@@ -85,41 +93,16 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         trigger={null}
         width={250}
         theme="light"
-        className={`sider-primary ant-layout-sider-primary !p-0 ${
-          sidenavType === "#fff" ? "active-route" : ""
-        }`}
+        className={`sider-primary ant-layout-sider-primary !p-0 ${sidenavType === "#fff" ? "active-route" : ""
+          }`}
         style={{ background: sidenavType }}
       >
         <Sidebar color={sidenavColor} />
       </Sider>
       <Layout>
-      {fixed ? (
-          <Affix>
-            <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-              <Header
-                placement="left"
-                onPress={openDrawer}
-                name={pathname}
-                subName={pathname}
-                handleSidenavColor={handleSidenavColor}
-                handleSidenavType={handleSidenavType}
-                handleFixedNavbar={handleFixedNavbar}
-              />
-            </AntHeader>
-          </Affix>
-        ) : (
-          <AntHeader className={`${fixed ? "ant-header-fixed" : ""}`}>
-            <Header
-              placement="left"
-              onPress={openDrawer}
-              name={pathname}
-              subName={pathname}
-              handleSidenavColor={handleSidenavColor}
-              handleSidenavType={handleSidenavType}
-              handleFixedNavbar={handleFixedNavbar}
-            />
-          </AntHeader>
-        )}
+        <div className="sidebar-toggler py-3 lg:hidden" onClick={openDrawer}>
+          {toggler}
+        </div>
         <Content className="content-ant">{children}</Content>
       </Layout>
     </Layout>
