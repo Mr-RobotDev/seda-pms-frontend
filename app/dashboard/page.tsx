@@ -1,5 +1,8 @@
-"use client";
 import MainDashboardView from "@/components/Dashboard/dashboardViews/MainDashboardView";
+
+export const metadata = {
+  title: 'Dashboard'
+}
 
 const DashboardPage = () => {
   return (

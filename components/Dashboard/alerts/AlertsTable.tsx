@@ -10,8 +10,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 
 const AlertsTable = () => {
-  const { user } = useSelector((state: RootState) => state.authReducer)
-  const isAdmin = user?.role === 'Admin'
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer)
   const [alerts, setAlerts] = useState<AlertDataType[]>([])
   const [loading, setLoading] = useState(false)
   const router = useRouter()

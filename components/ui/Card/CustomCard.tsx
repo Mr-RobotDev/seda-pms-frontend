@@ -25,7 +25,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
   const { timeFrame, currentDashboard } = useSelector(
     (state: RootState) => state.dashboardReducer
   );
-  const { user } = useSelector((state: RootState) => state.authReducer);
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -180,7 +180,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
                 </span>
               </div>
             </div>
-            {user?.role === "Admin" && !isRenaming && (
+            {isAdmin && !isRenaming && (
               <Button onMouseDown={handleOnClick} className=" w-10 h-10 border flex items-center justify-center">
                 <OptionsMenu cardId={card.id} setIsRenaming={setIsRenaming} />
               </Button>

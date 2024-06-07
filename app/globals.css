@@ -429,3 +429,10 @@ body{
 .custom-form-item .ant-form-item-control {
   margin-bottom: 0;
 }
+
+
+@media (max-width: 786px) {
+  .ant-layout{
+    padding: 5px !important;
+  }
+}

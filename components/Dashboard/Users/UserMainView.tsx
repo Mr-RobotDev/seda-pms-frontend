@@ -24,6 +24,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import CustomMenu from "@/components/ui/Menu/CustomMenu";
 import { userOrganizationOptions, userRoleOptions } from "@/utils/form";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { useRouter } from "next/navigation";
 
 const initialUserState: User = {
   id: "",
@@ -51,6 +54,8 @@ const UserMainView = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [user, setUser] = useState<User>(initialUserState);
   const [form] = Form.useForm();
+  const { user: loggedInUser } = useSelector((state: RootState) => state.authReducer)
+  const router = useRouter()
 
   const columns: TableProps<any>["columns"] = [
     {
@@ -161,8 +166,7 @@ const UserMainView = () => {
 
   const handleOk = async () => {
     try {
-      const values = await form.validateFields();
-      setUser(values);
+      delete user.id
       const response = await axiosInstance.post("/users", user);
       if (response.status === 200) {
         setUsers((prevUsers) => [...prevUsers, response.data.user]);
@@ -173,13 +177,21 @@ const UserMainView = () => {
       }
     } catch (error) {
       console.log("Validate Failed:", error);
+    } finally {
+      setUser(initialUserState);
+      form.resetFields()
     }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    setUser(initialUserState)
   };
+
+  useEffect(() => {
+    if (loggedInUser && loggedInUser?.role !== 'Admin') {
+      router.push('/dashboard/floor')
+    }
+  }, [router, loggedInUser])
 
   useEffect(() => {
     (async () => {
@@ -204,7 +216,7 @@ const UserMainView = () => {
   };
 
   return (
-    <Card>
+    loggedInUser?.role === 'Admin' && <Card>
       <div className=" flex flex-row justify-between items-center">
         <div className=" flex items-center justify-center my-auto">
           <h1 className="text-3xl font-semibold !mb-0">Users</h1>
@@ -216,7 +228,7 @@ const UserMainView = () => {
           >
             <span className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center">
               <FontAwesomeIcon icon={faCirclePlus} />
-              Add User
+              Create New User
             </span>
           </div>
         </div>
@@ -248,28 +260,30 @@ const UserMainView = () => {
             variant="filled"
             style={{ maxWidth: 600 }}
           >
-            <Form.Item
-              label="First Name"
-              name="firstName"
-              rules={[{ required: true, message: "First name is required" }]}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              className="custom-form-item"
-            >
-              <Input onChange={(e) => setUser({ ...user, firstName: e.target.value })} value={user.firstName} />
-            </Form.Item>
+            <div className=" grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <Form.Item
+                label="First Name"
+                name="firstName"
+                rules={[{ required: true, message: "First name is required" }]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                className="custom-form-item"
+              >
+                <Input onChange={(e) => setUser({ ...user, firstName: e.target.value })} value={user.firstName} />
+              </Form.Item>
 
 
-            <Form.Item
-              label="Last Name"
-              name="lastName"
-              rules={[{ required: true, message: "Last name is required" }]}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              className="custom-form-item"
-            >
-              <Input onChange={(e) => setUser({ ...user, lastName: e.target.value })} value={user.lastName} />
-            </Form.Item>
+              <Form.Item
+                label="Last Name"
+                name="lastName"
+                rules={[{ required: true, message: "Last name is required" }]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                className="custom-form-item"
+              >
+                <Input onChange={(e) => setUser({ ...user, lastName: e.target.value })} value={user.lastName} />
+              </Form.Item>
+            </div>
 
             <Form.Item
               label="Email"

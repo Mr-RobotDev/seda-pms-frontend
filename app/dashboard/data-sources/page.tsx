@@ -1,16 +1,9 @@
-'use client'
-import Image from 'next/image'
-import React from 'react'
-import withDashboardLayout from '@/hoc/withDashboardLayout'
+import MainDataSourcesView from '@/components/Dashboard/DataSources/MainDataSourcesView'
 
-const DataSroucePage = () => {
-  return (
-    <div className=" flex justify-center items-center mt-20">
-      <div className=" max-w-96 max-h-96">
-        <Image src='/comming-soon.svg' alt="Comming Soon" className=" w-full h-full" width={100} height={100} />
-      </div>
-    </div>
-  )
+export const metadata = {
+  title: 'Data Sources'
 }
 
-export default withDashboardLayout(DataSroucePage)
+const DataSourcePage = () => <MainDataSourcesView />
+
+export default DataSourcePage

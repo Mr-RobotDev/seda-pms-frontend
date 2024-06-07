@@ -14,7 +14,7 @@ import {
 
 const ReportsMainView = () => {
   const [createNewReport, setCreateNewReport] = useState(false);
-  const { user } = useSelector((state: RootState) => state.authReducer)
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer)
   const { dashboards, currentDashboard } = useSelector(
     (state: RootState) => state.dashboardReducer
   );
@@ -36,14 +36,14 @@ const ReportsMainView = () => {
         {dashboards.length !== 0 && (
           <>
             <h1 className=" text-3xl font-semibold">Reports</h1>
-            <div className=" flex items-center gap-2 justify-between">
+            <div className=" flex items-center gap-1 justify-between">
               <div className=" flex items-center gap-2">
                 <DashboardMenu
                   dashboardsList={dashboards}
                   routingFunctionality={false}
                 />
               </div>
-              {!createNewReport && user?.role === 'Admin' && (
+              {!createNewReport && isAdmin && (
                 <div
                   className="flex justify-center"
                   onClick={() => setCreateNewReport(true)}

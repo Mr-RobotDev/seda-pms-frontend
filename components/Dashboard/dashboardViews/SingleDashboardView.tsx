@@ -41,7 +41,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
     currentDashboard: currentSelectedDashboard,
     dashboardCards,
   } = useSelector((state: RootState) => state.dashboardReducer);
-  const { user } = useSelector((state: RootState) => state.authReducer);
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer);
 
   useEffect(() => {
     dispatch(getDashboards());
@@ -125,7 +125,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
     <>
       <div>
         <div className=" flex flex-col gap-3 md:flex-row md:gap-0 justify-between items-center">
-          <div className=" flex flex-row gap-3">
+          <div className=" flex flex-row gap-3 order-2 md:order-1">
             <DashboardMenu
               dashboardsList={dashboards}
               routingFunctionality={true}
@@ -134,8 +134,8 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
               <TimeFrameMenu functionality={true} />
             )}
           </div>
-          {user?.role === "Admin" && (
-            <div className="flex justify-center md:mt-0 mb-3">
+          {isAdmin && (
+            <div className="flex md:justify-center md:w-auto justify-end w-full  order-1 md:order-2">
               <span
                 onClick={() => setIsModalOpen(true)}
                 className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"

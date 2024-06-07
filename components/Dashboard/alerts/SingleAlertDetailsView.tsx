@@ -9,8 +9,8 @@ import { PrimaryInput } from '@/components/ui/Input/Input'
 import CustomTags from '../reports/CustomTags'
 import ScheduleTypeMenu from '../reports/ScheduleTypeMenu'
 import { daysOfWeek, triggerRangeTypeOptions, triggerWhenOptions } from '@/utils/form'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/app/store/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/app/store/store'
 import CustomMenu from '@/components/ui/Menu/CustomMenu'
 import DeviceSelector from '../Modals/DeviceSelector'
 import DeviceDetailsComp from '../DeviceDetailsComp'
@@ -19,6 +19,7 @@ import axiosInstance from '@/lib/axiosInstance'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { validateAlertFormData } from '@/utils/helper_functions'
+import { resetAlertDevice } from '@/app/store/slice/devicesSlice'
 
 interface SingleAlertDetailsViewProps {
   alert: AlertDataType
@@ -37,13 +38,15 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
     ...alert,
     device: device.id
   })
+  const router = useRouter()
+  const dispatch: AppDispatch = useDispatch()
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([device.id]);
   const [isVisible, setIsVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [deviceChanged, setDeviceChanged] = useState(false)
-  const router = useRouter()
-  const { user } = useSelector((state: RootState) => state.authReducer)
-  const isAdmin = user?.role === 'Admin'
+
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer)
+  const { deviceForAlert } = useSelector((state: RootState) => state.devicesReducer)
   const isCustomScheduleType = formData?.scheduleType === "custom";
   const isWeekdaysScheduleType = formData?.scheduleType === "weekdays";
   const isEverydayScheduleType = formData?.scheduleType === "everyday";
@@ -167,6 +170,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
         toast.error(error.response.data.message[0]);
       } finally {
         setLoading(false);
+        dispatch(resetAlertDevice())
       }
     }
   }
@@ -179,7 +183,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
       toast.error(message);
       return;
     }
-    
+
     if (formData) {
       setLoading(true);
       const dataToSend = { ...formData };
@@ -210,6 +214,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
         toast.error(error.response.data.message[0]);
       } finally {
         setLoading(false);
+        dispatch(resetAlertDevice())
       }
     }
   }
@@ -255,6 +260,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
                   name="name"
                   value={formData?.name}
                   onChange={handleChange}
+                  disabled={!isAdmin}
                 />
               </div>
               {!creatingNewAlert && <div className="px-8 h-full">
@@ -262,6 +268,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
                 <Switch
                   checked={formData?.enabled}
                   onChange={handleSwitchChange}
+                  disabled={!isAdmin}
                 />
               </div>}
             </div>
@@ -323,6 +330,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
               <div className="flex flex-row items-center  mb-3 md:mb-0">
                 <PrimaryInput
                   name="lower"
+                  disabled={formData.trigger.range.type === 'upper' || !isAdmin}
                   value={formData.trigger.range.lower?.toString()}
                   onChange={handleChange}
                   className='!h-[49px]'
@@ -334,6 +342,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
               <p className="!mb-1 text-sm">Upper ({typeAndUnits[formData.trigger.field]})</p>
               <div className="flex flex-row items-center  mb-3 md:mb-0">
                 <PrimaryInput
+                  disabled={formData.trigger.range.type === 'lower' || !isAdmin}
                   name="upper"
                   value={formData.trigger.range.upper?.toString()}
                   onChange={handleChange}
@@ -351,26 +360,25 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
           <div className=' flex flex-row justify-between items-center'>
             <p className="font-semibold text-lg !mb-0">Device</p>
             <div>
-              <Button onClick={() => setIsVisible(true)}>Select the Device</Button>
+              {isAdmin && <Button onClick={() => setIsVisible(true)}>Select the Device</Button>}
             </div>
           </div>
-          {deviceChanged && <p>The device associated with this alert has been changed. Please update the record to fetch the latest device data.</p>}
-          {!creatingNewAlert && <div className={`${deviceChanged ? 'opacity-50' : ''}`}>
-            <DeviceDetail device={device} />
+
+          {<div>
+            {(deviceForAlert.id !== '' || device.id !== '') && <DeviceDetail device={deviceChanged || creatingNewAlert ? deviceForAlert : device} />}
           </div>}
         </Card>
         <div className=" flex flex-row justify-end mt-4">
-          {
-            creatingNewAlert ? (
-              <Button type="primary" onClick={handleCreateNewAlert} className=" w-32">
-                Create
-              </Button>
-            ) : (
-              <Button type="primary" onClick={handleUpdateAlert} className=" w-32">
-                Update
-              </Button>
-            )
-          }
+          {!creatingNewAlert && isAdmin && (
+            <Button type="primary" onClick={handleUpdateAlert} className=" w-32">
+              Update
+            </Button>
+          )}
+          {creatingNewAlert && (
+            <Button type="primary" onClick={handleCreateNewAlert} className=" w-32">
+              Create
+            </Button>
+          )}
         </div>
       </Spin>
       <Modal
@@ -382,12 +390,12 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
       >
         <p className="font-semibold text-lg !mb-0 text-center">Select the Device</p>
         <div className='!h-[600px] overflow-y-auto py-3'>
-          <DeviceSelector 
-            allowSingleDevice={true} 
-            selectedRowKeys={selectedRowKeys} 
+          <DeviceSelector
+            allowSingleDevice={true}
+            selectedRowKeys={selectedRowKeys}
             setSelectedRowKeys={setSelectedRowKeys}
             deviceType={formData.trigger.field}
-            />
+          />
         </div>
         {selectedRowKeys.length === 1 &&
           <div className=' flex justify-end mt-3'>

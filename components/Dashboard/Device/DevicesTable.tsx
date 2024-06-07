@@ -9,12 +9,15 @@ import SimSignal from "./SimSignal";
 import { useTimeAgo } from "next-timeago";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
+import useIsMobile from "@/app/hooks/useMobile";
+import './DeviceTable.css'
 
 const DevicesTable = () => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const { TimeAgo } = useTimeAgo();
+  const isMobile = useIsMobile();
 
-  const columns: TableProps<DevicesType>["columns"] = [
+  let columns: TableProps<DevicesType>["columns"] = [
     {
       title: "TYPE",
       dataIndex: "type",
@@ -34,7 +37,7 @@ const DevicesTable = () => {
     {
       title: "NAME",
       render: (_, { type, name }) => (
-        <div className=" flex flex-row items-center">
+        <div className=" w-36 md:w-full whitespace-normal flex flex-row items-center">
           <p className=" !text-black">{name}</p>
         </div>
       ),
@@ -44,7 +47,7 @@ const DevicesTable = () => {
       title: 'STATE',
       dataIndex: 'state',
       render: (_, { type, temperature, relativeHumidity, pressure }) => (
-        <div>
+        <div className=" w-20 md:w-full whitespace-normal">
           {
             type === 'pressure' ? <p className="!text-black">{pressure?.toFixed(2)} Pa</p> : <p className="!text-black"> {relativeHumidity.toFixed(2)} %RH AT {temperature?.toFixed(2)} °C</p>
           }
@@ -56,12 +59,12 @@ const DevicesTable = () => {
       key: "lastUpdated",
       render: (_, { lastUpdated }) =>
         lastUpdated ? (
-          <div className=" flex flex-row items-center">
+          <div className="flex flex-row items-center">
             <TimeAgo date={new Date(lastUpdated)} locale="en" />
           </div>
         ) : (
           <div>
-            <p className=" !text-2xl !ml-4">-</p>
+            <p className="!text-2xl !ml-4">-</p>
           </div>
         ),
     },
@@ -84,7 +87,7 @@ const DevicesTable = () => {
           )}
         </>
       )
-    },    
+    },
     {
       title: "ACTIONS",
       key: "actions",
@@ -110,6 +113,10 @@ const DevicesTable = () => {
       },
     },
   ];
+
+  if (isMobile) {
+    columns = columns.filter(column => column.key !== 'lastUpdated');
+  }
 
   const router = useRouter();
   useEffect(() => {
