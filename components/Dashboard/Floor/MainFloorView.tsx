@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
 import { RootState } from "@/app/store/store";
 import DeviceStatsPieChart from "./DeviceStatsPieChart";
+import FullScreenButton from "@/components/ui/FullScreenButton/FullScreenButton";
 
 const MainFloorView = () => {
   const dispatch = useDispatch();
@@ -38,7 +39,10 @@ const MainFloorView = () => {
 
   return (
     <>
-      <h1 className=" text-3xl font-semibold">Floor Plan</h1>
+      <div className=" flex items-center justify-between mb-3">
+        <h1 className=" text-3xl font-semibold">Floor Plan</h1>
+        <FullScreenButton />
+      </div>
       {error ? (
         <h1 className=" text-2xl font-semibold mt-20 text-center">
           Error Loading the Resources
