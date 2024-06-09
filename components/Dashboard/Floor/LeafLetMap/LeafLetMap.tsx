@@ -156,17 +156,17 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
   ];
 
   const customThermometerIcon = new Icon({
-    iconUrl: "/newIcons/temperature.svg",
+    iconUrl: "/humidity.png",
     iconSize: [25, 25],
   });
 
   const customColdStorageIcon = new Icon({
-    iconUrl: "/newIcons/humidity.svg",
+    iconUrl: "/snowflake.png",
     iconSize: [25, 25],
   });
 
   const customPressueIcons = new Icon({
-    iconUrl: "/newIcons/pressure.svg",
+    iconUrl: "/pressure.png",
     iconSize: [25, 25],
   })
 
