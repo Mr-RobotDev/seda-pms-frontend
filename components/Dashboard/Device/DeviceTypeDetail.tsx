@@ -1,3 +1,4 @@
+import { humidityIcon, pressureIcon, temperatureIcon } from '@/svgs/Icons';
 import { Card } from 'antd'
 import Image from 'next/image';
 import React from 'react'
@@ -7,9 +8,17 @@ interface DeviceTypeDetailProps {
   title: string;
   value: number;
   image: string;
+  type?: string;
 }
 
-const DeviceTypeDetail = ({ title, value, image }: DeviceTypeDetailProps) => {
+
+const deviceIcons: { [key: string]: any } = {
+  temperature: '/newIcons/temperature.svg',
+  humidity: '/newIcons/humidity.svg',
+  pressure: '/newIcons/pressure.svg',
+}
+
+const DeviceTypeDetail = ({ title, value, image, type }: DeviceTypeDetailProps) => {
   return (
     <>
       <Card bordered={false} className="criclebox h-full">
@@ -27,13 +36,13 @@ const DeviceTypeDetail = ({ title, value, image }: DeviceTypeDetailProps) => {
             </div>
           </div>
           <div className=" w-12 h-12 flex items-center justify-center ml-auto">
-            <Image
-              src={image}
+            {type && <Image
+              src={deviceIcons[type]}
               className=" w-full h-full"
               alt="icon"
               width={100}
               height={100}
-            />
+            />}
           </div>
         </div>
       </Card>

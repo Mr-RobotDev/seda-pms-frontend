@@ -469,11 +469,11 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
 
         {
           deviceData?.type === 'pressure' ?
-            <DeviceTypeDetail title="Highest Pressure" value={deviceData?.pressure as number} image="/pressure.png" />
+            <DeviceTypeDetail title="Highest Pressure" value={deviceData?.pressure as number} image="/pressure.png" type="pressure" />
             :
             <>
-              <DeviceTypeDetail title="Highest Temperature" value={deviceData?.temperature as number} image="/high-temperature.png" />
-              <DeviceTypeDetail title="Highest Humidity" value={deviceData?.relativeHumidity as number} image="/humidity.png" />
+              <DeviceTypeDetail title="Highest Temperature" value={deviceData?.temperature as number} image="/high-temperature.png" type="temperature" />
+              <DeviceTypeDetail title="Highest Humidity" value={deviceData?.relativeHumidity as number} image="/humidity.png" type="humidity" />
               <div>
                 <Card bordered={false} className="criclebox h-full">
                   <div className=" text-2xl flex flex-row justify-between">

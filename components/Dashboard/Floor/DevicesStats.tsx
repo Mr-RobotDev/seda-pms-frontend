@@ -41,9 +41,9 @@ const DevicesStats = () => {
               </div>
             </Card>
           </div>
-          <DeviceTypeDetail title="Highest Temperature" value={devicesStats.highestTemperature} image="/high-temperature.png" />
-          <DeviceTypeDetail title="Highest Humidity" value={devicesStats.highestRelativeHumidity} image="/humidity.png" />
-          <DeviceTypeDetail title="Highest Pressue" value={devicesStats.highestPressure} image="/pressure.png" />
+          <DeviceTypeDetail title="Highest Temperature" value={devicesStats.highestTemperature} image="/high-temperature.png" type="temperature" />
+          <DeviceTypeDetail title="Highest Humidity" value={devicesStats.highestRelativeHumidity} image="/humidity.png" type="humidity" />
+          <DeviceTypeDetail title="Highest Pressure" value={devicesStats.highestPressure} image="/pressure.png" type="pressure" />
         </div>
       </div>
     </div>
