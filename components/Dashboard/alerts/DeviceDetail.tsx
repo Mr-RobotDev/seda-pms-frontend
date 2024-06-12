@@ -21,7 +21,7 @@ const DeviceDetail = ({ device }: DeviceDetailProps) => {
           <div className="!m-0 flex flex-row items-center gap-2">
             <div className="w-6 h-6">
               <Image
-                src="/pressure.png"
+                src="/icons/highest-pressure.png"
                 alt="Pressure"
                 width={100}
                 height={100}
@@ -34,7 +34,7 @@ const DeviceDetail = ({ device }: DeviceDetailProps) => {
             <div className="!m-0 flex flex-row items-center gap-2">
               <div className="w-6 h-6">
                 <Image
-                  src="/high-temperature.png"
+                  src="/icons/highest-temperature.png"
                   alt="temperature"
                   width={100}
                   height={100}
@@ -45,7 +45,7 @@ const DeviceDetail = ({ device }: DeviceDetailProps) => {
             <div className="!m-0 flex flex-row items-center gap-2">
               <div className="w-6 h-6">
                 <Image
-                  src="/humidity.png"
+                  src="/icons/highest-humidity.png"
                   alt="temperature"
                   width={100}
                   height={100}

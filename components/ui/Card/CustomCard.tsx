@@ -123,11 +123,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
             <div className=" flex flex-row items-center gap-2">
               <div className=" w-11 h-11 border border-blue-100 rounded-md p-1">
                 <Image
-                  src={
-                    card.field === "temperature"
-                      ? "/thermometer.png"
-                      : "/snowflake.png"
-                  }
+                  src={card.field === "temperature" ? "/icons/cold-or-freeze.png" : (card.field === 'pressure' ? '/icons/highest-pressure.png' : "/icons/humidity.png")}
                   alt="Sensors"
                   className="w-full h-full object-cover rounded-sm"
                   unoptimized

@@ -31,7 +31,7 @@ const DevicesStats = () => {
                 </div>
                 <div className=" w-12 h-12 flex items-center justify-center ml-auto">
                   <Image
-                    src={"/devices.png"}
+                    src={"/icons/devices.png"}
                     className=" w-full h-full"
                     alt="icon"
                     width={100}
@@ -41,9 +41,9 @@ const DevicesStats = () => {
               </div>
             </Card>
           </div>
-          <DeviceTypeDetail title="Highest Temperature" value={devicesStats.highestTemperature} image="/high-temperature.png" />
-          <DeviceTypeDetail title="Highest Humidity" value={devicesStats.highestRelativeHumidity} image="/humidity.png" />
-          <DeviceTypeDetail title="Highest Pressue" value={devicesStats.highestPressure} image="/pressure.png" />
+          <DeviceTypeDetail title="Highest Temperature" value={devicesStats.highestTemperature} image="/icons/highest-temperature.png" />
+          <DeviceTypeDetail title="Highest Humidity" value={devicesStats.highestRelativeHumidity} image="/icons/highest-humidity.png" />
+          <DeviceTypeDetail title="Highest Pressue" value={devicesStats.highestPressure} image="/icons/highest-pressure.png" />
         </div>
       </div>
     </div>

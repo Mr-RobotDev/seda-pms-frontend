@@ -440,7 +440,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         <div className=" h-full">
           <Card bordered={false} className="criclebox h-full">
             <div className=" text-2xl flex flex-row justify-between">
-              <div>
+              <div className="w-10/12">
                 <span className=" text-lg">Name</span>
                 <div className="">
                   <span className="">
@@ -452,11 +452,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               </div>
               <div className=" w-12 h-12 flex items-center justify-center ml-auto">
                 <Image
-                  src={
-                    deviceData?.type === "cold"
-                      ? "/snowflake.png"
-                      : "/thermometer.png"
-                  }
+                  src={deviceData?.type === "cold" ? "/icons/cold-or-freeze.png" : (deviceData?.type === 'pressure' ? '/icons/highest-pressure.png' : "/icons/humidity.png")}
                   className=" w-full h-full"
                   alt="icon"
                   width={100}
@@ -469,11 +465,11 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
 
         {
           deviceData?.type === 'pressure' ?
-            <DeviceTypeDetail title="Highest Pressure" value={deviceData?.pressure as number} image="/pressure.png" />
+            <DeviceTypeDetail title="Highest Pressure" value={deviceData?.pressure as number} image="/icons/highest-pressure.png" />
             :
             <>
-              <DeviceTypeDetail title="Highest Temperature" value={deviceData?.temperature as number} image="/high-temperature.png" />
-              <DeviceTypeDetail title="Highest Humidity" value={deviceData?.relativeHumidity as number} image="/humidity.png" />
+              <DeviceTypeDetail title="Highest Temperature" value={deviceData?.temperature as number} image="/icons/highest-temperature.png" />
+              <DeviceTypeDetail title="Highest Humidity" value={deviceData?.relativeHumidity as number} image="/icons/highest-humidity.png" />
               <div>
                 <Card bordered={false} className="criclebox h-full">
                   <div className=" text-2xl flex flex-row justify-between">
@@ -497,7 +493,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                     </div>
                     <div className=" w-12 h-12 flex items-center justify-center ml-auto">
                       <Image
-                        src={deviceData?.signalStrength ? '/network-signal.png' : '/offline.png'}
+                        src={deviceData?.signalStrength ? '/icons/signal-strength.png' : '/icons/offline.png'}
                         className=" w-full h-full"
                         alt="icon"
                         width={100}
