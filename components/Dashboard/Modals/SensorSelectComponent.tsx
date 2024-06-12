@@ -9,9 +9,9 @@ interface SensorSelectComponentProps {
 }
 
 const typeToIconUrl: Record<string, string> = {
-  temperature: '/thermometer.png',
-  relativeHumidity: '/snowflake.png',
-  pressure: '/pressure.png',
+  temperature: '/icons/cold-or-freeze.png',
+  relativeHumidity: '/icons/humidity.png',
+  pressure: '/icons/highest-pressure.png',
 };
 
 const SensorSelectComponent = ({ handleClick, selectedSensors, sensorType, title }: SensorSelectComponentProps) => {
