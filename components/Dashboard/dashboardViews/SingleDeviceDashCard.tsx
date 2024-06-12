@@ -91,7 +91,7 @@ const SingleDeviceDashCard = ({
     return (
       <ReactApexChart
         options={temperatureOptions}
-        series={relativeHumidityData}
+        series={temperatureData}
         type="line"
         width={"100%"}
         height={"100%"}
