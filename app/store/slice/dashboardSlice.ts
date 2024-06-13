@@ -19,6 +19,7 @@ interface DashboardState {
   dashboardCards: DashboardCardType[];
   error: string;
   timeFrame: TimeFrameType
+  fullScreen: boolean
 }
 
 interface createCardType {
@@ -45,7 +46,8 @@ const initialState: DashboardState = {
   },
   dashboardCards: [],
   error: '',
-  timeFrame: timeFrames.yesterday
+  timeFrame: timeFrames.yesterday,
+  fullScreen: false
 }
 
 export const getDashboards = createAsyncThunk('dashboard/getDashboards', async () => {
@@ -161,6 +163,9 @@ const dashboardSlice = createSlice({
     setTimeFrame: (state, action) => {
       state.timeFrame = action.payload;
     },
+    setFullScreen: (state, action) => {
+      state.fullScreen = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -266,7 +271,8 @@ const dashboardSlice = createSlice({
 export const {
   resetState,
   setCurrentDashboard,
-  setTimeFrame
+  setTimeFrame,
+  setFullScreen
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

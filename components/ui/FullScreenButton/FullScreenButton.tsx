@@ -1,12 +1,16 @@
+import { setFullScreen } from '@/app/store/slice/dashboardSlice';
+import { RootState } from '@/app/store/store';
 import { Button } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdFullscreen, MdFullscreenExit } from "react-icons/md";
+import { useDispatch, useSelector } from 'react-redux';
 
 const FullScreenButton: React.FC = () => {
-  const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
+  const { fullScreen } = useSelector((state: RootState) => state.dashboardReducer);
+  const dispatch = useDispatch()
 
   const handleFullScreen = () => {
-    if (!isFullScreen) {
+    if (!fullScreen) {
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
       }
@@ -15,12 +19,12 @@ const FullScreenButton: React.FC = () => {
         document.exitFullscreen();
       }
     }
-    setIsFullScreen(!isFullScreen);
+    dispatch(setFullScreen(!fullScreen));
   };
 
   return (
     <Button onClick={handleFullScreen}>
-      {isFullScreen ?
+      {fullScreen ?
         <div className=' w-full h-full flex flex-row items-center gap-2'>
           <p className=' !mb-0'>Exit Full Screen</p>
           <MdFullscreenExit className=' w-6 h-6' />
