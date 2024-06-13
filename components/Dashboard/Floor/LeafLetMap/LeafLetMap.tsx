@@ -24,7 +24,6 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, active }) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const [events, setEvents] = useState<DevicesType[]>([]);
   const { token } = useSelector((state: RootState) => state.authReducer);
-  const [zoom, setZoom] = useState(19);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -104,14 +103,6 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, active }) => {
   }, [token]);
 
   useEffect(() => {
-    if (active) {
-      setZoom(21);
-    } else {
-      setZoom(19);
-    }
-  }, [active]);
-
-  useEffect(() => {
     const recentEvent = events.at(-1);
     if (recentEvent) {
       setDevices((prevState) =>
@@ -188,7 +179,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, active }) => {
     >
       <MapContainer
         center={[51.5014, -0.083]}
-        zoom={zoom}
+        zoom={20}
         minZoom={19}
         scrollWheelZoom={false}
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
