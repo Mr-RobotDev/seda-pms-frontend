@@ -1,31 +1,30 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MapContainer, ImageOverlay, Marker, Popup, FeatureGroup } from "react-leaflet";
+import { MapContainer, ImageOverlay, Marker, Popup } from "react-leaflet";
 import { Icon, LatLngBoundsExpression } from "leaflet";
 import axiosInstance from "@/lib/axiosInstance";
 import DeviceDetailsComp from "../../DeviceDetailsComp";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "./leaflet.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
 import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
 import { DevicesType } from "@/type";
-import { EditControl } from "react-leaflet-draw"
+import { EditControl } from "react-leaflet-draw";
 
 interface LeafLetMapProps {
   diagram?: string;
+  active?: boolean;
 }
 
-const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
-  const devicesStats = useSelector(
-    (state: RootState) => state.statisticsReducer
-  );
+const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, active }) => {
+  const devicesStats = useSelector((state: RootState) => state.statisticsReducer);
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const [events, setEvents] = useState<DevicesType[]>([]);
   const { token } = useSelector((state: RootState) => state.authReducer);
+  const [zoom, setZoom] = useState(19);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -105,6 +104,14 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
   }, [token]);
 
   useEffect(() => {
+    if (active) {
+      setZoom(21);
+    } else {
+      setZoom(19);
+    }
+  }, [active]);
+
+  useEffect(() => {
     const recentEvent = events.at(-1);
     if (recentEvent) {
       setDevices((prevState) =>
@@ -165,23 +172,23 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
     iconSize: [22, 22],
   });
 
-  const customPressueIcons = new Icon({
+  const customPressureIcon = new Icon({
     iconUrl: "/icons/pressure.png",
     iconSize: [22, 22],
-  })
+  });
 
-  const _onCreate = (e:any) => {
+  const _onCreate = (e: any) => {
     console.log(e.layer._latlng);
-  }
+  };
 
   return (
     <div
       style={{ width: "100%" }}
-      className="w-full h-[500px] md:max-h-[670px] 2xl:h-[900px]"
+      className={`w-full ${active ? 'h-screen' : 'h-[500px] md:max-h-[670px] 2xl:h-[900px]'}`}
     >
       <MapContainer
         center={[51.5014, -0.083]}
-        zoom={19}
+        zoom={zoom}
         minZoom={19}
         scrollWheelZoom={false}
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
@@ -195,7 +202,9 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
             icon={
               device.type === "cold"
                 ? customColdStorageIcon
-                : (device.type === 'pressure' ? customPressueIcons : customThermometerIcon)
+                : device.type === "pressure"
+                ? customPressureIcon
+                : customThermometerIcon
             }
           >
             <Popup>
