@@ -25,7 +25,7 @@ const DevicesTable = () => {
         <div className=" flex flex-row items-center gap-7">
           <div className=" w-5 h-5">
             <Image
-              src={type === "cold" ? "/icons/cold-or-freeze.png" : (type === 'pressure' ? '/icons/highest-pressure.png' : "/icons/humidity.png")}
+              src={type === "cold" ? "/icons/cold-or-freeze.png" : (type === 'pressure' ? '/icons/pressure.png' : "/icons/humidity.png")}
               alt="icon"
               width={100}
               height={100}
