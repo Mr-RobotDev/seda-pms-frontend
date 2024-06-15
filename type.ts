@@ -145,6 +145,7 @@ export interface AlertDataType {
 interface Trigger {
   field: string;
   range: Range;
+  duration: number;
 }
 
 interface Range {

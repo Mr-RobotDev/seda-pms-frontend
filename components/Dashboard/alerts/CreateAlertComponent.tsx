@@ -18,7 +18,8 @@ const CreateAlertComponent = () => {
         lower: 0,
         upper: 0,
         type: 'lower'
-      }
+      },
+      duration: 0
     },
     scheduleType: 'weekdays',
     weekdays: [],
