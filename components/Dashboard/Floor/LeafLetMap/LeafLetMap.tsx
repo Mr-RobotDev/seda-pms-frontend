@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
 import { DevicesType } from "@/type";
 import { EditControl } from "react-leaflet-draw"
+import { iconsBasedOnType } from "@/utils/helper_functions";
 
 interface LeafLetMapProps {
   diagram?: string;
@@ -156,23 +157,11 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, fullScreen }) => {
     [51.5019, -0.082],
   ];
 
-  const customThermometerIcon = new Icon({
-    iconUrl: "/icons/humidity.png",
-    iconSize: [22, 22],
-  });
-
-  const customColdStorageIcon = new Icon({
-    iconUrl: "/icons/cold-or-freeze.png",
-    iconSize: [22, 22],
-  });
-
-  const customPressueIcons = new Icon({
-    iconUrl: "/icons/highest-pressure.png",
-    iconSize: [22, 22],
-  })
-
-  const _onCreate = (e:any) => {
-    console.log(e.layer._latlng);
+  const getMarkerIcons = (key: string) => {
+    return new Icon({
+      iconUrl: iconsBasedOnType(key),
+      iconSize: [22, 22],
+    })
   }
 
   return (
@@ -182,7 +171,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, fullScreen }) => {
     >
       <MapContainer
         center={[51.5014, -0.083]}
-        zoom={fullScreen ? 20: 19}
+        zoom={fullScreen ? 20 : 19}
         minZoom={19}
         scrollWheelZoom={false}
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
@@ -193,11 +182,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, fullScreen }) => {
           <Marker
             key={device.oem}
             position={[device.location.lat, device.location.long]}
-            icon={
-              device.type === "cold"
-                ? customColdStorageIcon
-                : (device.type === 'pressure' ? customPressueIcons : customThermometerIcon)
-            }
+            icon={getMarkerIcons(device.type)}
           >
             <Popup>
               <DeviceDetailsComp device={device} />

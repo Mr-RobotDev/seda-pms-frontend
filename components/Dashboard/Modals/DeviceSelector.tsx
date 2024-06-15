@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { setDeviceForAlert, setDevicesToGlobal } from "@/app/store/slice/devicesSlice";
+import { iconsBasedOnType } from "@/utils/helper_functions";
 
 interface DevicesSelectorProps {
   setSelectedRowKeys: (selectedRowKeys: string[]) => void;
@@ -45,7 +46,7 @@ const DevicesSelector = ({
         <div className="flex flex-row items-center gap-7">
           <div className="w-5 h-5">
             <Image
-              src={type === "cold" ? "/icons/cold-or-freeze.png" : (type === 'pressure' ? '/icons/highest-pressure.png' : "/icons/humidity.png")}
+              src={iconsBasedOnType(type)}
               alt="icon"
               width={100}
               height={100}

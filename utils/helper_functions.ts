@@ -127,3 +127,14 @@ export function formatToTitleCase(input: string): string {
 
   return formattedWords.join(' ');
 }
+
+export const iconsBasedOnType = (key: string) => {
+  const icons: Record<string, string> = {
+    humidity: '/icons/humidity.png',
+    pressure: '/icons/highest-pressure.png',
+    freezer: '/icons/freezer.png',
+    fridge: '/icons/fridge.png',
+  }
+
+  return icons[key] || '';
+}
