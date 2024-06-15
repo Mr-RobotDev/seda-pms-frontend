@@ -73,7 +73,7 @@ const MainFloorView = () => {
                   className="mb-24 md:mb-0"
                 >
                   <Card>
-                    <div className=" flex justify-end mb-3 md:mb-0">
+                    <div className=" flex justify-end mb-3">
                       <Link
                         href={`/dashboard/floor-plan`}
                         target="_blank"

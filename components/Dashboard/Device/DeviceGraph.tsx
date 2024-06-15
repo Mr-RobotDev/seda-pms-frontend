@@ -21,6 +21,7 @@ import {
 } from "@/utils/graph";
 import DeviceTypeDetail from "./DeviceTypeDetail";
 import PressueChart from "./PressueChart";
+import { iconsBasedOnType } from "@/utils/helper_functions";
 
 dayjs.extend(isBetween);
 
@@ -452,7 +453,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               </div>
               <div className=" w-12 h-12 flex items-center justify-center ml-auto">
                 <Image
-                  src={deviceData?.type === "cold" ? "/icons/cold-or-freeze.png" : (deviceData?.type === 'pressure' ? '/icons/pressure.png' : "/icons/humidity.png")}
+                  src={iconsBasedOnType(deviceData?.type as string)}
                   className=" w-full h-full"
                   alt="icon"
                   width={100}

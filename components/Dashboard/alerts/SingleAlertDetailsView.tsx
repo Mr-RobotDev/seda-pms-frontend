@@ -68,7 +68,15 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
               range: {
                 ...prevState.trigger.range,
                 [name]: Number(value)
-              }
+              },
+            }
+          };
+        } else if (name === 'duration'){
+          return {
+            ...prevState,
+            trigger: {
+              ...prevState.trigger,
+              duration: Number(value)
             }
           };
         } else {
@@ -345,6 +353,18 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
                   disabled={formData.trigger.range.type === 'lower' || !isAdmin}
                   name="upper"
                   value={formData.trigger.range.upper?.toString()}
+                  onChange={handleChange}
+                  className='!h-[49px]'
+                  type='number'
+                />
+              </div>
+            </div>
+            <div>
+              <p className="!mb-1 text-sm">Duration (minutes)</p>
+              <div className="flex flex-row items-center  mb-3 md:mb-0">
+                <PrimaryInput
+                  name="duration"
+                  value={formData.trigger.duration?.toString()}
                   onChange={handleChange}
                   className='!h-[49px]'
                   type='number'

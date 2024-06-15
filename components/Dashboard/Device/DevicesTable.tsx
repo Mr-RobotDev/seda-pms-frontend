@@ -11,6 +11,7 @@ import Link from "next/link";
 import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import useIsMobile from "@/app/hooks/useMobile";
 import './DeviceTable.css'
+import { iconsBasedOnType } from "@/utils/helper_functions";
 
 const DevicesTable = () => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
@@ -25,7 +26,7 @@ const DevicesTable = () => {
         <div className=" flex flex-row items-center gap-7">
           <div className=" w-5 h-5">
             <Image
-              src={type === "cold" ? "/icons/cold-or-freeze.png" : (type === 'pressure' ? '/icons/pressure.png' : "/icons/humidity.png")}
+              src={iconsBasedOnType(type)}
               alt="icon"
               width={100}
               height={100}
@@ -36,13 +37,12 @@ const DevicesTable = () => {
     },
     {
       title: "NAME",
-      render: (_, { type, name }) => (
+      render: (_, { name }) => (
         <div className=" w-36 md:w-full whitespace-normal flex flex-row items-center">
           <p className=" !text-black">{name}</p>
         </div>
       ),
     },
-
     {
       title: 'STATE',
       dataIndex: 'state',
@@ -51,6 +51,15 @@ const DevicesTable = () => {
           {
             type === 'pressure' ? <p className="!text-black">{pressure?.toFixed(2)} Pa</p> : <p className="!text-black"> {relativeHumidity.toFixed(2)} %RH AT {temperature?.toFixed(2)} °C</p>
           }
+        </div>
+      ),
+    },
+    {
+      title: "SENSOR ID",
+      key: 'sensorId',
+      render: (_, { oem }) => (
+        <div className=" w-36 md:w-full whitespace-normal flex flex-row items-center">
+          {oem ? <p className=" !text-black">{oem}</p>: <p>-</p>}
         </div>
       ),
     },
@@ -115,7 +124,7 @@ const DevicesTable = () => {
   ];
 
   if (isMobile) {
-    columns = columns.filter(column => column.key !== 'lastUpdated');
+    columns = columns.filter(column => column.key !== 'lastUpdated' && column.key !== 'sensorId');
   }
 
   const router = useRouter();

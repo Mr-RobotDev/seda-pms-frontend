@@ -17,7 +17,7 @@ const DeviceDetail = ({ device }: DeviceDetailProps) => {
 
 
       {
-        device.type === 'pressure' ?
+        device.pressure ?
           <div className="!m-0 flex flex-row items-center gap-2">
             <div className="w-6 h-6">
               <Image

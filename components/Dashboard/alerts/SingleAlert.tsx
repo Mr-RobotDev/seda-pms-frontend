@@ -11,11 +11,6 @@ const fetchAlertRecord = async (id: string) => {
   return response.data
 };
 
-const fetchDevice = async (id: string) => {
-  const response = await axiosInstance.get(`/devices/${id}`)
-  return response.data
-};
-
 interface SingleAlertProps {
   id: string;
 }
@@ -29,9 +24,8 @@ const SingleAlert = ({ id }: SingleAlertProps) => {
     (async () => {
       try {
         const alertRecord = await fetchAlertRecord(id);
-        const deviceRecord = await fetchDevice(alertRecord.device.id);
         setAlert(alertRecord)
-        setDevice(deviceRecord)
+        setDevice(alertRecord.device)
       } catch (error) {
         console.log('Error->', error);
       }
