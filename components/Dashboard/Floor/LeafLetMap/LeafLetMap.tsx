@@ -167,7 +167,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, fullScreen }) => {
   });
 
   const customPressueIcons = new Icon({
-    iconUrl: "/icons/pressure.png",
+    iconUrl: "/icons/highest-pressure.png",
     iconSize: [22, 22],
   })
 

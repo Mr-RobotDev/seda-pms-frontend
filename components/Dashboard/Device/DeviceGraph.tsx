@@ -452,7 +452,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
               </div>
               <div className=" w-12 h-12 flex items-center justify-center ml-auto">
                 <Image
-                  src={deviceData?.type === "cold" ? "/icons/cold-or-freeze.png" : (deviceData?.type === 'pressure' ? '/icons/pressure.png' : "/icons/humidity.png")}
+                  src={deviceData?.type === "cold" ? "/icons/cold-or-freeze.png" : (deviceData?.type === 'pressure' ? '/icons/highest-pressure.png' : "/icons/humidity.png")}
                   className=" w-full h-full"
                   alt="icon"
                   width={100}
