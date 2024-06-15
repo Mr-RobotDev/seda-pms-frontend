@@ -4,13 +4,16 @@ import withDashboardLayout from "@/hoc/withDashboardLayout";
 import DevicesStats from "./DevicesStats";
 import axiosInstance from "@/lib/axiosInstance";
 import toast from "react-hot-toast";
-import { Card, Col, Row, Spin } from "antd";
+import { Button, Card, Col, Row, Spin } from "antd";
 import LeafLetMap from "./LeafLetMap/LeafLetMap";
 import { useDispatch, useSelector } from "react-redux";
 import { setDevicesStats } from "@/app/store/slice/StatisticsSlice";
 import { RootState } from "@/app/store/store";
 import DeviceStatsPieChart from "./DeviceStatsPieChart";
 import FullScreenButton from "@/components/ui/FullScreenButton/FullScreenButton";
+import Link from "next/link";
+import { ArrowUpRightIcon } from "@heroicons/react/24/outline";
+import { setFullScreen } from "@/app/store/slice/dashboardSlice";
 
 const MainFloorView = () => {
   const dispatch = useDispatch();
@@ -18,6 +21,10 @@ const MainFloorView = () => {
     (state: RootState) => state.statisticsReducer
   );
   const [error, setError] = useState(false);
+
+  const removeExistingFullScreen = () => {
+    dispatch(setFullScreen(false));
+  }
 
   useEffect(() => {
     (async () => {
@@ -66,6 +73,26 @@ const MainFloorView = () => {
                   className="mb-24 md:mb-0"
                 >
                   <Card>
+                    <div className=" flex justify-end mb-3 md:mb-0">
+                      <Link
+                        href={`/dashboard/floor-plan`}
+                        target="_blank"
+                      >
+                        <Button
+                          className=" flex flex-row items-center justify-center gap-3"
+                          style={{ width: "170px" }}
+                          onClick={removeExistingFullScreen}
+                        >
+                          Show on Full Screen
+                          <div>
+                            <ArrowUpRightIcon
+                              width={16}
+                              className="transform transition-transform duration-150 group-hover:translate-x-1"
+                            />
+                          </div>
+                        </Button>
+                      </Link>
+                    </div>
                     <LeafLetMap />
                   </Card>
                 </Col>

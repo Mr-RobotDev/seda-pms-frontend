@@ -17,9 +17,10 @@ import { EditControl } from "react-leaflet-draw"
 
 interface LeafLetMapProps {
   diagram?: string;
+  fullScreen?: boolean
 }
 
-const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
+const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, fullScreen }) => {
   const devicesStats = useSelector(
     (state: RootState) => state.statisticsReducer
   );
@@ -177,11 +178,11 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram }) => {
   return (
     <div
       style={{ width: "100%" }}
-      className="w-full h-[500px] md:max-h-[670px] 2xl:h-[900px]"
+      className={`w-full ${fullScreen ? 'h-screen' : 'h-[500px] md:max-h-[670px] 2xl:h-[900px]'}`}
     >
       <MapContainer
         center={[51.5014, -0.083]}
-        zoom={19}
+        zoom={fullScreen ? 20: 19}
         minZoom={19}
         scrollWheelZoom={false}
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
