@@ -29,9 +29,8 @@ const SingleAlert = ({ id }: SingleAlertProps) => {
     (async () => {
       try {
         const alertRecord = await fetchAlertRecord(id);
-        const deviceRecord = await fetchDevice(alertRecord.device.id);
         setAlert(alertRecord)
-        setDevice(deviceRecord)
+        setDevice(alertRecord.device)
       } catch (error) {
         console.log('Error->', error);
       }
