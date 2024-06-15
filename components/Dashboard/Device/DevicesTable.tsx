@@ -42,7 +42,6 @@ const DevicesTable = () => {
         </div>
       ),
     },
-
     {
       title: 'STATE',
       dataIndex: 'state',
@@ -51,6 +50,15 @@ const DevicesTable = () => {
           {
             type === 'pressure' ? <p className="!text-black">{pressure?.toFixed(2)} Pa</p> : <p className="!text-black"> {relativeHumidity.toFixed(2)} %RH AT {temperature?.toFixed(2)} °C</p>
           }
+        </div>
+      ),
+    },
+    {
+      title: "SENSOR ID",
+      key: 'sensorId',
+      render: (_, { oem }) => (
+        <div className=" w-36 md:w-full whitespace-normal flex flex-row items-center">
+          {oem ? <p className=" !text-black">{oem}</p>: <p>-</p>}
         </div>
       ),
     },
@@ -115,7 +123,7 @@ const DevicesTable = () => {
   ];
 
   if (isMobile) {
-    columns = columns.filter(column => column.key !== 'lastUpdated');
+    columns = columns.filter(column => column.key !== 'lastUpdated' && column.key !== 'sensorId');
   }
 
   const router = useRouter();
