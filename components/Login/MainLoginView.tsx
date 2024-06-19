@@ -43,14 +43,25 @@ export default function MainLoginView() {
     <section className="md:h-screen md:mt-0 h-screen pt-12 md:pt-0 overflow-y-hidden">
       <div className="md:h-full md:flex md:justify-center md:items-center">
         <div className="flex flex-col md:flex-row gap-12 lg:gap-36">
-          <div className="w-64 md:w-96 mx-auto">
-            <Image
-              src="/logo.svg"
-              className="w-full h-full"
-              alt="Logo"
-              width={100}
-              height={100}
-            />
+          <div className="w-64 md:w-96 mx-auto my-auto flex flex-col gap-10">
+            <div>
+              <Image
+                src="/OriginLogo.svg"
+                className="w-full h-full"
+                alt="Logo"
+                width={100}
+                height={100}
+              />
+            </div>
+            <div>
+              <Image
+                src="/logo.svg"
+                className="w-full h-full"
+                alt="Logo"
+                width={100}
+                height={100}
+              />
+            </div>
           </div>
           <div>
             <div className="w-[350px] sm:w-[400px] md:w-96 mx-auto">

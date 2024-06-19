@@ -130,20 +130,19 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
     <div className="h-full flex flex-col justify-between !bg-white border-r">
       <div>
         <div className="brand p-5 pb-0">
-          <div className=" flex flex-row items-center justify-center">
-            <div>
+          <div className=" flex flex-row items-center justify-center gap-5">
+            <div className=" w-24">
               <Image
-                src="/logo.svg"
+                src="/OriginLogo.png"
                 alt="Website logo"
                 width={100}
                 height={100}
                 className=" w-full h-full"
               />
             </div>
-            <p className=" !mb-0 text-2xl mx-2 !text-black">X</p>
-            <div className=" w-24">
+            <div>
               <Image
-                src="/OriginLogo.png"
+                src="/logo.svg"
                 alt="Website logo"
                 width={100}
                 height={100}

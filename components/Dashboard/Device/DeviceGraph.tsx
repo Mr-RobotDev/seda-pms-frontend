@@ -62,6 +62,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       chart: {
         id: "TemperatureChart",
         group: "device",
+        ...commonApexOptions.chart
       },
       yaxis: {
         title: {
@@ -108,6 +109,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         chart: {
           id: "HumidityChart",
           group: "device",
+          ...commonApexOptions.chart
         },
         yaxis: {
           title: {
