@@ -34,6 +34,12 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
     setCard(cardObj);
   }, [cardObj]);
 
+
+  useEffect(() => {
+
+  })
+
+
   useEffect(() => {
     let isCancelled = false;
 
@@ -52,7 +58,9 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
                 eventTypes: card.field,
               },
             });
-            fetchDevice(device.id)
+            if (card.devices.length === 1) {
+              fetchDevice(device.id)
+            }
             if (!isCancelled) {
               eventsMapTemp[id] = { data: response.data, name: name };
             }
@@ -161,9 +169,8 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
                       getTooltipContainer={(triggerNode) =>
                         triggerNode.parentNode as HTMLElement
                       }
-                      title={`${
-                        editingName.length < 3 ? "Atleast 3 characters" : ""
-                      }`}
+                      title={`${editingName.length < 3 ? "Atleast 3 characters" : ""
+                        }`}
                     >
                       <span className="flex">
                         <button
