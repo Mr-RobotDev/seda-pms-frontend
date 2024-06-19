@@ -60,7 +60,7 @@ type Annotation = {
     y2: number;
     borderColor: string;
     fillColor: string;
-    label: {
+    label?: {
       text: string;
     };
   }[];
@@ -114,18 +114,12 @@ export const generateAnnotations = (range: alertRange | undefined): Annotation =
           y2: lower,
           borderColor: 'rgba(0,0,0,0)',
           fillColor: 'rgba(0,0,0,0)',
-          label: {
-            text: `Below ${lower}`
-          }
         },
         {
           y: upper,
           y2: Infinity,
           borderColor: 'rgba(0,0,0,0)',
           fillColor: 'rgba(0,0,0,0)',
-          label: {
-            text: `Above ${upper}`
-          }
         },
         {
           y: lower,
