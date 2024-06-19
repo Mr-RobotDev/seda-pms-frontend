@@ -117,9 +117,8 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
           icon={
             <item.icon
               width={25}
-              className={`${
-                activeMenu === item.menuKey ? "!text-blue-700" : "!text-black"
-              }`}
+              className={`${activeMenu === item.menuKey ? "!text-blue-700" : "!text-black"
+                }`}
             />
           }
           url={item.url}
@@ -131,14 +130,26 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
     <div className="h-full flex flex-col justify-between !bg-white border-r">
       <div>
         <div className="brand p-5 pb-0">
-          <div>
-            <Image
-              src="/logo.svg"
-              alt="Website logo"
-              width={100}
-              height={100}
-              className=" w-full h-full"
-            />
+          <div className=" flex flex-row items-center justify-center">
+            <div>
+              <Image
+                src="/logo.svg"
+                alt="Website logo"
+                width={100}
+                height={100}
+                className=" w-full h-full"
+              />
+            </div>
+            <p className=" !mb-0 text-2xl mx-2 !text-black">X</p>
+            <div className=" w-24">
+              <Image
+                src="/OriginLogo.png"
+                alt="Website logo"
+                width={100}
+                height={100}
+                className=" w-full h-full"
+              />
+            </div>
           </div>
         </div>
         <hr />

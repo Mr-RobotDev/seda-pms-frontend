@@ -18,6 +18,7 @@ import {
   temperatureColors,
   humidityColors,
   commonApexOptions,
+  generateAnnotations,
 } from "@/utils/graph";
 import DeviceTypeDetail from "./DeviceTypeDetail";
 import PressueChart from "./PressueChart";
@@ -67,6 +68,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           text: "Temperature (°C)",
         },
       },
+      annotations: deviceData?.alert?.field === 'temperature' ? generateAnnotations(deviceData?.alert?.range) : {},
       xaxis: {
         type: "datetime",
       },
@@ -115,6 +117,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             formatter: (value: number) => `${value}%`,
           },
         },
+        annotations: deviceData?.alert?.field === 'relativeHumidity' ? generateAnnotations(deviceData?.alert?.range) : {},
         xaxis: {
           type: "datetime",
         },
@@ -155,6 +158,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         ...commonApexOptions,
         chart: {
           id: "PressueChart",
+          ...commonApexOptions.chart
         },
         yaxis: {
           title: {
@@ -164,6 +168,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             formatter: (value: number) => `${value}Pa`,
           },
         },
+        annotations: generateAnnotations(deviceData?.alert?.range),
         xaxis: {
           type: "datetime",
         },

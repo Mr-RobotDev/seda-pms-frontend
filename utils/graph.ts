@@ -1,3 +1,4 @@
+import { alertRange } from "@/type";
 import { ApexOptions } from "apexcharts";
 
 export const humidityColors = [
@@ -22,11 +23,11 @@ export const temperatureColors = [
   "#CC0000",
   "#B30000",
   "#990000",
-  "#800000" 
+  "#800000"
 ];
 
 export const commonApexOptions: ApexOptions = {
-  chart:{
+  chart: {
     toolbar: {
       show: false,
       tools: {
@@ -53,5 +54,121 @@ export const commonApexOptions: ApexOptions = {
   }
 }
 
+type Annotation = {
+  yaxis: {
+    y: number;
+    y2: number;
+    borderColor: string;
+    fillColor: string;
+    label: {
+      text: string;
+    };
+  }[];
+};
 
 
+
+export const generateAnnotations = (range: alertRange | undefined): Annotation => {
+  if (range === undefined) {
+    return { yaxis: [] }
+  }
+
+  const { lower, upper, type } = range;
+  if (type === 'outside') {
+    return {
+      yaxis: [
+        {
+          y: lower,
+          y2: upper,
+          borderColor: 'rgba(0,0,0,0)',
+          fillColor: 'rgba(0,0,0,0)',
+          label: {
+            text: ''
+          }
+        },
+        {
+          y: -Infinity,
+          y2: lower,
+          borderColor: '#FF4560',
+          fillColor: 'rgba(255, 69, 96, 0.2)',
+          label: {
+            text: `Below ${lower}`
+          }
+        },
+        {
+          y: upper,
+          y2: Infinity,
+          borderColor: '#FF4560',
+          fillColor: 'rgba(255, 69, 96, 0.2)',
+          label: {
+            text: `Above ${upper}`
+          }
+        }
+      ]
+    };
+  } else if (type === 'inside') {
+    return {
+      yaxis: [
+        {
+          y: -Infinity,
+          y2: lower,
+          borderColor: 'rgba(0,0,0,0)',
+          fillColor: 'rgba(0,0,0,0)',
+          label: {
+            text: `Below ${lower}`
+          }
+        },
+        {
+          y: upper,
+          y2: Infinity,
+          borderColor: 'rgba(0,0,0,0)',
+          fillColor: 'rgba(0,0,0,0)',
+          label: {
+            text: `Above ${upper}`
+          }
+        },
+        {
+          y: lower,
+          y2: upper,
+          borderColor: '#FF4560',
+          fillColor: 'rgba(255, 69, 96, 0.2)',
+          label: {
+            text: `Between ${lower} and ${upper}`
+          }
+        }
+      ]
+    };
+  } else if (type === 'upper') {
+    return {
+      yaxis: [
+        {
+          y: upper,
+          y2: Infinity,
+          borderColor: '#FF4560',
+          fillColor: 'rgba(255, 69, 96, 0.2)',
+          label: {
+            text: `Above ${upper}`
+          }
+        }
+      ]
+    };
+  } else if (type === 'lower') {
+    return {
+      yaxis: [
+        {
+          y: -Infinity,
+          y2: lower,
+          borderColor: '#FF4560',
+          fillColor: 'rgba(255, 69, 96, 0.2)',
+          label: {
+            text: `Below ${lower}`
+          }
+        }
+      ]
+    };
+  } else {
+    return {
+      yaxis: []
+    };
+  }
+}

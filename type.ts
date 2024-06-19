@@ -1,3 +1,10 @@
+export type alertRange = {
+  lower: number;
+  upper: number;
+  type: 'outside' | 'inside' | 'upper' | 'lower';
+};
+
+
 export interface DevicesType {
   id: string;
   oem: string;
@@ -13,6 +20,10 @@ export interface DevicesType {
   signalStrength: number;
   lastUpdated: string;
   isOffline: boolean;
+  alert?: {
+    field: string,
+    range: alertRange
+  }
 }
 
 
