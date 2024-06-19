@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ApexOptions } from "apexcharts";
-import { EventsMap, Event } from "@/type";
+import { EventsMap, Event, alertRange } from "@/type";
 import { SeriesType } from "@/type";
 
 import ReactApexChart from "react-apexcharts";
@@ -9,16 +9,22 @@ import {
   humidityColors,
   temperatureColors,
   commonApexOptions,
+  generateAnnotations,
 } from "@/utils/graph";
 
 type SingleDeviceDashCardProps = {
   data: EventsMap;
   eventTypes: string;
+  alert: {
+    field: string,
+    range: alertRange
+  } | undefined;
 };
 
 const SingleDeviceDashCard = ({
   data,
   eventTypes,
+  alert
 }: SingleDeviceDashCardProps) => {
   const [temperatureData, setTemperatureData] = useState<SeriesType[]>([]);
   const [relativeHumidityData, setRelativeHumidityData] = useState<
@@ -76,6 +82,7 @@ const SingleDeviceDashCard = ({
           text: "Temperature",
         },
       },
+      annotations: alert?.field === 'temperature' ? generateAnnotations(alert?.range) : {},
       series: [
         {
           name: "Temperature",
@@ -116,6 +123,7 @@ const SingleDeviceDashCard = ({
           text: "Relative Humidity",
         },
       },
+      annotations: alert?.field === 'relativeHumidity' ? generateAnnotations(alert?.range) : {},
       series: [
         {
           name: "Relative Humidity",

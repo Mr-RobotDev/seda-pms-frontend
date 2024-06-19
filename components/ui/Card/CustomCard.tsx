@@ -1,6 +1,6 @@
 import TemperatureChart from "@/components/Dashboard/dashboardViews/TemperatureChart";
 import axiosInstance from "@/lib/axiosInstance";
-import { DashboardCardType } from "@/type";
+import { DashboardCardType, DevicesType } from "@/type";
 import { memo, useEffect, useState } from "react";
 import { Button, Spin, Tooltip } from "antd";
 import { EventsMap, Event, DeviceData } from "@/type";
@@ -18,6 +18,7 @@ interface CardProps {
 
 const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
   const [eventsMap, setEventsMap] = useState<EventsMap>({});
+  const [deviceData, setDeviceData] = useState<DevicesType>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isRenaming, setIsRenaming] = useState(false);
   const [editingName, setEditingName] = useState(cardObj.name);
@@ -51,6 +52,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
                 eventTypes: card.field,
               },
             });
+            fetchDevice(device.id)
             if (!isCancelled) {
               eventsMapTemp[id] = { data: response.data, name: name };
             }
@@ -72,7 +74,20 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
     return () => {
       isCancelled = true;
     };
-  }, [card, timeFrame.startDate, timeFrame.endDate]); // Ensure dependencies are stable
+  }, [card, timeFrame.startDate, timeFrame.endDate]);
+
+  const fetchDevice = async (id: string) => {
+    try {
+      const response = await axiosInstance.get(`/devices/${id}`);
+      if (response.status === 200) {
+        setDeviceData(response.data);
+      } else {
+        console.log("error->", response);
+      }
+    } catch (error: any) {
+      console.log("error->", error);
+    }
+  }
 
   const handleOnClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -192,6 +207,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
                 <SingleDeviceDashCard
                   data={eventsMap}
                   eventTypes={cardObj.field}
+                  alert={deviceData?.alert}
                 />
               )}
           </div>
