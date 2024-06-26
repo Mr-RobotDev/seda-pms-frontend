@@ -44,7 +44,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
     let isCancelled = false;
 
     const fetchEventsForDevices = async () => {
-      if (!isCancelled) {
+      if (!isCancelled && timeFrame.startDate && timeFrame.endDate) {
         setLoading(true);
         const eventsMapTemp: EventsMap = {};
 
