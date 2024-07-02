@@ -55,6 +55,7 @@ const TemperatureChart: React.FC<TemperatureChartProps> = ({
       type: "datetime",
     },
     yaxis: {
+      forceNiceScale: true,
       title: {
         text:
           eventTypes === "temperature"
