@@ -12,17 +12,22 @@ import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import useIsMobile from "@/app/hooks/useMobile";
 import './DeviceTable.css'
 import { iconsBasedOnType } from "@/utils/helper_functions";
+import { PrimaryInput } from "@/components/ui/Input/Input";
+import useDebounce from "@/app/hooks/useDebounce";
 
-const DevicesTable = () => {
+const DevicesTable: React.FC = () => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const { TimeAgo } = useTimeAgo();
   const isMobile = useIsMobile();
+  const [search, setSearch] = useState<string>('');
+  const debouncedSearch = useDebounce(search, 500);
+  const [loading, setLoading] = useState(false)
 
   let columns: TableProps<DevicesType>["columns"] = [
     {
       title: "TYPE",
       dataIndex: "type",
-      render: (_, { type }) => (
+      render: (_: any, { type }: DevicesType) => (
         <div className=" flex flex-row items-center gap-7">
           <div className=" w-5 h-5">
             <Image
@@ -37,7 +42,7 @@ const DevicesTable = () => {
     },
     {
       title: "NAME",
-      render: (_, { name }) => (
+      render: (_: any, { name }: DevicesType) => (
         <div className=" w-36 md:w-full whitespace-normal flex flex-row items-center">
           <p className=" !text-black">{name}</p>
         </div>
@@ -46,10 +51,10 @@ const DevicesTable = () => {
     {
       title: 'STATE',
       dataIndex: 'state',
-      render: (_, { type, temperature, relativeHumidity, pressure }) => (
+      render: (_: any, { type, temperature, relativeHumidity, pressure }: DevicesType) => (
         <div className=" w-20 md:w-full whitespace-normal">
           {
-            type === 'pressure' ? <p className="!text-black">{pressure?.toFixed(2)} Pa</p> : <p className="!text-black"> {relativeHumidity.toFixed(2)} %RH AT {temperature?.toFixed(2)} °C</p>
+            type === 'pressure' ? <p className="!text-black">{pressure?.toFixed(2)} Pa</p> : <p className="!text-black"> {relativeHumidity?.toFixed(2)} %RH AT {temperature?.toFixed(2)} °C</p>
           }
         </div>
       ),
@@ -57,16 +62,16 @@ const DevicesTable = () => {
     {
       title: "SENSOR ID",
       key: 'sensorId',
-      render: (_, { oem }) => (
+      render: (_: any, { oem }: DevicesType) => (
         <div className=" w-36 md:w-full whitespace-normal flex flex-row items-center">
-          {oem ? <p className=" !text-black">{oem}</p>: <p>-</p>}
+          {oem ? <p className=" !text-black">{oem}</p> : <p>-</p>}
         </div>
       ),
     },
     {
       title: "LAST UPDATED",
       key: "lastUpdated",
-      render: (_, { lastUpdated }) =>
+      render: (_: any, { lastUpdated }: DevicesType) =>
         lastUpdated ? (
           <div className="flex flex-row items-center">
             <TimeAgo date={new Date(lastUpdated)} locale="en" />
@@ -79,7 +84,7 @@ const DevicesTable = () => {
     },
     {
       title: "SIGNAL",
-      render: (_, { isOffline, signalStrength, type }) => (
+      render: (_: any, { isOffline, signalStrength, type }: DevicesType) => (
         <>
           {type === 'pressure' ? (
             <p>-</p>
@@ -100,8 +105,8 @@ const DevicesTable = () => {
     {
       title: "ACTIONS",
       key: "actions",
-      dataIndex: "aactions",
-      render: (_, { id }) => {
+      dataIndex: "actions",
+      render: (_: any, { id }: DevicesType) => {
         return (
           <div className=" flex flex-row gap-2">
             <Link
@@ -131,15 +136,24 @@ const DevicesTable = () => {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axiosInstance.get("/devices?page=1&limit=50");
+        setLoading(true)
+        const response = await axiosInstance.get("/devices?page=1&limit=50",
+          {
+            params: {
+              search: debouncedSearch,
+            },
+          }
+        );
         if (response.status === 200) {
           setDevices(response.data.results);
         }
       } catch (error) {
         console.log(error);
+      } finally{
+        setLoading(false)
       }
     })();
-  }, []);
+  }, [debouncedSearch]);
 
   const onRowClick = (record: DevicesType) => {
     return {
@@ -151,11 +165,19 @@ const DevicesTable = () => {
 
   return (
     <div className="mt-8">
+      <div className=" flex flex-row items-center gap-2 my-5">
+        <p className="!text-lg font-bold !mb-0">Search</p>
+        <PrimaryInput
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className=" max-w-96"
+        />
+      </div>
       <Table
         columns={columns}
         dataSource={devices}
         scroll={{ x: 500 }}
-        loading={devices.length === 0}
+        loading={loading}
         className="cursor-pointer"
         onRow={onRowClick}
       />
