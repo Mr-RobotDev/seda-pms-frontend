@@ -52,7 +52,7 @@ const SensorSelector = ({
   return (
     <div className="flex flex-col gap-4 mt-6">
       {
-        isPressureDevice ? <SensorSelectComponent title="Pressue" sensorType="pressure" handleClick={handleClick} selectedSensors={selectedSensors} />
+        isPressureDevice ? <SensorSelectComponent title="Pressure" sensorType="pressure" handleClick={handleClick} selectedSensors={selectedSensors} />
           :
           <>
             <SensorSelectComponent title="Temperature" sensorType="temperature" handleClick={handleClick} selectedSensors={selectedSensors} />
