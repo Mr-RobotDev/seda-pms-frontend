@@ -165,12 +165,13 @@ const DevicesTable: React.FC = () => {
 
   return (
     <div className="mt-8">
-      <div className=" flex flex-row items-center gap-2 my-5">
-        <p className="!text-lg font-bold !mb-0">Search</p>
+      <div className=" ">
+        <p className="!text-base font-bold !mb-0">Search</p>
         <PrimaryInput
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className=" max-w-96"
+          placeholder="Search By Name or Sensor ID"
         />
       </div>
       <Table

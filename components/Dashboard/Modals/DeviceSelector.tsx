@@ -12,6 +12,8 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { setDeviceForAlert, setDevicesToGlobal } from "@/app/store/slice/devicesSlice";
 import { iconsBasedOnType } from "@/utils/helper_functions";
+import { PrimaryInput } from "@/components/ui/Input/Input";
+import useDebounce from "@/app/hooks/useDebounce";
 
 interface DevicesSelectorProps {
   setSelectedRowKeys: (selectedRowKeys: string[]) => void;
@@ -30,6 +32,8 @@ const DevicesSelector = ({
   const [loading, setLoading] = useState(false)
   const { TimeAgo } = useTimeAgo();
   const dispatch: AppDispatch = useDispatch()
+  const [search, setSearch] = useState<string>('');
+  const debouncedSearch = useDebounce(search, 500);
 
   const addOrRemoveDeviceIdToTheList = (e: any, id: string) => {
     e.stopPropagation()
@@ -115,7 +119,7 @@ const DevicesSelector = ({
     (async () => {
       try {
         setLoading(true);
-        const params: any = { page: 1, limit: 50 };
+        const params: any = { page: 1, limit: 50, search: debouncedSearch };
         if (deviceType) {
           params.type = deviceType === 'pressure' ? 'pressure' : 'humidity,cold';
         }
@@ -130,7 +134,7 @@ const DevicesSelector = ({
         setLoading(false);
       }
     })();
-  }, [dispatch, deviceType]);
+  }, [dispatch, deviceType, debouncedSearch]);
 
   const onRowClick = (record: DevicesType) => {
     return {
@@ -150,6 +154,15 @@ const DevicesSelector = ({
 
   return (
     <div className="mt-8">
+      <div className="pr-10 mb-6">
+        <p className="!text-base font-bold !mb-0">Search</p>
+        <PrimaryInput
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className=""
+          placeholder="Search By Name or Sensor ID"
+        />
+      </div>
       <Table
         columns={columns}
         dataSource={devices}
