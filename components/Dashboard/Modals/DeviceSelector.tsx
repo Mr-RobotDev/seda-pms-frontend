@@ -29,6 +29,7 @@ const DevicesSelector = ({
   deviceType
 }: DevicesSelectorProps) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
+  const [tempDevices, setTempDevices] = useState<DevicesType[]>([]);
   const [loading, setLoading] = useState(false)
   const { TimeAgo } = useTimeAgo();
   const dispatch: AppDispatch = useDispatch()
@@ -103,7 +104,7 @@ const DevicesSelector = ({
     },
   ];
 
-  if(allowSingleDevice){
+  if (allowSingleDevice) {
     columns.unshift({
       title: "Add",
       dataIndex: "add",
@@ -126,6 +127,7 @@ const DevicesSelector = ({
         const response = await axiosInstance.get("/devices", { params });
         if (response.status === 200) {
           setDevices(response.data.results);
+          setTempDevices(response.data.results);
           dispatch(setDevicesToGlobal(response.data.results));
         }
       } catch (error) {
@@ -141,6 +143,7 @@ const DevicesSelector = ({
       onClick: () => {
         if (allowSingleDevice) return;
         const selectedKey = record.id;
+
         if (selectedRowKeys.includes(selectedKey)) {
           setSelectedRowKeys(
             selectedRowKeys.filter((key) => key !== selectedKey)
@@ -148,9 +151,22 @@ const DevicesSelector = ({
         } else {
           setSelectedRowKeys([...selectedRowKeys, selectedKey]);
         }
+
       },
     };
   };
+
+  useEffect(() => {
+    if (selectedRowKeys.length === 0) {
+      setDevices(tempDevices)
+    } else {
+      setDevices((prevState: any) => {
+        const firstSelectedDeivce = prevState.find((device: any) => device.id === selectedRowKeys[0]);
+        return prevState.filter((device: any) => device.type === firstSelectedDeivce?.type)
+      })
+    }
+
+  }, [selectedRowKeys, tempDevices])
 
   return (
     <div className="mt-8">
