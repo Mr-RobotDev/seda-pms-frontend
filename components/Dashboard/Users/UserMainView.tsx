@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import withDashboardLayout from "@/hoc/withDashboardLayout";
 import {
   Button,
@@ -53,9 +53,49 @@ const UserMainView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [user, setUser] = useState<User>(initialUserState);
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-  const { user: loggedInUser } = useSelector((state: RootState) => state.authReducer)
-  const router = useRouter()
+  const { user: loggedInUser } = useSelector((state: RootState) => state.authReducer);
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const fetchUsers = useCallback(async (page: number, limit: number) => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get("/users", {
+        params: { page, limit },
+      });
+      if (response.status === 200) {
+        setUsers(response.data.results);
+        setCurrentPage(response.data.pagination.page);
+        setPageSize(response.data.pagination.limit);
+        setTotalItems(response.data.pagination.totalResults);
+      } else {
+        console.log("error ->", response);
+      }
+    } catch (error) {
+      console.log("error ->", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loggedInUser && loggedInUser.role !== "Admin") {
+      router.push("/dashboard");
+    }
+  }, [loggedInUser, router]);
+
+  useEffect(() => {
+    fetchUsers(currentPage, pageSize);
+  }, [fetchUsers, currentPage, pageSize]);
+
+  const handleTableChange = (newPagination: any) => {
+    setCurrentPage(newPagination);
+    setPageSize(10);
+  };
 
   const columns: TableProps<any>["columns"] = [
     {
@@ -111,7 +151,7 @@ const UserMainView = () => {
     {
       title: "Actions",
       key: "actions",
-      dataIndex: "aactions",
+      dataIndex: "actions",
       render: (_, { id, role }) => {
         return (
           <div className=" flex flex-row gap-4 items-center">
@@ -166,7 +206,7 @@ const UserMainView = () => {
 
   const handleOk = async () => {
     try {
-      delete user.id
+      delete user.id;
       const response = await axiosInstance.post("/users", user);
       if (response.status === 200) {
         setUsers((prevUsers) => [...prevUsers, response.data.user]);
@@ -179,7 +219,7 @@ const UserMainView = () => {
       console.log("Validate Failed:", error);
     } finally {
       setUser(initialUserState);
-      form.resetFields()
+      form.resetFields();
     }
   };
 
@@ -187,154 +227,141 @@ const UserMainView = () => {
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    if (loggedInUser && loggedInUser?.role !== 'Admin') {
-      router.push('/dashboard')
-    }
-  }, [router, loggedInUser])
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await axiosInstance.get("/users");
-        if (response.status === 200) {
-          setUsers(response.data.results);
-          console.log(response);
-        } else {
-          console.log("error ->", response);
-        }
-      } catch (error: any) {
-        console.log("error ->", error);
-      } finally {
-        setIsModalOpen(false);
-      }
-    })();
-  }, []);
-
-  const handlePagination = (page: number) => {
-    console.log(page);
-  };
-
   return (
-    loggedInUser?.role === 'Admin' && <Card>
-      <div className=" flex flex-row justify-between items-center">
-        <div className=" flex items-center justify-center my-auto">
-          <h1 className="text-3xl font-semibold !mb-0">Users</h1>
-        </div>
-        <div>
-          <div
-            className="flex justify-center"
-            onClick={showModal}
-          >
-            <span className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center">
-              <FontAwesomeIcon icon={faCirclePlus} />
-              Create New User
-            </span>
+    loggedInUser?.role === "Admin" && (
+      <Card>
+        <div className=" flex flex-row justify-between items-center">
+          <div className=" flex items-center justify-center my-auto">
+            <h1 className="text-3xl font-semibold !mb-0">Users</h1>
+          </div>
+          <div>
+            <div className="flex justify-center" onClick={showModal}>
+              <span className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center">
+                <FontAwesomeIcon icon={faCirclePlus} />
+                Create New User
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className=" mt-6">
-        <Table
-          columns={columns}
-          dataSource={users}
-          scroll={{ x: 500 }}
-          loading={users.length === 0}
-          pagination={{
-            onChange: handlePagination,
-          }}
-        />
-      </div>
-      <Modal
-        title="Create New User"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText="Create User"
-        cancelText="Cancel"
-      >
-        <div>
-          <Form
-            {...formItemLayout}
-            form={form}
-            variant="filled"
-            style={{ maxWidth: 600 }}
-          >
-            <div className=" grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <Form.Item
-                label="First Name"
-                name="firstName"
-                rules={[{ required: true, message: "First name is required" }]}
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                className="custom-form-item"
-              >
-                <Input onChange={(e) => setUser({ ...user, firstName: e.target.value })} value={user.firstName} />
-              </Form.Item>
-
-
-              <Form.Item
-                label="Last Name"
-                name="lastName"
-                rules={[{ required: true, message: "Last name is required" }]}
-                labelCol={{ span: 24 }}
-                wrapperCol={{ span: 24 }}
-                className="custom-form-item"
-              >
-                <Input onChange={(e) => setUser({ ...user, lastName: e.target.value })} value={user.lastName} />
-              </Form.Item>
-            </div>
-
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[{ required: true, message: "Email is required" }]}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              className="custom-form-item"
-            >
-              <Input type="email" onChange={(e) => setUser({ ...user, email: e.target.value })} value={user.email} />
-            </Form.Item>
-
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{ required: true, message: "Please add the password" }]}
-              labelCol={{ span: 24 }}
-              wrapperCol={{ span: 24 }}
-              className="custom-form-item"
-            >
-              <Input type="password" onChange={(e) => setUser({ ...user, password: e.target.value })} value={user.password} />
-            </Form.Item>
-
-            <div className=" grid grid-cols-1 sm:grid-cols-2 gap-2 !mb-8">
-              <div>
-                <label>Role</label>
-                <div className="flex flex-row items-center border rounded-md shadow-md lg: mb-3 md:mb-0">
-                  <CustomMenu
-                    isAdmin={true}
-                    handleTypeChange={(value: string) => setUser({ ...user, role: value })}
-                    options={userRoleOptions}
-                    initialValue={user.role}
-                  />
-                </div>
-              </div>
-              <div>
-                <label>Organization</label>
-                <div className="flex flex-row items-center border rounded-md shadow-md lg: mb-3 md:mb-0">
-                  <CustomMenu
-                    isAdmin={true}
-                    handleTypeChange={(value: string) => setUser({ ...user, organization: value })}
-                    options={userOrganizationOptions}
-                    initialValue={user.organization}
-                  />
-                </div>
-              </div>
-            </div>
-          </Form>
+        <div className=" mt-6">
+          <Table
+            columns={columns}
+            dataSource={users}
+            scroll={{ x: 500 }}
+            loading={loading}
+            pagination={{
+              current: currentPage,
+              pageSize: pageSize,
+              total: totalItems,
+              onChange: handleTableChange,
+            }}
+          />
         </div>
-      </Modal>
-    </Card>
+        <Modal
+          title="Create New User"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          okText="Create User"
+          cancelText="Cancel"
+        >
+          <div>
+            <Form
+              {...formItemLayout}
+              form={form}
+              variant="filled"
+              style={{ maxWidth: 600 }}
+            >
+              <div className=" grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <Form.Item
+                  label="First Name"
+                  name="firstName"
+                  rules={[{ required: true, message: "First name is required" }]}
+                  labelCol={{ span: 24 }}
+                  wrapperCol={{ span: 24 }}
+                  className="custom-form-item"
+                >
+                  <Input
+                    onChange={(e) => setUser({ ...user, firstName: e.target.value })}
+                    value={user.firstName}
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label="Last Name"
+                  name="lastName"
+                  rules={[{ required: true, message: "Last name is required" }]}
+                  labelCol={{ span: 24 }}
+                  wrapperCol={{ span: 24 }}
+                  className="custom-form-item"
+                >
+                  <Input
+                    onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+                    value={user.lastName}
+                  />
+                </Form.Item>
+              </div>
+
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[{ required: true, message: "Email is required" }]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                className="custom-form-item"
+              >
+                <Input
+                  type="email"
+                  onChange={(e) => setUser({ ...user, email: e.target.value })}
+                  value={user.email}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[{ required: true, message: "Please add the password" }]}
+                labelCol={{ span: 24 }}
+                wrapperCol={{ span: 24 }}
+                className="custom-form-item"
+              >
+                <Input
+                  type="password"
+                  onChange={(e) => setUser({ ...user, password: e.target.value })}
+                  value={user.password}
+                />
+              </Form.Item>
+
+              <div className=" grid grid-cols-1 sm:grid-cols-2 gap-2 !mb-8">
+                <div>
+                  <label>Role</label>
+                  <div className="flex flex-row items-center border rounded-md shadow-md lg: mb-3 md:mb-0">
+                    <CustomMenu
+                      isAdmin={true}
+                      handleTypeChange={(value: string) => setUser({ ...user, role: value })}
+                      options={userRoleOptions}
+                      initialValue={user.role}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label>Organization</label>
+                  <div className="flex flex-row items-center border rounded-md shadow-md lg: mb-3 md:mb-0">
+                    <CustomMenu
+                      isAdmin={true}
+                      handleTypeChange={(value: string) => setUser({ ...user, organization: value })}
+                      options={userOrganizationOptions}
+                      initialValue={user.organization}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Form>
+          </div>
+        </Modal>
+      </Card>
+    )
   );
 };
 
