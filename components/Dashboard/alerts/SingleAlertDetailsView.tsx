@@ -121,24 +121,24 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
     setFormData((prevState) => prevState && { ...prevState, scheduleType: value })
   }
 
-  const handleTriggerWhenChange = (value: string) => {
+  const handleTriggerWhenChange = (value: string[]) => {
     setFormData(prevState => ({
       ...prevState,
       trigger: {
         ...prevState.trigger,
-        field: value
+        field: value[0]
       }
     }));
   }
 
-  const handleRangeTypeChange = (value: string) => {
+  const handleRangeTypeChange = (value: string[]) => {
     setFormData(prevState => ({
       ...prevState,
       trigger: {
         ...prevState.trigger,
         range: {
           ...prevState.trigger.range,
-          type: value
+          type: value[0]
         }
       }
     }));
@@ -324,13 +324,17 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
             <div>
               <p className="!mb-1 text-sm">When</p>
               <div className="flex flex-row items-center border rounded-md shadow-md lg: mb-3 md:mb-0">
-                <CustomMenu handleTypeChange={handleTriggerWhenChange} isAdmin={isAdmin} initialValue={formData.trigger.field} options={triggerWhenOptions} />
+                <CustomMenu 
+                  handleTypeChange={handleTriggerWhenChange} 
+                  isAdmin={isAdmin} 
+                  initialValue={[formData.trigger.field as string]} 
+                  options={triggerWhenOptions} />
               </div>
             </div>
             <div>
               <p className="!mb-1 text-sm">Is</p>
               <div className="flex flex-row items-center border rounded-md shadow-md  mb-3 md:mb-0">
-                <CustomMenu handleTypeChange={handleRangeTypeChange} isAdmin={isAdmin} initialValue={formData.trigger.range.type} options={triggerRangeTypeOptions} />
+                <CustomMenu handleTypeChange={handleRangeTypeChange} isAdmin={isAdmin} initialValue={[formData.trigger.range.type as string]} options={triggerRangeTypeOptions} />
               </div>
             </div>
             <div>

@@ -47,3 +47,10 @@ export const daysOfWeek = [
   "saturday",
   "sunday",
 ];
+
+export const deviceTypeOptions = [
+  { label: 'Humidity', value: 'humidity' },
+  { label: 'Fridge', value: 'fridge' },
+  { label: 'Freezer', value: 'freezer' },
+  { label: 'Pressure', value: 'pressure' },
+]

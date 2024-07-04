@@ -1,4 +1,4 @@
-import { AlertDataType, ReportsType } from "@/type";
+import { AlertDataType, ReportsType, SingleNameIdObject } from "@/type";
 import dayjs from 'dayjs';
 
 export const activeSidebar = (path: string): string => {
@@ -138,3 +138,10 @@ export const iconsBasedOnType = (key: string) => {
 
   return icons[key] || '';
 }
+
+export const tranformObjectForSelectComponent = (objects: SingleNameIdObject[]) => {
+  return objects.map(org => ({
+    label: org.name,
+    value: org.id
+  }));
+};

@@ -170,3 +170,8 @@ interface Device {
   lastUpdated: string;
   id: string;
 }
+
+export interface SingleNameIdObject {
+  name: string;
+  id: string;
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import axiosInstance from "@/lib/axiosInstance";
@@ -14,6 +14,8 @@ import './DeviceTable.css'
 import { iconsBasedOnType } from "@/utils/helper_functions";
 import { PrimaryInput } from "@/components/ui/Input/Input";
 import useDebounce from "@/app/hooks/useDebounce";
+import CustomMenu from "@/components/ui/Menu/CustomMenu";
+import { deviceTypeOptions } from "@/utils/form";
 
 const DevicesTable: React.FC = () => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
@@ -21,7 +23,47 @@ const DevicesTable: React.FC = () => {
   const isMobile = useIsMobile();
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 500);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [selectedDeviceTypes, setSelectedDeviceTypes] = useState<string[]>([]);
+
+  const fetchDevices = useCallback(async (searchQuery: string, deviceTypes: string[]) => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get("/devices?page=1&limit=50", {
+        params: {
+          search: searchQuery,
+          type: deviceTypes.join(','),
+        },
+      });
+      if (response.status === 200) {
+        setDevices(response.data.results);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDevices(debouncedSearch, selectedDeviceTypes);
+  }, [debouncedSearch, selectedDeviceTypes, fetchDevices]);
+
+  const handleTypeChange = (types: string[]) => {
+    setSelectedDeviceTypes(types);
+  };
+
+  useEffect(() => {
+    console.log('selectedDeviceTypes->', selectedDeviceTypes)
+  }, [selectedDeviceTypes])
+
+  const onRowClick = (record: DevicesType) => {
+    return {
+      onClick: () => {
+        router.push(`/dashboard/devices/${record.id}`);
+      },
+    };
+  };
 
   let columns: TableProps<DevicesType>["columns"] = [
     {
@@ -133,46 +175,32 @@ const DevicesTable: React.FC = () => {
   }
 
   const router = useRouter();
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true)
-        const response = await axiosInstance.get("/devices?page=1&limit=50",
-          {
-            params: {
-              search: debouncedSearch,
-            },
-          }
-        );
-        if (response.status === 200) {
-          setDevices(response.data.results);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally{
-        setLoading(false)
-      }
-    })();
-  }, [debouncedSearch]);
-
-  const onRowClick = (record: DevicesType) => {
-    return {
-      onClick: () => {
-        router.push(`/dashboard/devices/${record.id}`);
-      },
-    };
-  };
 
   return (
     <div className="mt-8">
-      <div className=" ">
-        <p className="!text-base font-bold !mb-0">Search</p>
-        <PrimaryInput
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className=" max-w-96"
-          placeholder="Search By Name or Sensor ID"
-        />
+      <div className=" flex flex-col md:flex-row gap-3 mb-3">
+        <div className="flex-1">
+          <p className="!text-base font-bold !mb-1">Search</p>
+          <PrimaryInput
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className=" w-full !h-[50px]"
+            placeholder="Search By Name or Sensor ID"
+          />
+        </div>
+        <div className="w-72">
+          <p className="!text-base font-bold !mb-1">Device Type</p>
+          <div className="flex flex-row items-center border rounded-md shadow-md">
+            <CustomMenu
+              handleTypeChange={handleTypeChange}
+              initialValue={selectedDeviceTypes}
+              isAdmin={true}
+              options={deviceTypeOptions}
+              multiple={true}
+              searchable={false}
+            />
+          </div>
+        </div>
       </div>
       <Table
         columns={columns}

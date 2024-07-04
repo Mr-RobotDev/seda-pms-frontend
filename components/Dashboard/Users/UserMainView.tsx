@@ -339,9 +339,9 @@ const UserMainView = () => {
                   <div className="flex flex-row items-center border rounded-md shadow-md lg: mb-3 md:mb-0">
                     <CustomMenu
                       isAdmin={true}
-                      handleTypeChange={(value: string) => setUser({ ...user, role: value })}
+                      handleTypeChange={(value: string[]) => setUser({ ...user, role: value[0] })}
                       options={userRoleOptions}
-                      initialValue={user.role}
+                      initialValue={[user.role as string]}
                     />
                   </div>
                 </div>
@@ -350,9 +350,9 @@ const UserMainView = () => {
                   <div className="flex flex-row items-center border rounded-md shadow-md lg: mb-3 md:mb-0">
                     <CustomMenu
                       isAdmin={true}
-                      handleTypeChange={(value: string) => setUser({ ...user, organization: value })}
+                      handleTypeChange={(value: string[]) => setUser({ ...user, organization: value[0] })}
                       options={userOrganizationOptions}
-                      initialValue={user.organization}
+                      initialValue={[user.organization as string]}
                     />
                   </div>
                 </div>
