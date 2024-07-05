@@ -1,0 +1,83 @@
+'use client'
+import React, { useState } from 'react'
+import { PrimaryInput } from '../ui/Input/Input'
+import { Button, Card } from 'antd'
+import { toast } from 'react-hot-toast'
+import axiosInstance from '@/lib/axiosInstance'
+
+const ForgotPasswordForm = () => {
+  const [email, setEmail] = useState('')
+  const [isValidEmail, setIsValidEmail] = useState(true)
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email)
+  }
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setEmail(value)
+    setIsValidEmail(validateEmail(value))
+  }
+
+  const handleSubmit = async () => {
+    if (!isValidEmail) {
+      toast.error('Please enter a valid email address')
+      return
+    }
+
+    const formData = {
+      email,
+    }
+
+    try {
+      const response = await axiosInstance.post('/auth/forgot-password', formData)
+      if (response.status === 200) {
+        toast.success('Reset instructions sent to your email')
+      } else {
+        toast.error('Error sending reset instructions')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return (
+    <div className='w-full h-screen flex justify-center items-center p-4'>
+      <Card className='xl:w-4/12 lg:w-5/12 md:w-6/12 w-full'>
+        <div className='flex flex-col rounded-md p-4'>
+          <div>
+            <h3 className='text-2xl font-semibold my-2 '>Forgot Password?</h3>
+            <p className='text-sm text-gray-700 mb-5'>
+              Enter the email address you used when you joined and we’ll send
+              you instructions to reset your password.
+            </p>
+          </div>
+          <label className="!text-base font-bold !mb-1">Email</label>
+          <PrimaryInput
+            name="email"
+            value={email}
+            onChange={handleEmailChange}
+            className='w-full'
+          />
+          {!isValidEmail && (
+            <p className='!text-red-500 text-sm mt-1'>
+              Please enter a valid email address
+            </p>
+          )}
+          <Button
+            type='primary'
+            size='large'
+            disabled={email === '' || !isValidEmail}
+            className='mt-7'
+            onClick={handleSubmit}
+          >
+            Send Reset Instructions
+          </Button>
+        </div>
+      </Card>
+    </div>
+  )
+}
+
+export default ForgotPasswordForm
