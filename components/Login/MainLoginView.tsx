@@ -7,6 +7,7 @@ import { login } from "@/app/store/slice/authSlice";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
+import Link from "next/link"; // Add Link import
 
 const { Title } = Typography;
 
@@ -55,11 +56,12 @@ export default function MainLoginView() {
             </div>
             <div>
               <Image
-                src="/logo.svg"
+                src="/new-logo.jpg"
                 className="w-full h-full"
                 alt="Logo"
                 width={100}
                 height={100}
+                unoptimized
               />
             </div>
           </div>
@@ -86,13 +88,17 @@ export default function MainLoginView() {
                     },
                   ]}
                 >
-                  <Input
-                    placeholder="example@gmail.com"
-                    className="h-10"
-                  />
+                  <Input placeholder="example@gmail.com" className="h-10" />
                 </Form.Item>
                 <Form.Item
-                  label="Password"
+                  label={
+                    <div className="flex justify-between items-center w-96">
+                      <span>Password</span>
+                      <Link href="/forgot-password" className="text-blue-500">
+                        Forgot?
+                      </Link>
+                    </div>
+                  }
                   name="password"
                   rules={[
                     {

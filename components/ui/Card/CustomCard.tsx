@@ -106,7 +106,6 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
     e.stopPropagation();
     e.preventDefault();
     setIsRenaming(false);
-    console.log("clicked");
     setEditingName(card.name);
   };
 

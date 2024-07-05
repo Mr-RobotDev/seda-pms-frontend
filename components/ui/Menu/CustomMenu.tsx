@@ -107,7 +107,6 @@ const CustomMenu = ({
             ? prevSelected.filter((type) => type !== value)
             : [...prevSelected, value];
           handleTypeChange(newSelected);
-          console.log(newSelected);
           return newSelected;
         } else {
           handleTypeChange([value]);
