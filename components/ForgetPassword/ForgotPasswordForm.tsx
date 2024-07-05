@@ -49,7 +49,7 @@ const ForgotPasswordForm = () => {
       <Card className='xl:w-4/12 lg:w-5/12 md:w-6/12 w-full'>
         <Link
           className="text-blue-500 cursor-pointer flex flex-row gap-2 items-center group"
-          href={'/dashboard/alerts'}
+          href={'/login'}
         >
           <ArrowLeftIcon className="w-3 duration-200 group-hover:text-blue-700" />
           <p className="!mb-0 text-blue-500 cursor-pointer duration-200 group-hover:text-blue-700">
