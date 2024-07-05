@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Table, Tag } from "antd";
+import { Table, Tag, Button } from "antd";
 import type { TableProps } from "antd";
 import axiosInstance from "@/lib/axiosInstance";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DevicesType } from "@/type";
 import SimSignal from "./SimSignal";
 import { useTimeAgo } from "next-timeago";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
 import useIsMobile from "@/app/hooks/useMobile";
-import './DeviceTable.css'
-import { iconsBasedOnType } from "@/utils/helper_functions";
+import './DeviceTable.css';
+import { convertObjectToQueryString, iconsBasedOnType } from "@/utils/helper_functions";
 import { PrimaryInput } from "@/components/ui/Input/Input";
 import useDebounce from "@/app/hooks/useDebounce";
 import CustomMenu from "@/components/ui/Menu/CustomMenu";
@@ -21,22 +21,48 @@ const DevicesTable: React.FC = () => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const { TimeAgo } = useTimeAgo();
   const isMobile = useIsMobile();
-  const [search, setSearch] = useState<string>('');
-  const debouncedSearch = useDebounce(search, 500);
+  const [filters, setFilters] = useState({ search: '', type: [] as string[] });
+  const debouncedFilters = useDebounce(filters, 500);
   const [loading, setLoading] = useState(false);
-  const [selectedDeviceTypes, setSelectedDeviceTypes] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const fetchDevices = useCallback(async (searchQuery: string, deviceTypes: string[]) => {
+  const initializeFiltersFromUrl = useCallback(() => {
+    const params = new URLSearchParams(window.location.search);
+    const initialFilters = { search: '', type: [] as string[] };
+
+    if (params.has('search')) {
+      initialFilters.search = params.get('search') || '';
+    }
+    if (params.has('type')) {
+      initialFilters.type = params.getAll('type');
+    }
+    setFilters(initialFilters);
+  }, []);
+
+  useEffect(() => {
+    initializeFiltersFromUrl();
+  }, [initializeFiltersFromUrl]);
+
+  const fetchDevices = useCallback(async (filters: any, page: number, limit: number) => {
+    const queryparams = convertObjectToQueryString({
+      search: filters.search,
+      type: filters.type,
+      page,
+      limit
+    });
+
     try {
       setLoading(true);
-      const response = await axiosInstance.get("/devices?page=1&limit=50", {
-        params: {
-          search: searchQuery,
-          type: deviceTypes.join(','),
-        },
-      });
+      const response = await axiosInstance.get(`/devices?${queryparams}`);
       if (response.status === 200) {
         setDevices(response.data.results);
+        setCurrentPage(response.data.pagination.page);
+        setPageSize(response.data.pagination.limit);
+        setTotalItems(response.data.pagination.totalResults);
       }
     } catch (error) {
       console.log(error);
@@ -45,17 +71,38 @@ const DevicesTable: React.FC = () => {
     }
   }, []);
 
+  const updateQueryParams = useCallback((filters: any) => {
+    const queryParams = new URLSearchParams();
+
+    if (filters.search) {
+      queryParams.append('search', filters.search);
+    }
+    filters.type.forEach((type: any) => queryParams.append('type', type));
+
+    const queryString = queryParams.toString();
+    router.push(`/dashboard/devices?${queryString}`, undefined);
+  }, [router]);
+
   useEffect(() => {
-    fetchDevices(debouncedSearch, selectedDeviceTypes);
-  }, [debouncedSearch, selectedDeviceTypes, fetchDevices]);
+    fetchDevices(debouncedFilters, currentPage, pageSize);
+    updateQueryParams(debouncedFilters);
+  }, [debouncedFilters, fetchDevices, currentPage, pageSize, updateQueryParams]);
 
   const handleTypeChange = (types: string[]) => {
-    setSelectedDeviceTypes(types);
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      type: types,
+    }));
+    setCurrentPage(1); // Reset page to 1 when filters are changed
   };
 
-  useEffect(() => {
-    console.log('selectedDeviceTypes->', selectedDeviceTypes)
-  }, [selectedDeviceTypes])
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      search: e.target.value,
+    }));
+    setCurrentPage(1); // Reset page to 1 when filters are changed
+  };
 
   const onRowClick = (record: DevicesType) => {
     return {
@@ -63,6 +110,18 @@ const DevicesTable: React.FC = () => {
         router.push(`/dashboard/devices/${record.id}`);
       },
     };
+  };
+
+  const handleTableChange = (newPagination: any) => {
+    setCurrentPage(newPagination);
+    setPageSize(10);
+  };
+
+  const handleClearFilters = () => {
+    setFilters({ search: '', type: [] });
+    setCurrentPage(1);
+    setPageSize(10);
+    router.push(`/dashboard/devices`, undefined);
   };
 
   let columns: TableProps<DevicesType>["columns"] = [
@@ -85,7 +144,7 @@ const DevicesTable: React.FC = () => {
     {
       title: "NAME",
       render: (_: any, { name }: DevicesType) => (
-        <div className=" w-36 md:w-full whitespace-normal flex flex-row items-center">
+        <div className=" w-36 md:w-full whitespace-normal md:whitespace-nowrap flex flex-row items-center">
           <p className=" !text-black">{name}</p>
         </div>
       ),
@@ -94,7 +153,7 @@ const DevicesTable: React.FC = () => {
       title: 'STATE',
       dataIndex: 'state',
       render: (_: any, { type, temperature, relativeHumidity, pressure }: DevicesType) => (
-        <div className=" w-20 md:w-full whitespace-normal">
+        <div className="  w-20 md:w-full whitespace-normal md:whitespace-nowrap flex flex-row items-center">
           {
             type === 'pressure' ? <p className="!text-black">{pressure?.toFixed(2)} Pa</p> : <p className="!text-black"> {relativeHumidity?.toFixed(2)} %RH AT {temperature?.toFixed(2)} °C</p>
           }
@@ -174,17 +233,15 @@ const DevicesTable: React.FC = () => {
     columns = columns.filter(column => column.key !== 'lastUpdated' && column.key !== 'sensorId');
   }
 
-  const router = useRouter();
-
   return (
     <div className="mt-8">
       <div className=" flex flex-col md:flex-row gap-3 mb-3">
         <div className="flex-1">
           <p className="!text-base font-bold !mb-1">Search</p>
           <PrimaryInput
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className=" w-full !h-[50px]"
+            value={filters.search}
+            onChange={handleSearchChange}
+            className=" w-full !h-[45px]"
             placeholder="Search By Name or Sensor ID"
           />
         </div>
@@ -193,13 +250,16 @@ const DevicesTable: React.FC = () => {
           <div className="flex flex-row items-center border rounded-md shadow-md">
             <CustomMenu
               handleTypeChange={handleTypeChange}
-              initialValue={selectedDeviceTypes}
+              initialValue={filters.type}
               isAdmin={true}
               options={deviceTypeOptions}
               multiple={true}
               searchable={false}
             />
           </div>
+        </div>
+        <div className="flex items-end pb-1">
+          <Button type="primary" onClick={handleClearFilters}>Clear Filters</Button>
         </div>
       </div>
       <Table
@@ -209,6 +269,12 @@ const DevicesTable: React.FC = () => {
         loading={loading}
         className="cursor-pointer"
         onRow={onRowClick}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: totalItems,
+          onChange: handleTableChange,
+        }}
       />
     </div>
   );

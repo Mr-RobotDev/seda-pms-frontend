@@ -27,6 +27,7 @@ import { userOrganizationOptions, userRoleOptions } from "@/utils/form";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { useRouter } from "next/navigation";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 const initialUserState: User = {
   id: "",
@@ -96,6 +97,24 @@ const UserMainView = () => {
     setCurrentPage(newPagination);
     setPageSize(10);
   };
+
+  const handleDeleteUser = async(e: any, userId: string) => {
+    e.stopPropagation();
+    setLoading(true)
+    try {
+      const response = await axiosInstance.delete(`/users/${userId}`)
+      if (response.status === 200) {
+        const updatedUsers = users.filter(
+          (user) => user.id !== userId
+        );
+        setUsers(updatedUsers);
+      }
+    } catch (err) {
+      console.log('Error->', err);
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const columns: TableProps<any>["columns"] = [
     {
@@ -171,6 +190,14 @@ const UserMainView = () => {
                 />
               </div>
             </Link>
+            <div className=" flex flex-row gap-4 items-center">
+            <p
+              onClick={(e) => handleDeleteUser(e, id)}
+              className="  !text-red-400 hover:!text-red-600 duration-200 transition-all transform cursor-pointer flex flex-row gap-2 items-center"
+            >
+              <TrashIcon width={20} />
+            </p>
+          </div>
           </div>
         );
       },
@@ -216,6 +243,7 @@ const UserMainView = () => {
         console.log("Error creating user:", response);
       }
     } catch (error) {
+      toast.error('Error creating user');
       console.log("Validate Failed:", error);
     } finally {
       setUser(initialUserState);
