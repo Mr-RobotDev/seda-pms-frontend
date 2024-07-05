@@ -4,6 +4,8 @@ import { PrimaryInput } from '../ui/Input/Input'
 import { Button, Card } from 'antd'
 import { toast } from 'react-hot-toast'
 import axiosInstance from '@/lib/axiosInstance'
+import Link from 'next/link'
+import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState('')
@@ -45,6 +47,15 @@ const ForgotPasswordForm = () => {
   return (
     <div className='w-full h-screen flex justify-center items-center p-4'>
       <Card className='xl:w-4/12 lg:w-5/12 md:w-6/12 w-full'>
+        <Link
+          className="text-blue-500 cursor-pointer flex flex-row gap-2 items-center group"
+          href={'/dashboard/alerts'}
+        >
+          <ArrowLeftIcon className="w-3 duration-200 group-hover:text-blue-700" />
+          <p className="!mb-0 text-blue-500 cursor-pointer duration-200 group-hover:text-blue-700">
+            Back to login
+          </p>
+        </Link>
         <div className='flex flex-col rounded-md p-4'>
           <div>
             <h3 className='text-2xl font-semibold my-2 '>Forgot Password?</h3>
