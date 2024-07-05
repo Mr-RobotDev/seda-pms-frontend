@@ -142,11 +142,12 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
             </div>
             <div>
               <Image
-                src="/logo.svg"
+                src="/new-logo.jpg"
                 alt="Website logo"
                 width={100}
                 height={100}
                 className=" w-full h-full"
+                unoptimized
               />
             </div>
           </div>

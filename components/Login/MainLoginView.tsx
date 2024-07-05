@@ -56,11 +56,12 @@ export default function MainLoginView() {
             </div>
             <div>
               <Image
-                src="/logo.svg"
+                src="/new-logo.jpg"
                 className="w-full h-full"
                 alt="Logo"
                 width={100}
                 height={100}
+                unoptimized
               />
             </div>
           </div>
