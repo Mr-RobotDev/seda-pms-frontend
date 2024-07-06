@@ -42,17 +42,21 @@ const ResetPasswordForm = () => {
 
   const handleSubmit = async () => {
     if (!error && password && confirmPassword) {
+      const data = {
+        password: password
+      }
       try {
-        const response = await axiosInstance.post(`/auth/reset-password?key=${key}`, password)
+        const response = await axiosInstance.post(`/auth/reset-password?key=${key}`, data);
+        console.log(response)
         if (response.status === 200) {
-          console.log('Password changed successfully.')
-          router.push('/')
+          console.log('Password changed successfully.');
+          router.push('/');
         } else {
-          console.log('Error changing password.')
+          console.log('Error changing password. Status:', response.status);
         }
       } catch (error) {
-        toast.error('Error changing the password')
-        console.log('Error changing password.', error)
+        toast.error('Error changing the password');
+        console.error('Error changing password:', error);
       }
 
     } else {
