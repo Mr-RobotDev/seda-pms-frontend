@@ -15,7 +15,7 @@ const DeviceDetail = ({ deviceOem }: { deviceOem: string }) => {
     (async () => {
       setLoading(true)
       try {
-        const response = await axiosInstance.get(`/devices/c8g83tasffvg00bpl6ig/info`)
+        const response = await axiosInstance.get(`/devices/${deviceOem}/info`)
         if (response.status === 200) {
           setDevice(response.data)
         } else {
