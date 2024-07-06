@@ -20,12 +20,10 @@ const DeviceDetail = ({ deviceOem }: { deviceOem: string }) => {
           setDevice(response.data)
         } else {
           setError('Device not found')
-          toast.error('Error fetching device info')
         }
       } catch (error) {
         console.error('Error fetching device info:', error)
         setError('Device not found')
-        toast.error('Error fetching device info')
       } finally {
         setLoading(false)
       }
