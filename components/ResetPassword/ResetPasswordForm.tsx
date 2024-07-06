@@ -66,43 +66,45 @@ const ResetPasswordForm = () => {
 
   return (
     <div className='w-full h-screen flex justify-center items-center p-4'>
-      <Card className='xl:w-4/12 lg:w-5/12 md:w-6/12 w-full'>
-        <div>
-          <h3 className='text-2xl font-semibold my-2 '>Change Password?</h3>
-          <p className='text-sm text-gray-700 mb-5'>
-            For security reasons, we do <span className=' font-semibold'>NOT</span> store your password. So rest assured
-            that we will never send your password via email.
-          </p>
-        </div>
-
-        <div className='flex flex-col gap-3'>
+      <Card className=''>
+        <div className='flex flex-col rounded-md w-[350px] sm:w-[400px] md:w-96 mx-auto'>
           <div>
-            <label className='font-bold'>Password</label>
-            <Input.Password
-              placeholder="Enter your Password"
-              value={password}
-              className=' mt-1'
-              onChange={handlePasswordChange}
-              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-            />
+            <h3 className='text-2xl font-semibold my-2 '>Change Password?</h3>
+            <p className='text-sm text-gray-700 mb-5'>
+              For security reasons, we do <span className=' font-semibold'>NOT</span> store your password. So rest assured
+              that we will never send your password via email.
+            </p>
           </div>
 
-          <div>
-            <label className='font-bold'>Confirm Password</label>
-            <Input.Password
-              placeholder="Enter your Password Again"
-              value={confirmPassword}
-              className=' mt-1'
-              onChange={handleConfirmPasswordChange}
-              iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-            />
+          <div className='flex flex-col gap-5'>
+            <div>
+              <label className='font-bold'>Password</label>
+              <Input.Password
+                placeholder="Enter your Password"
+                value={password}
+                className=' mt-1 h-10'
+                onChange={handlePasswordChange}
+                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+              />
+            </div>
+
+            <div>
+              <label className='font-bold'>Confirm Password</label>
+              <Input.Password
+                placeholder="Enter your Password Again"
+                value={confirmPassword}
+                className=' mt-1 h-10'
+                onChange={handleConfirmPasswordChange}
+                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+              />
+            </div>
+
+            {error && <p className='text-red-500'>{error}</p>}
+
+            <Button type='primary' size='large' onClick={handleSubmit} disabled={!!error || !password || !confirmPassword} className=' mt-2'>
+              Submit
+            </Button>
           </div>
-
-          {error && <p className='text-red-500'>{error}</p>}
-
-          <Button type='primary' onClick={handleSubmit} disabled={!!error || !password || !confirmPassword} className=' mt-2'>
-            Submit
-          </Button>
         </div>
       </Card>
     </div>

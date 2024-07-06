@@ -46,7 +46,7 @@ const ForgotPasswordForm = () => {
 
   return (
     <div className='w-full h-screen flex justify-center items-center p-4'>
-      <Card className='xl:w-4/12 lg:w-5/12 md:w-6/12 w-full'>
+      <Card className=''>
         <Link
           className="text-blue-500 cursor-pointer flex flex-row gap-2 items-center group"
           href={'/login'}
@@ -56,7 +56,7 @@ const ForgotPasswordForm = () => {
             Back to login
           </p>
         </Link>
-        <div className='flex flex-col rounded-md p-4'>
+        <div className='flex flex-col rounded-md w-[350px] sm:w-[400px] md:w-96 mx-auto'>
           <div>
             <h3 className='text-2xl font-semibold my-2 '>Forgot Password?</h3>
             <p className='text-sm text-gray-700 mb-5'>
