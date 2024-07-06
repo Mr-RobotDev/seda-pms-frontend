@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { setDeviceForAlert, setDevicesToGlobal } from "@/app/store/slice/devicesSlice";
-import { iconsBasedOnType } from "@/utils/helper_functions";
+import { convertObjectToQueryString, iconsBasedOnType } from "@/utils/helper_functions";
 import { PrimaryInput } from "@/components/ui/Input/Input";
 import useDebounce from "@/app/hooks/useDebounce";
 
@@ -121,10 +121,13 @@ const DevicesSelector = ({
       try {
         setLoading(true);
         const params: any = { page: 1, limit: 50, search: debouncedSearch };
+
         if (deviceType) {
-          params.type = deviceType === 'pressure' ? 'pressure' : 'humidity,cold';
+          params.type = deviceType === 'pressure' ? 'pressure' : ['humidity', 'fridge', 'freezer'];
         }
-        const response = await axiosInstance.get("/devices", { params });
+
+        const updatedParams = convertObjectToQueryString(params)
+        const response = await axiosInstance.get(`/devices?${updatedParams}`);
         if (response.status === 200) {
           setDevices(response.data.results);
           setTempDevices(response.data.results);
@@ -157,6 +160,7 @@ const DevicesSelector = ({
   };
 
   useEffect(() => {
+    if (allowSingleDevice) return;
     if (selectedRowKeys.length === 0) {
       setDevices(tempDevices)
     } else {
@@ -166,7 +170,7 @@ const DevicesSelector = ({
       })
     }
 
-  }, [selectedRowKeys, tempDevices])
+  }, [selectedRowKeys, tempDevices, allowSingleDevice])
 
   return (
     <div className="mt-8">
