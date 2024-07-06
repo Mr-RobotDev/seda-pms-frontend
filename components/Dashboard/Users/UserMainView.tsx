@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRightIcon } from "@heroicons/react/16/solid";
-import { UserSwitchOutlined } from "@ant-design/icons";
+import { SyncOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { formatToTitleCase } from "@/utils/helper_functions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
@@ -98,22 +98,27 @@ const UserMainView = () => {
     setPageSize(10);
   };
 
-  const handleDeleteUser = async(e: any, userId: string) => {
-    e.stopPropagation();
+  const toggleStatus = async (id: string) => {
     setLoading(true)
     try {
-      const response = await axiosInstance.delete(`/users/${userId}`)
+      const response = await axiosInstance.patch(`/users/${id}/toggle-active`)
       if (response.status === 200) {
-        const updatedUsers = users.filter(
-          (user) => user.id !== userId
+        toast.success('User status updated successfully')
+        const updatedUsers = users.map((user) =>
+          user.id === id ? { ...user, isActive: !user.isActive } : user
         );
         setUsers(updatedUsers);
+      } else {
+        toast.error('Error, updating the user status')
       }
-    } catch (err) {
-      console.log('Error->', err);
+    } catch (error) {
+      console.log(error)
+      toast.error('Error, updating the user status')
     } finally {
       setLoading(false)
     }
+
+    console.log(id)
   }
 
   const columns: TableProps<any>["columns"] = [
@@ -168,6 +173,28 @@ const UserMainView = () => {
       },
     },
     {
+      title: "Status",
+      key: "isActive",
+      dataIndex: "isActive",
+      render: (_, { id, isActive }) => {
+        let color = isActive ? "green" : "red";
+        let statusText = isActive ? "Active" : "Inactive";
+        return (
+          <div className="flex items-center">
+            <div className="w-16">
+              <Tag color={color}>{statusText}</Tag>
+            </div>
+            <Button
+              type="link"
+              icon={<SyncOutlined />}
+              onClick={() => toggleStatus(id)}
+              title="Click to toggle status"
+            />
+          </div>
+        );
+      },
+    },
+    {
       title: "Actions",
       key: "actions",
       dataIndex: "actions",
@@ -190,14 +217,6 @@ const UserMainView = () => {
                 />
               </div>
             </Link>
-            <div className=" flex flex-row gap-4 items-center">
-            <p
-              onClick={(e) => handleDeleteUser(e, id)}
-              className="  !text-red-400 hover:!text-red-600 duration-200 transition-all transform cursor-pointer flex flex-row gap-2 items-center"
-            >
-              <TrashIcon width={20} />
-            </p>
-          </div>
           </div>
         );
       },

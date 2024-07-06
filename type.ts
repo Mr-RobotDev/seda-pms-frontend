@@ -35,6 +35,7 @@ export interface User {
   password: string;
   role: string;
   organization: string;
+  isActive?: boolean;
 }
 
 
