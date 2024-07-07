@@ -93,7 +93,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
     if (layouts.sm || layouts.xs) return;
 
     const updatedCards = layout.map((item: any) => {
-      const card = dashboardCards.find((card) => card.id === item.i);
+      const card = dashboardCards.find((card: any) => card.id === item.i);
       if (card) {
         if (
           card.x !== item.x ||
@@ -170,7 +170,6 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
               <DashboardMenu
                 dashboardsList={dashboards}
                 routingFunctionality={true}
-                activeDashboardId={id}
               />
             </div>
           </div>

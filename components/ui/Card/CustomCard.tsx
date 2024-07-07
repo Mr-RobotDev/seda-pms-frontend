@@ -199,7 +199,7 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
             </div>
             {isAdmin && !isRenaming && (
               <Button onMouseDown={handleOnClick} className=" w-10 h-10 border flex items-center justify-center">
-                <OptionsMenu cardId={card.id} setIsRenaming={setIsRenaming} />
+                <OptionsMenu card={card} setIsRenaming={setIsRenaming} />
               </Button>
             )}
           </div>
