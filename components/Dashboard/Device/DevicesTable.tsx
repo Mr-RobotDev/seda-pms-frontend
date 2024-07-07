@@ -255,6 +255,7 @@ const DevicesTable: React.FC = () => {
               options={deviceTypeOptions}
               multiple={true}
               searchable={false}
+              placeholderText="Select the Device Type"
             />
           </div>
         </div>
