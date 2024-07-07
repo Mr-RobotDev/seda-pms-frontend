@@ -63,12 +63,9 @@ const QRCodeComponent = forwardRef<QRCodeComponentRef, QRCodeComponentProps>(
         aspectRatio: 1.9,
       };
 
-      if (width <= 370) {
+      if (width <= 580) {
         config.aspectRatio = 0.9;
         config.qrbox = 140;
-      } else if (width > 370 && width <= 580) {
-        config.aspectRatio = 1.3;
-        config.qrbox = 160;
       } else if (width > 580 && width <= 768) {
         config.aspectRatio = 1.7;
         config.qrbox = 180;
@@ -101,7 +98,7 @@ const QRCodeComponent = forwardRef<QRCodeComponentRef, QRCodeComponentProps>(
 
         const config = calculateConfig();
 
-        if(!html5QrcodeRef.current){
+        if (!html5QrcodeRef.current) {
           html5QrcodeRef.current = new Html5Qrcode(scannerRef.current.id);
         }
         try {
