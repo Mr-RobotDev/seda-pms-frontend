@@ -2,10 +2,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Button, Modal } from 'antd';
 import QRCodeComponent, { QRCodeComponentRef } from './QRCodeComponent';
 import { ScanOutlined } from '@ant-design/icons';
+import useIsMobile from '@/app/hooks/useMobile';
 
 const QRParentComponent: React.FC = () => {
   const qrCodePluginRef = useRef<QRCodeComponentRef>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const isMobile = useIsMobile();
 
   const handleQRCodeSuccess = (decodedText: string) => {
     console.log('QR Code scanned successfully:', decodedText);
@@ -34,14 +36,14 @@ const QRParentComponent: React.FC = () => {
 
   return (
     <div>
-      <Button icon={<ScanOutlined className=' text-lg ' />} onClick={startScan}>Scan QR Code</Button>
+      <Button icon={<ScanOutlined className='text-lg' />} onClick={startScan}>Scan QR Code</Button>
       <Modal
         title="QR Code Scanner"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
         footer={null}
-        width="80%"
-        style={{ top: 20, padding: 0 }}
+        className="modal-responsive"
+        width={`${isMobile ? '90%' : '80%'}`}
       >
         {isModalVisible && (
           <QRCodeComponent
