@@ -173,7 +173,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
           </div>
           {isAdmin && currentSelectedDashboard && dashboardCards.length !== 0 && (
             <div className=" flex-1 flex flex-row items-end flex-wrap justify-start sm:justify-end gap-3 w-full lg:w-auto">
-              <div className=" flex flex-row- items-end gap-3 w-full sm:w-auto">
+              <div className=" flex flex-row- items-end gap-0 md:gap-3 w-full sm:w-auto">
                 <div className="w-full sm:w-auto">
                   <p className=" text-sm mb-1">Time frame</p>
                   <TimeFrameMenu functionality={true} />
