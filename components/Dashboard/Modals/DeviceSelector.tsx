@@ -20,13 +20,15 @@ interface DevicesSelectorProps {
   selectedRowKeys: string[];
   allowSingleDevice?: boolean;
   deviceType?: string;
+  updatingDevice?:boolean
 }
 
 const DevicesSelector = ({
   selectedRowKeys,
   setSelectedRowKeys,
   allowSingleDevice,
-  deviceType
+  deviceType,
+  updatingDevice
 }: DevicesSelectorProps) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const [tempDevices, setTempDevices] = useState<DevicesType[]>([]);
@@ -174,7 +176,7 @@ const DevicesSelector = ({
 
   return (
     <div className="mt-8">
-      <div className="pr-10 mb-6">
+      { !updatingDevice && <div className="pr-10 mb-6">
         <p className="!text-base font-bold !mb-0">Search</p>
         <PrimaryInput
           value={search}
@@ -182,7 +184,7 @@ const DevicesSelector = ({
           className=""
           placeholder="Search By Name or Sensor ID"
         />
-      </div>
+      </div>}
       <Table
         columns={columns}
         dataSource={devices}

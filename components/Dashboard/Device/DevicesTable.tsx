@@ -245,7 +245,7 @@ const DevicesTable: React.FC = () => {
             placeholder="Search By Name or Sensor ID"
           />
         </div>
-        <div className="w-72">
+        <div className=" md:!w-72">
           <p className="!text-base font-bold !mb-1">Device Type</p>
           <div className="flex flex-row items-center border rounded-md shadow-md">
             <CustomMenu
@@ -255,10 +255,11 @@ const DevicesTable: React.FC = () => {
               options={deviceTypeOptions}
               multiple={true}
               searchable={false}
+              placeholderText="Select the Device Type"
             />
           </div>
         </div>
-        <div className="flex items-end pb-1">
+        <div className="flex items-end justify-end pb-1">
           <Button type="primary" onClick={handleClearFilters}>Clear Filters</Button>
         </div>
       </div>

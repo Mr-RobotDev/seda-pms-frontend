@@ -15,6 +15,7 @@ interface DashboardState {
     get: boolean;
     delete: boolean;
     updateCard: boolean;
+    updateCardDevices: boolean;
     gettingDashboardCards: boolean;
   };
   dashboardCards: DashboardCardType[];
@@ -44,6 +45,7 @@ const initialState: DashboardState = {
     get: false,
     delete: false,
     updateCard: false,
+    updateCardDevices: false,
     gettingDashboardCards: false,
   },
   dashboardCards: [],
@@ -151,6 +153,18 @@ export const updateCard = createAsyncThunk('/dashboard/card/update', async ({ da
 
   throw new Error('Failed to update card');
 })
+
+export const updateCardDevices = createAsyncThunk('/dashboard/card/updateDevices', async ({ dashboardId, cardId, devices }: { dashboardId: string, cardId: string, devices: string[] }) => {
+  const response = await axiosInstance.patch(`/dashboards/${dashboardId}/cards/${cardId}`, {
+    devices: devices
+  })
+  if (response.status === 200) {
+    return response.data
+  }
+
+  throw new Error('Failed to update card devices');
+})
+
 
 const dashboardSlice = createSlice({
   name: 'dashboard',
@@ -271,6 +285,19 @@ const dashboardSlice = createSlice({
       })
       .addCase(updateCard.rejected, (state, action) => {
         state.isLoading.updateCard = false;
+        state.error = action.error.message ?? 'Failed to Update the card';
+      })
+      .addCase(updateCardDevices.pending, (state, action) => {
+        state.error = ''
+        state.isLoading.updateCardDevices = true;
+      })
+      .addCase(updateCardDevices.fulfilled, (state, action) => {
+        console.log('action.payload->', action.payload)
+        state.dashboardCards = state.dashboardCards.map(card => card.id === action.payload.id? action.payload : card)
+        state.isLoading.updateCardDevices = false;
+      })
+      .addCase(updateCardDevices.rejected, (state, action) => {
+        state.isLoading.updateCardDevices = false;
         state.error = action.error.message ?? 'Failed to Update the card';
       })
   }

@@ -60,6 +60,8 @@ const TemperatureChart: React.FC<TemperatureChartProps> = ({
         text:
           eventTypes === "temperature"
             ? "Temperature (°C)"
+            : eventTypes === 'pressure' 
+            ? 'Pressure'
             : "Relative Humidity (%)",
       },
     },
