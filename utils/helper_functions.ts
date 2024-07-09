@@ -88,6 +88,10 @@ export const validateAlertFormData = (formData: AlertDataType | null): { isValid
     return { isValid: false, message: "Name should not be empty." };
   }
 
+  if (formData.trigger.duration < 1){
+    return { isValid: false, message: "Trigger Duration must not be less than 1." };
+  }
+
   if (!formData.device) {
     return { isValid: false, message: "Device should not be empty." };
   }

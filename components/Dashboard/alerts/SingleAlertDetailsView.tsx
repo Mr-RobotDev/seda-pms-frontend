@@ -1,7 +1,6 @@
 'use client'
 import { AlertDataType, DevicesType } from '@/type'
 import React, { useState } from 'react'
-import withDashboardLayout from '@/hoc/withDashboardLayout'
 import Link from 'next/link'
 import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 import { Button, Card, Checkbox, Modal, Spin, Switch } from 'antd'
@@ -13,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/app/store/store'
 import CustomMenu from '@/components/ui/Menu/CustomMenu'
 import DeviceSelector from '../Modals/DeviceSelector'
-import DeviceDetailsComp from '../DeviceDetailsComp'
 import DeviceDetail from './DeviceDetail'
 import axiosInstance from '@/lib/axiosInstance'
 import { useRouter } from 'next/navigation'
@@ -175,7 +173,8 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
         }
       } catch (error: any) {
         console.log("error->", error);
-        toast.error(error.response.data.message[0]);
+        const errorMessage = Array.isArray(error.response.data.message) ? error.response.data.message[0] : error.response.data.message
+        toast.error(errorMessage);
       } finally {
         setLoading(false);
         dispatch(resetAlertDevice())
@@ -198,20 +197,13 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
       delete dataToSend.enabled;
       delete dataToSend.id
 
-      const { isValid, message } = validateAlertFormData(formData);
-
-      if (!isValid) {
-        toast.error(message);
-        return;
-      }
-
       try {
         const response = await axiosInstance.post(
           `/alerts/${alert.id}`,
           dataToSend
         );
         if (response.status === 200) {
-          console.log(response);
+          dispatch(resetAlertDevice())
           router.push('/dashboard/alerts')
           toast.success("Alert Created Successfully");
         } else {
@@ -219,10 +211,10 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
         }
       } catch (error: any) {
         console.log("error->", error);
-        toast.error(error.response.data.message[0]);
+        const errorMessage = Array.isArray(error.response.data.message) ? error.response.data.message[0] : error.response.data.message
+        toast.error(errorMessage);
       } finally {
         setLoading(false);
-        dispatch(resetAlertDevice())
       }
     }
   }

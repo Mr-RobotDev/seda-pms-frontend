@@ -27,13 +27,13 @@ const authSlice = createSlice({
       state.token = token;
       state.isAdmin = user.role === 'Admin'
 
-      localStorage.setItem("token", token);
+      localStorage.setItem("seda_token", token);
       axiosInstance.defaults.headers.Authorization = "Bearer " + token;
-      Cookies.set("token", token, { expires: 7 });
+      Cookies.set("seda_token", token, { expires: 7 });
     },
     logout(state) {
-      Cookies.remove("token");
-      localStorage.removeItem("token");
+      Cookies.remove("seda_token");
+      localStorage.removeItem("seda_token");
       sessionStorage.setItem("didLogout", "true");
 
       if (axiosInstance.defaults.headers) {
