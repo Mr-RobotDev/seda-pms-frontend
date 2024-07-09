@@ -110,12 +110,10 @@ const DevicesSelector = ({
     columns.unshift({
       title: "Add",
       dataIndex: "add",
-      render: (_, { id, hasAlert }) => (
-        <>
-          {!hasAlert && <div className="flex flex-row items-center" onClick={(e) => addOrRemoveDeviceIdToTheList(e, id)}>
-            {selectedRowKeys.includes(id) ? <MinusCircleIcon width={25} className=" text-red-400" /> : <PlusCircleIcon width={25} className=" text-blue-700" />}
-          </div>}
-        </>
+      render: (_, { id }) => (
+        <div className="flex flex-row items-center" onClick={(e) => addOrRemoveDeviceIdToTheList(e, id)}>
+          {selectedRowKeys.includes(id) ? <MinusCircleIcon width={25} className=" text-red-400" /> : <PlusCircleIcon width={25} className=" text-blue-700" />}
+        </div>
       ),
     })
   }
@@ -197,7 +195,7 @@ const DevicesSelector = ({
         rowClassName={(record) =>
           selectedRowKeys.includes(record.id)
             ? "ant-table-row-selected border-2 border-blue-500"
-            : (allowSingleDevice && record.hasAlert) ? "cursor-not-allowed opacity-50" : ""
+            : ""
         }
       />
     </div>
