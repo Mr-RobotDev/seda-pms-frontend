@@ -24,6 +24,7 @@ export interface DevicesType {
     field: string,
     range: alertRange
   }
+  hasAlert?: boolean
 }
 
 

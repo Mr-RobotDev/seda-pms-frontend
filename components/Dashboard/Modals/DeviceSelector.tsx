@@ -20,7 +20,7 @@ interface DevicesSelectorProps {
   selectedRowKeys: string[];
   allowSingleDevice?: boolean;
   deviceType?: string;
-  updatingDevice?:boolean
+  updatingDevice?: boolean
 }
 
 const DevicesSelector = ({
@@ -110,10 +110,12 @@ const DevicesSelector = ({
     columns.unshift({
       title: "Add",
       dataIndex: "add",
-      render: (_, { id }) => (
-        <div className="flex flex-row items-center" onClick={(e) => addOrRemoveDeviceIdToTheList(e, id)}>
-          {selectedRowKeys.includes(id) ? <MinusCircleIcon width={25} className=" text-red-400" /> : <PlusCircleIcon width={25} className=" text-blue-700" />}
-        </div>
+      render: (_, { id, hasAlert }) => (
+        <>
+          {!hasAlert && <div className="flex flex-row items-center" onClick={(e) => addOrRemoveDeviceIdToTheList(e, id)}>
+            {selectedRowKeys.includes(id) ? <MinusCircleIcon width={25} className=" text-red-400" /> : <PlusCircleIcon width={25} className=" text-blue-700" />}
+          </div>}
+        </>
       ),
     })
   }
@@ -176,7 +178,7 @@ const DevicesSelector = ({
 
   return (
     <div className="mt-8">
-      { !updatingDevice && <div className="pr-10 mb-6">
+      {!updatingDevice && <div className="pr-10 mb-6">
         <p className="!text-base font-bold !mb-0">Search</p>
         <PrimaryInput
           value={search}
@@ -194,8 +196,8 @@ const DevicesSelector = ({
         onRow={(record) => onRowClick(record)}
         rowClassName={(record) =>
           selectedRowKeys.includes(record.id)
-            ? "ant-table-row-selected !border-2 !border-blue-500"
-            : ""
+            ? "ant-table-row-selected border-2 border-blue-500"
+            : (allowSingleDevice && record.hasAlert) ? "cursor-not-allowed opacity-50" : ""
         }
       />
     </div>
