@@ -1,5 +1,4 @@
 import ProfileView from "@/components/Dashboard/ProfileView";
-import { cookies } from 'next/headers'
 
 export const metadata = {
   title: 'Profile'
