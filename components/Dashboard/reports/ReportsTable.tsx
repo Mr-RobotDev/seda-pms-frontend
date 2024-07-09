@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, use, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, use, useCallback, useEffect, useState } from "react";
 import { DashboardType, ReportsType } from "@/type";
 import axiosInstance from "@/lib/axiosInstance";
 import { Button, Card, Checkbox, Spin, Switch, Table, TableProps } from "antd";
@@ -47,6 +47,10 @@ const ReportsTable = ({
   const [formData, setFormData] = useState<ReportsType | null>(null);
   const { user, isAdmin } = useSelector((state: RootState) => state.authReducer)
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+
   const daysOfWeek = [
     "monday",
     "tuesday",
@@ -67,27 +71,34 @@ const ReportsTable = ({
     }
   }, [showDetailsReport, setCreateNewReport]);
 
-  useEffect(() => {
-    if (currentDashboard.id !== "") {
-      (async () => {
-        try {
-          setLoading(true);
-          const response = await axiosInstance.get(
-            `/dashboards/${currentDashboard.id}/reports`
-          );
-          if (response.status === 200) {
-            setReports(response.data.results);
-          } else {
-            console.log("error ->", response);
-          }
-        } catch (error: any) {
-          console.log("Error:", error);
-        } finally {
-          setLoading(false);
+  const fetchReports = useCallback(async (dashboardId: string, page: number, limit: number) => {
+    if (dashboardId !== "") {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get(
+          `/dashboards/${dashboardId}/reports`
+        , {
+          params: { page, limit },
+        });
+        if (response.status === 200) {
+          setReports(response.data.results);
+          setCurrentPage(response.data.pagination.page);
+          setPageSize(response.data.pagination.limit);
+          setTotalItems(response.data.pagination.totalResults);
+        } else {
+          console.log("error ->", response);
         }
-      })();
+      } catch (error: any) {
+        console.log("Error:", error);
+      } finally {
+        setLoading(false);
+      }
     }
-  }, [currentDashboard]);
+  }, [])
+
+  useEffect(() => {
+    fetchReports(currentDashboard.id, currentPage, pageSize)
+  }, [fetchReports, currentDashboard, currentPage, pageSize]);
 
   useEffect(() => {
     if (createNewReport) {
@@ -321,6 +332,11 @@ const ReportsTable = ({
     });
   };
 
+  const handleTablePaginationChange = (newPagination: any) => {
+    setCurrentPage(newPagination);
+    setPageSize(10);
+  }
+
   const renderCheckboxes = () =>
     daysOfWeek.map((day) => (
       <Checkbox
@@ -379,6 +395,12 @@ const ReportsTable = ({
                 rowClassName="overflow-hidden"
                 loading={loading}
                 onRow={showReportsDetails}
+                pagination={{
+                  current: currentPage,
+                  pageSize: pageSize,
+                  total: totalItems,
+                  onChange: handleTablePaginationChange,
+                }}
               />
             </div>
           }
