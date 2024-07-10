@@ -7,6 +7,7 @@ import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/app/store/store'
+import AlertsStats from './AlertsStats'
 
 const AlertMainView = () => {
   const { isAdmin } = useSelector((state: RootState) => state.authReducer)
@@ -23,6 +24,7 @@ const AlertMainView = () => {
           </span>
         </Link>}
       </div>
+      <AlertsStats />
       <AlertsTable />
     </>
   )

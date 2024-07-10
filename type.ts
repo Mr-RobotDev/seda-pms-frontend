@@ -177,3 +177,10 @@ export interface SingleNameIdObject {
   name: string;
   id: string;
 }
+
+export interface AlertStatsType {
+  totalActiveAlerts: number;
+  totalNonActiveAlerts: number;
+  activeAlerts: string[];
+  nonActiveAlerts: string[];
+}

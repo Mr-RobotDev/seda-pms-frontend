@@ -131,9 +131,27 @@ const DevicesSelector = ({
         const updatedParams = convertObjectToQueryString(params)
         const response = await axiosInstance.get(`/devices?${updatedParams}`);
         if (response.status === 200) {
-          setDevices(response.data.results);
-          setTempDevices(response.data.results);
-          dispatch(setDevicesToGlobal(response.data.results));
+          const devices = response.data.results;
+          setTempDevices(devices);
+          dispatch(setDevicesToGlobal(devices));
+        
+          if (allowSingleDevice) {
+            const filterMap: { [key: string]: string } = {
+              'relativeHumidity': 'humidityAlert',
+              'temperature': 'temperatureAlert',
+              'pressure': 'pressureAlert'
+            };
+        
+            const alertKey = filterMap[deviceType as string];
+            if (alertKey) {
+              const filteredDevices = devices.filter((device: any) => device[alertKey] === false);
+              setDevices(filteredDevices);
+            } else {
+              setDevices(devices);
+            }
+          } else {
+            setDevices(devices);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -141,7 +159,7 @@ const DevicesSelector = ({
         setLoading(false);
       }
     })();
-  }, [dispatch, deviceType, debouncedSearch]);
+  }, [dispatch, deviceType, debouncedSearch, allowSingleDevice]);
 
   const onRowClick = (record: DevicesType) => {
     return {

@@ -7,19 +7,21 @@ interface DeviceTypeDetailProps {
   title: string;
   value: number;
   image: string;
+  notDecimal?: boolean;
+  bigHeadings?: boolean;
 }
 
-const DeviceTypeDetail = ({ title, value, image }: DeviceTypeDetailProps) => {
+const DeviceTypeDetail = ({ title, value, image, notDecimal, bigHeadings }: DeviceTypeDetailProps) => {
   return (
     <>
       <Card bordered={false} className="criclebox h-full">
         <div className=" text-2xl flex flex-row justify-between">
-          <div>
-            <span className=" text-lg !mb-0">{title}</span>
+          <div className=''>
+            <span className={`text-lg !mb-0 ${bigHeadings ? '!text-xl' : ''}`}>{title}</span>
             <div className="text-2xl font-bold">
-              <span className="!text-3xl !font-bold">
+              <span className={`!text-3xl !font-bold ${bigHeadings ? '!text-4xl' : ''}`}>
                 <CountUp
-                  decimals={2}
+                  decimals={notDecimal ? 0 : 2}
                   end={value}
                   duration={2}
                 />
