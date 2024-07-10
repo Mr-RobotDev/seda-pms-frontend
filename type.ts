@@ -24,6 +24,9 @@ export interface DevicesType {
     field: string,
     range: alertRange
   }
+  humidityAlert?: boolean;
+  temperatureAlert?: boolean;
+  pressureAlert?: boolean;
 }
 
 
