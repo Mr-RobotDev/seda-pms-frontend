@@ -15,6 +15,7 @@ import {
   ArrowLeftStartOnRectangleIcon,
   AdjustmentsHorizontalIcon,
   ClipboardDocumentListIcon,
+  BookOpenIcon,
 } from "@heroicons/react/24/outline";
 
 import axiosInstance from "@/lib/axiosInstance";
@@ -92,6 +93,14 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
       url: "/dashboard/users",
       menuKey: "users",
       icon: UserIcon,
+      adminOnly: true,
+    },
+    {
+      key: "13",
+      title: "Change Logs",
+      url: "/dashboard/change-logs",
+      menuKey: "change-logs",
+      icon: BookOpenIcon,
       adminOnly: true,
     },
   ];
