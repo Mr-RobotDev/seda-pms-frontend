@@ -79,6 +79,16 @@ const AlertsTable = () => {
       ),
     },
     {
+      title: "ACTIVE",
+      key: "active",
+      dataIndex: "active",
+      render: (_, { active }) => (
+        <div className="flex flex-row gap-4 items-center">
+          {active ? <CheckIcon className=" text-green-700" width={20} /> : <XMarkIcon className=" text-red-700" width={20} />}
+        </div>
+      ),
+    },
+    {
       title: "ENABLED",
       key: "enabled",
       dataIndex: "enabled",

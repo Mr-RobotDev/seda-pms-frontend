@@ -152,6 +152,7 @@ export interface AlertDataType {
   weekdays: string[];
   enabled?: boolean;
   id?: string;
+  active?: boolean;
 }
 
 interface Trigger {
