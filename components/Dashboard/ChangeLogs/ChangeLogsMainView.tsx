@@ -2,25 +2,20 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import withDashboardLayout from "@/hoc/withDashboardLayout";
 import axiosInstance from "@/lib/axiosInstance";
-import { Card, DatePicker, Modal, Spin, Tag, Timeline } from "antd";
+import { Card, DatePicker, Modal, Tag } from "antd";
 import toast from "react-hot-toast";
 import dayjs, { Dayjs } from "dayjs";
-import { formatDateTime, formatToTitleCase } from "@/utils/helper_functions";
+import { formatDateTime } from "@/utils/helper_functions";
 import "./changeLog.css";
-import Link from "next/link";
-import { useTimeAgo } from "next-timeago";
-import {
-  ArrowLeftStartOnRectangleIcon,
-  ArrowLeftEndOnRectangleIcon,
-  EyeIcon,
-  PresentationChartBarIcon,
-} from "@heroicons/react/16/solid";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { PrimaryInput } from "@/components/ui/Input/Input";
 import TextArea from "antd/es/input/TextArea";
 import LoadingWrapper from "@/components/ui/LoadingWrapper/LoadingWrapper";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { useRouter } from "next/navigation";
 
 const { RangePicker } = DatePicker;
 
@@ -47,6 +42,7 @@ const ChangeLogsMainView = () => {
     dayjs().startOf('day').add(1, 'day').subtract(1, 'millisecond'),
   ]);
   const [activityLogs, setActivityLogs] = useState<ChangeLogs[]>([]);
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer)
   const [loading, setLoading] = useState<boolean>(false);
   const [createLoading, setCreateLoading] = useState<boolean>(false);
   const [error, setError] = useState({
@@ -54,7 +50,7 @@ const ChangeLogsMainView = () => {
     change: '',
     isValid: true,
   })
-  const { TimeAgo } = useTimeAgo();
+  const router = useRouter();
   const initialFetchRef = useRef(true);
   const [formData, setFormData] = useState<ChangeLogFormData>(defaultState);
 
@@ -63,6 +59,13 @@ const ChangeLogsMainView = () => {
   const showModal = () => {
     setIsModalOpen(true);
   };
+
+  useEffect(() => {
+    if (!isAdmin) {
+      router.push('/dashboard');
+      toast.error('Cannot Access this page')
+    }
+  }, [isAdmin, router])
 
   const handleCreateNewLog = async () => {
     const versionRegex = /^\d+\.\d+\.\d+$/;
@@ -224,7 +227,7 @@ const ChangeLogsMainView = () => {
   };
 
   return (
-    <>
+    isAdmin && <>
       <Card>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
           <h1 className="text-3xl font-semibold !mb-4 md:!mb-0">
