@@ -5,6 +5,8 @@ import DeviceTypeDetail from '../Device/DeviceTypeDetail'
 import axiosInstance from '@/lib/axiosInstance'
 import { AlertStatsType } from '@/type'
 import LoadingWrapper from '@/components/ui/LoadingWrapper/LoadingWrapper'
+import CountUp from "react-countup";
+import Image from 'next/image'
 
 const AlertsStats = () => {
   const [alertStats, setAlertStats] = useState<AlertStatsType>()
@@ -31,22 +33,57 @@ const AlertsStats = () => {
   return (
     <div className=' my-4'>
       <LoadingWrapper loading={loading}>
-        {alertStats ? <div className=' grid grid-cols-1 md:grid-cols-2 gap-5'>
-          <div className=' w-full flex flex-col gap-5 '>
-            <div className='flex-1'>
-              <DeviceTypeDetail title="Active Alerts" value={alertStats?.totalActiveAlerts} notDecimal={true} image="/icons/active-alerts.png" bigHeadings={true} />
+        {alertStats ?
+          <div className=' grid grid-cols-1 md:grid-cols-2 gap-5'>
+            <div className='!h-full'>
+              <Card bordered={false} className="criclebox h-full">
+                <div className="text-2xl flex flex-row justify-between">
+                  <div className="">
+                    <span className="!mb-0 !text-xl">Active Alerts</span>
+                    <div className="text-2xl font-bold">
+                      <span className="!text-4xl !font-bold">
+                        <CountUp end={alertStats?.totalActiveAlerts} duration={2} />
+                      </span>
+                    </div>
+                  </div>
+                  <div className="w-16 h-16 flex items-center justify-center ml-auto">
+                    <Image
+                      src="/icons/active-alerts.png"
+                      className="w-full h-full"
+                      alt="icon"
+                      width={100}
+                      height={100}
+                    />
+                  </div>
+                </div>
+                <div className="mt-5">
+                  {alertStats.activeAlerts.length > 0 ? (
+                    <div className="flex flex-wrap md:flex-nowrap gap-0 md:gap-3 w-full overflow-x-auto">
+                      {Array.from({ length: Math.ceil(alertStats.activeAlerts.length / 10) }).map((_, columnIndex) => (
+                        <ul className=" mb-0" key={columnIndex}>
+                          {alertStats.activeAlerts.slice(columnIndex * 10, (columnIndex + 1) * 10).map((alert) => (
+                            <li className="mb-[6px] w-56" key={alert}>{alert}</li>
+                          ))}
+                        </ul>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No Active Alerts</p>
+                  )}
+                </div>
+              </Card>
+
+
+
+
             </div>
-            <div className='flex-1'>
-              <DeviceTypeDetail title="Non Active Alerts" value={alertStats?.totalNonActiveAlerts} notDecimal={true} image="/icons/non-active-alerts.png" bigHeadings={true} />
-            </div>
+            <Card className=' flex justify-center items-center'>
+              <AlertsPieChart data={alertStats} />
+            </Card>
           </div>
-          <Card className=' flex justify-center items-center'>
-            <AlertsPieChart data={alertStats} />
-          </Card>
-        </div>
-        :
-        !loading && <div className=' text-center my-4 text-xl '>Could Not Fetch the Alerts Stats</div>  
-      }
+          :
+          !loading && <div className=' text-center my-4 text-xl '>Could Not Fetch the Alerts Stats</div>
+        }
       </LoadingWrapper>
     </div>
   )

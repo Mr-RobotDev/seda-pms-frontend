@@ -38,7 +38,7 @@ const AlertsPieChart: React.FC<AlertsPieChartProps> = ({ data }) => {
       }
     },
     labels: ['Active Alerts', 'Non-Active Alerts'],
-    colors: ['#C70039', '#50C878'],
+    colors: ['#F40615', '#50C878'],
     tooltip: {
       enabled: true,
       custom: function ({ seriesIndex }) {

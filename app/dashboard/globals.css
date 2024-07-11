@@ -7,8 +7,10 @@ body{
 }
 
 /* width */
+/* General scrollbar styling */
 ::-webkit-scrollbar {
   width: 3px;
+  height: 3px; /* Add this line to specify the height of the horizontal scrollbar */
 }
 
 /* Track */
@@ -23,6 +25,23 @@ body{
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Horizontal scrollbar styling */
+::-webkit-scrollbar:horizontal {
+  height: 3px; /* Specify the height for the horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track:horizontal {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
   background: #555;
 }
 
