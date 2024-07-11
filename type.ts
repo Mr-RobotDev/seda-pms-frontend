@@ -20,10 +20,10 @@ export interface DevicesType {
   signalStrength: number;
   lastUpdated: string;
   isOffline: boolean;
-  alert?: {
+  alerts?: {
     field: string,
     range: alertRange
-  }
+  }[]
   humidityAlert?: boolean;
   temperatureAlert?: boolean;
   pressureAlert?: boolean;

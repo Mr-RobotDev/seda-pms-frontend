@@ -5,7 +5,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import toast from "react-hot-toast";
-import { DevicesType, DataPoint } from "@/type";
+import { DevicesType, DataPoint, alertRange } from "@/type";
 import Image from "next/image";
 import CountUp from "react-countup";
 import ReactApexChart from "react-apexcharts";
@@ -19,6 +19,7 @@ import {
   humidityColors,
   commonApexOptions,
   generateAnnotations,
+  calculateMinMaxValues,
 } from "@/utils/graph";
 import DeviceTypeDetail from "./DeviceTypeDetail";
 import PressueChart from "./PressueChart";
@@ -56,7 +57,15 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
     }
   }, []);
 
-  const TemperatureChart = React.memo(({ data }: { data: any }) => {
+  const TemperatureChart = React.memo(({ data, deviceData }: { data: any, deviceData: any }) => {
+    const isAlertPresent = deviceData?.alerts?.find((alert: any) => alert.field === 'temperature')
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
     const options = {
       ...commonApexOptions,
       chart: {
@@ -68,8 +77,10 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         title: {
           text: "Temperature (°C)",
         },
+        min: minValue,
+        max: maxValue,
       },
-      annotations: deviceData?.alert?.field === 'temperature' ? generateAnnotations(deviceData?.alert?.range) : {},
+      annotations: isAlertPresent ? generateAnnotations(isAlertPresent.range) : {},
       xaxis: {
         type: "datetime",
       },
@@ -102,24 +113,35 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
 
   TemperatureChart.displayName = "TemperatureChart";
 
-  const HumidityChart = React.memo(({ data }: { data: any }) => {
+  const HumidityChart = React.memo(({ data, deviceData }: { data: any; deviceData: any }) => {
+    const isAlertPresent = deviceData?.alerts?.find((alert: any) => alert.field === 'relativeHumidity');
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+
     const options = useMemo(
       () => ({
         ...commonApexOptions,
         chart: {
           id: "HumidityChart",
           group: "device",
-          ...commonApexOptions.chart
+          ...commonApexOptions.chart,
         },
         yaxis: {
           title: {
             text: "Humidity (%)",
           },
           labels: {
-            formatter: (value: number) => `${value}%`,
+            formatter: (value: number) => `${value.toFixed(2)}%`,
           },
+          min: minValue,
+          max: maxValue,
         },
-        annotations: deviceData?.alert?.field === 'relativeHumidity' ? generateAnnotations(deviceData?.alert?.range) : {},
+        annotations: annotations,
         xaxis: {
           type: "datetime",
         },
@@ -138,7 +160,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         },
         colors: humidityColors,
       }),
-      [data]
+      [data, annotations, minValue, maxValue]
     );
 
     return (
@@ -155,6 +177,15 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   HumidityChart.displayName = "HumidityChart";
 
   const PressureChart = React.memo(({ data }: { data: any }) => {
+    const isAlertPresent = deviceData?.alerts?.find((alert) => alert.field === 'pressure')
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+
     const options = useMemo(
       () => ({
         ...commonApexOptions,
@@ -166,11 +197,13 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           title: {
             text: "Pressure (Pa)",
           },
+          min: minValue,
+          max: maxValue,
           labels: {
             formatter: (value: number) => `${value}Pa`,
           },
         },
-        annotations: generateAnnotations(deviceData?.alert?.range),
+        annotations: isAlertPresent ? generateAnnotations(isAlertPresent.range) : {},
         xaxis: {
           type: "datetime",
         },
@@ -189,7 +222,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         },
         colors: humidityColors,
       }),
-      [data]
+      [data, isAlertPresent, minValue, maxValue]
     );
 
     return (
@@ -601,12 +634,12 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                     <div>
                       <div className=" h-[275px]">
                         {temperatureData.length !== 0 && (
-                          <TemperatureChart data={temperatureData} />
+                          <TemperatureChart data={temperatureData} deviceData={deviceData} />
                         )}
                       </div>
                       <div className=" h-[275px]">
                         {humidityData.length !== 0 && (
-                          <HumidityChart data={humidityData} />
+                          <HumidityChart data={humidityData} deviceData={deviceData} />
                         )}
                       </div>
                     </div>
