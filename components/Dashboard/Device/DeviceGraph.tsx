@@ -79,6 +79,9 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         },
         min: minValue,
         max: maxValue,
+        labels: {
+          formatter: (value: number) => `${value.toFixed(2)} °C`,
+        },
       },
       annotations: isAlertPresent ? generateAnnotations(isAlertPresent.range) : {},
       xaxis: {
@@ -136,7 +139,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             text: "Humidity (%)",
           },
           labels: {
-            formatter: (value: number) => `${value.toFixed(2)}%`,
+            formatter: (value: number) => `${value.toFixed(2)} %`,
           },
           min: minValue,
           max: maxValue,
@@ -200,7 +203,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           min: minValue,
           max: maxValue,
           labels: {
-            formatter: (value: number) => `${value}Pa`,
+            formatter: (value: number) => `${value.toFixed(2)} Pa`,
           },
         },
         annotations: isAlertPresent ? generateAnnotations(isAlertPresent.range) : {},

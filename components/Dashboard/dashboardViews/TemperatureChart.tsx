@@ -64,6 +64,9 @@ const TemperatureChart: React.FC<TemperatureChartProps> = ({
             ? 'Pressure'
             : "Relative Humidity (%)",
       },
+      labels: {
+        formatter: (value: number) => `${value.toFixed(2)}`,
+      },
     },
   };
 

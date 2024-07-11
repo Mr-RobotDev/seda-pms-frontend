@@ -93,7 +93,10 @@ const SingleDeviceDashCard = ({
           text: "Temperature",
         },
         min: minValue,
-        max: maxValue
+        max: maxValue,
+        labels: {
+          formatter: (value: number) => `${value.toFixed(2)} °C`,
+        },
       },
       annotations: annotations,
       series: [
@@ -146,7 +149,10 @@ const SingleDeviceDashCard = ({
           text: "Relative Humidity",
         },
         min: minValue,
-        max: maxValue
+        max: maxValue,
+        labels: {
+          formatter: (value: number) => `${value.toFixed(2)} %`,
+        },
       },
       annotations: annotations,
       series: [
