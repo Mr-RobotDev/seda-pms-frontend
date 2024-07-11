@@ -206,14 +206,16 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
           <div className="flex-grow">
             {Object.keys(eventsMap).length > 0 &&
               cardObj.field.split(",").length === 1 && (
-                <TemperatureChart data={eventsMap} eventTypes={cardObj.field} />
+                <TemperatureChart 
+                  data={eventsMap} 
+                  eventTypes={cardObj.field} />
               )}
             {Object.keys(eventsMap).length > 0 &&
               cardObj.field.split(",").length > 1 && (
                 <SingleDeviceDashCard
                   data={eventsMap}
                   eventTypes={cardObj.field}
-                  alert={deviceData?.alert}
+                  alerts={deviceData?.alerts}
                 />
               )}
           </div>

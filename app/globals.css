@@ -436,3 +436,7 @@ body{
     padding: 5px !important;
   }
 }
+
+.right-tooltip {
+  @apply absolute transform translate-x-2;
+}

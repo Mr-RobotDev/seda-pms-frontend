@@ -1,13 +1,12 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Tag } from "antd";
 import type { TableProps } from "antd";
 import axiosInstance from "@/lib/axiosInstance";
 import Image from "next/image";
-import { DevicesType, Event } from "@/type";
+import { DevicesType } from "@/type";
 import SimSignal from "../Device/SimSignal";
 import { useTimeAgo } from "next-timeago";
-import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/16/solid";
-import toast from "react-hot-toast";
+import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
 import { setDeviceForAlert, setDevicesToGlobal } from "@/app/store/slice/devicesSlice";
@@ -20,7 +19,7 @@ interface DevicesSelectorProps {
   selectedRowKeys: string[];
   allowSingleDevice?: boolean;
   deviceType?: string;
-  updatingDevice?: boolean
+  updatingDevice?: boolean;
 }
 
 const DevicesSelector = ({
@@ -28,22 +27,22 @@ const DevicesSelector = ({
   setSelectedRowKeys,
   allowSingleDevice,
   deviceType,
-  updatingDevice
+  updatingDevice,
 }: DevicesSelectorProps) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const [tempDevices, setTempDevices] = useState<DevicesType[]>([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const { TimeAgo } = useTimeAgo();
-  const dispatch: AppDispatch = useDispatch()
+  const dispatch: AppDispatch = useDispatch();
   const [search, setSearch] = useState<string>('');
   const debouncedSearch = useDebounce(search, 500);
 
   const addOrRemoveDeviceIdToTheList = (e: any, id: string) => {
-    e.stopPropagation()
-    const deviceToStore = devices.find(device => device.id === id)
-    dispatch(setDeviceForAlert(deviceToStore))
+    e.stopPropagation();
+    const deviceToStore = devices.find(device => device.id === id);
+    dispatch(setDeviceForAlert(deviceToStore));
     setSelectedRowKeys([id]);
-  }
+  };
 
   const columns: TableProps<DevicesType>["columns"] = [
     {
@@ -110,12 +109,25 @@ const DevicesSelector = ({
     columns.unshift({
       title: "Add",
       dataIndex: "add",
-      render: (_, { id }) => (
-        <div className="flex flex-row items-center" onClick={(e) => addOrRemoveDeviceIdToTheList(e, id)}>
-          {selectedRowKeys.includes(id) ? <MinusCircleIcon width={25} className=" text-red-400" /> : <PlusCircleIcon width={25} className=" text-blue-700" />}
-        </div>
-      ),
-    })
+      render: (_, { id, humidityAlert, temperatureAlert, pressureAlert }) => {
+        const alertKeyMap: { [key: string]: boolean | undefined } = {
+          'relativeHumidity': humidityAlert,
+          'temperature': temperatureAlert,
+          'pressure': pressureAlert,
+        };
+        const alertKey = alertKeyMap[deviceType as string];
+        if (alertKey === false) {
+          return (
+            <div className="flex flex-row items-center" onClick={(e) => addOrRemoveDeviceIdToTheList(e, id)}>
+              {selectedRowKeys.includes(id)
+                ? <MinusCircleIcon width={25} className="text-red-400" />
+                : <PlusCircleIcon width={25} className="text-blue-700" />}
+            </div>
+          );
+        }
+        return null;
+      },
+    });
   }
 
   useEffect(() => {
@@ -128,12 +140,13 @@ const DevicesSelector = ({
           params.type = deviceType === 'pressure' ? 'pressure' : ['humidity', 'fridge', 'freezer'];
         }
 
-        const updatedParams = convertObjectToQueryString(params)
+        const updatedParams = convertObjectToQueryString(params);
         const response = await axiosInstance.get(`/devices?${updatedParams}`);
         if (response.status === 200) {
-          setDevices(response.data.results);
-          setTempDevices(response.data.results);
-          dispatch(setDevicesToGlobal(response.data.results));
+          const devices = response.data.results;
+          setTempDevices(devices);
+          dispatch(setDevicesToGlobal(devices));
+          setDevices(devices);
         }
       } catch (error) {
         console.log(error);
@@ -141,7 +154,7 @@ const DevicesSelector = ({
         setLoading(false);
       }
     })();
-  }, [dispatch, deviceType, debouncedSearch]);
+  }, [dispatch, deviceType, debouncedSearch, allowSingleDevice]);
 
   const onRowClick = (record: DevicesType) => {
     return {
@@ -156,7 +169,6 @@ const DevicesSelector = ({
         } else {
           setSelectedRowKeys([...selectedRowKeys, selectedKey]);
         }
-
       },
     };
   };
@@ -164,15 +176,14 @@ const DevicesSelector = ({
   useEffect(() => {
     if (allowSingleDevice) return;
     if (selectedRowKeys.length === 0) {
-      setDevices(tempDevices)
+      setDevices(tempDevices);
     } else {
       setDevices((prevState: any) => {
-        const firstSelectedDeivce = prevState.find((device: any) => device.id === selectedRowKeys[0]);
-        return prevState.filter((device: any) => device.type === firstSelectedDeivce?.type)
-      })
+        const firstSelectedDevice = prevState.find((device: any) => device.id === selectedRowKeys[0]);
+        return prevState.filter((device: any) => device.type === firstSelectedDevice?.type);
+      });
     }
-
-  }, [selectedRowKeys, tempDevices, allowSingleDevice])
+  }, [selectedRowKeys, tempDevices, allowSingleDevice]);
 
   return (
     <div className="mt-8">
@@ -192,11 +203,21 @@ const DevicesSelector = ({
         loading={loading}
         className="cursor-pointer"
         onRow={(record) => onRowClick(record)}
-        rowClassName={(record) =>
-          selectedRowKeys.includes(record.id)
+        rowClassName={(record) => {
+          const alertKeyMap: { [key: string]: boolean | undefined } = {
+            'relativeHumidity': record.humidityAlert,
+            'temperature': record.temperatureAlert,
+            'pressure': record.pressureAlert,
+          };
+          const alertKey = alertKeyMap[deviceType as string];
+          const isSelected = selectedRowKeys.includes(record.id);
+          const isDisabled = allowSingleDevice && alertKey === true;
+          return isSelected
             ? "ant-table-row-selected border-2 border-blue-500"
-            : ""
-        }
+            : isDisabled
+            ? "opacity-50 cursor-not-allowed"
+            : "";
+        }}
       />
     </div>
   );

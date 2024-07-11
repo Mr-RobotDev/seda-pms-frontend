@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ApexOptions } from "apexcharts";
 import { EventsMap, Event, alertRange } from "@/type";
 import { SeriesType } from "@/type";
@@ -10,21 +10,22 @@ import {
   temperatureColors,
   commonApexOptions,
   generateAnnotations,
+  calculateMinMaxValues,
 } from "@/utils/graph";
 
 type SingleDeviceDashCardProps = {
   data: EventsMap;
   eventTypes: string;
-  alert: {
+  alerts: {
     field: string,
     range: alertRange
-  } | undefined;
+  }[] | undefined;
 };
 
 const SingleDeviceDashCard = ({
   data,
   eventTypes,
-  alert
+  alerts
 }: SingleDeviceDashCardProps) => {
   const [temperatureData, setTemperatureData] = useState<SeriesType[]>([]);
   const [relativeHumidityData, setRelativeHumidityData] = useState<
@@ -66,6 +67,16 @@ const SingleDeviceDashCard = ({
   }, [data]);
 
   const TemperatureChart = ({ data }: { data: any }) => {
+
+    const isAlertPresent = alerts?.find((alert: any) => alert.field === 'temperature');
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data[0].data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+
     const temperatureOptions: ApexOptions = {
       ...commonApexOptions,
       chart: {
@@ -81,8 +92,13 @@ const SingleDeviceDashCard = ({
         title: {
           text: "Temperature",
         },
+        min: minValue,
+        max: maxValue,
+        labels: {
+          formatter: (value: number) => `${value.toFixed(2)} °C`,
+        },
       },
-      annotations: alert?.field === 'temperature' ? generateAnnotations(alert?.range) : {},
+      annotations: annotations,
       series: [
         {
           name: "Temperature",
@@ -107,6 +123,16 @@ const SingleDeviceDashCard = ({
   };
 
   const RelativeHumidityChart = ({ data }: { data: any }) => {
+
+    const isAlertPresent = alerts?.find((alert: any) => alert.field === 'relativeHumidity');
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data[0].data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+
     const relativeHmidityOptions: ApexOptions = {
       ...commonApexOptions,
       chart: {
@@ -122,8 +148,13 @@ const SingleDeviceDashCard = ({
         title: {
           text: "Relative Humidity",
         },
+        min: minValue,
+        max: maxValue,
+        labels: {
+          formatter: (value: number) => `${value.toFixed(2)} %`,
+        },
       },
-      annotations: alert?.field === 'relativeHumidity' ? generateAnnotations(alert?.range) : {},
+      annotations: annotations,
       series: [
         {
           name: "Relative Humidity",

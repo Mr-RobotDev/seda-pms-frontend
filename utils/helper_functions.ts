@@ -10,6 +10,7 @@ export const activeSidebar = (path: string): string => {
     { name: 'data-sources', path: '/dashboard/data-sources' },
     { name: 'profile', path: '/dashboard/profile' },
     { name: 'reports', path: '/dashboard/reports' },
+    { name: 'change-logs', path: '/dashboard/change-logs' },
     { name: 'dashboard', path: '/dashboard' },
   ];
 
@@ -88,7 +89,7 @@ export const validateAlertFormData = (formData: AlertDataType | null): { isValid
     return { isValid: false, message: "Name should not be empty." };
   }
 
-  if (formData.trigger.duration < 1){
+  if (formData.trigger.duration < 1) {
     return { isValid: false, message: "Trigger Duration must not be less than 1." };
   }
 
@@ -165,7 +166,7 @@ export const convertObjectToQueryString = (params: { [key: string]: any }): stri
     }
   }
 
-  if(queryStringParts.length === 0){
+  if (queryStringParts.length === 0) {
     return ''
   }
   return queryStringParts.join('&');

@@ -20,10 +20,13 @@ export interface DevicesType {
   signalStrength: number;
   lastUpdated: string;
   isOffline: boolean;
-  alert?: {
+  alerts?: {
     field: string,
     range: alertRange
-  }
+  }[]
+  humidityAlert?: boolean;
+  temperatureAlert?: boolean;
+  pressureAlert?: boolean;
 }
 
 
@@ -152,6 +155,7 @@ export interface AlertDataType {
   weekdays: string[];
   enabled?: boolean;
   id?: string;
+  active?: boolean;
 }
 
 interface Trigger {
@@ -175,4 +179,11 @@ interface Device {
 export interface SingleNameIdObject {
   name: string;
   id: string;
+}
+
+export interface AlertStatsType {
+  totalActiveAlerts: number;
+  totalNonActiveAlerts: number;
+  activeAlerts: string[];
+  nonActiveAlerts: string[];
 }

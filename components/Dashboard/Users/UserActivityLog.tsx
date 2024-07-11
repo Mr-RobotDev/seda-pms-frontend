@@ -202,10 +202,9 @@ const UserActivityLog = ({ id }: UserActivityLogProps) => {
             <div className="flex flex-row items-start md:items-center gap-1">
               <div>
                 <div
-                  className={`w-10 h-10 rounded-full mr-5 flex justify-center items-center ${
-                    actionTailwindColorMapping[item.action] ||
+                  className={`w-10 h-10 rounded-full mr-5 flex justify-center items-center ${actionTailwindColorMapping[item.action] ||
                     actionTailwindColorMapping["default"]
-                  }`}
+                    }`}
                 >
                   {actionIcons[item.action] || actionIcons["default"]}
                 </div>
@@ -247,12 +246,10 @@ const UserActivityLog = ({ id }: UserActivityLogProps) => {
                   )}
                   <p className="!mb-0">
                     at{" "}
-                    <strong>{`${
-                      formatDateTime(item.createdAt).formattedDate
-                    }`}</strong>{" "}
-                    <span>{`${
-                      formatDateTime(item.createdAt).formattedTime
-                    }`}</span>
+                    <strong>{`${formatDateTime(item.createdAt).formattedDate
+                      }`}</strong>{" "}
+                    <span>{`${formatDateTime(item.createdAt).formattedTime
+                      }`}</span>
                   </p>
                 </div>
               </div>
@@ -269,12 +266,13 @@ const UserActivityLog = ({ id }: UserActivityLogProps) => {
         <h1 className="text-3xl font-semibold !mb-4 md:!mb-0">
           User Activity Logs
         </h1>
-        <div className="flex flex-col md:flex-row gap-3 items-start md:items-center">
-          <p className="mb-0 font-semibold">Date Range: </p>
+        <div className=" w-full md:w-auto order-2 md:order-1">
+          <p className=" text-sm mb-1">Date Range:</p>
           <RangePicker
             onChange={handleRangeChange}
-            showTime
             defaultValue={range}
+            className="w-full"
+            showTime
           />
         </div>
       </div>
