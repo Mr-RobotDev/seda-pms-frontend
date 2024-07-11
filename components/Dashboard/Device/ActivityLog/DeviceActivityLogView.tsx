@@ -271,12 +271,13 @@ const DeviceActivityLogView = ({ id }: DeviceActivityLogViewProps) => {
           <h1 className="text-3xl font-semibold !mb-4 md:!mb-0">
             {device.name} Activity Logs
           </h1>
-          <div className="flex flex-col md:flex-row gap-3 items-start md:items-center">
-            <p className="mb-0 font-semibold">Date Range: </p>
+          <div className=" w-full md:w-auto order-2 md:order-1">
+            <p className=" text-sm mb-1">Date Range:</p>
             <RangePicker
               onChange={handleRangeChange}
-              showTime
               defaultValue={range}
+              className="w-full"
+              showTime
             />
           </div>
         </div>

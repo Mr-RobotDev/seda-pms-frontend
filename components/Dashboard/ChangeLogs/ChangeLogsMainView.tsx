@@ -228,42 +228,42 @@ const ChangeLogsMainView = () => {
 
   return (
     isAdmin && <>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
-        <div className=" flex flex-row w-full md:w-auto justify-between items-center !mb-4 md:!mb-0">
-          <h1 className="text-3xl font-semibold !mb-0">
-            Change Logs
-          </h1>
-          <div className="block md:hidden">
-            <span
-              onClick={showModal}
-              className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"
-            >
-              <FontAwesomeIcon icon={faCirclePlus} />
-              Create New Log
-            </span>
-          </div>
-        </div>
-        <div className=" flex flex-col md:flex-row items-end gap-4 w-full md:w-auto">
-          <div className=" w-full md:w-auto order-2 md:order-1">
-            <p className=" text-sm mb-1">Date Range:</p>
-            <RangePicker
-              onChange={handleRangeChange}
-              defaultValue={range}
-              className="w-full"
-            />
-          </div>
-          <div className=" hidden md:block order-1 md:order-2">
-            <span
-              onClick={showModal}
-              className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"
-            >
-              <FontAwesomeIcon icon={faCirclePlus} />
-              Create New Log
-            </span>
-          </div>
-        </div>
-      </div>
       <Card>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+          <div className=" flex flex-row w-full flex-wrap md:w-auto justify-between items-center !mb-4 md:!mb-0">
+            <h1 className="text-2xl sm:text-3xl font-semibold !mb-0">
+              Change Logs
+            </h1>
+            <div className="block md:hidden ml-auto">
+              <span
+                onClick={showModal}
+                className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"
+              >
+                <FontAwesomeIcon icon={faCirclePlus} />
+                Create New Log
+              </span>
+            </div>
+          </div>
+          <div className=" flex flex-col md:flex-row items-end gap-4 w-full md:w-auto">
+            <div className=" w-full md:w-auto order-2 md:order-1">
+              <p className=" text-sm mb-1">Date Range:</p>
+              <RangePicker
+                onChange={handleRangeChange}
+                defaultValue={range}
+                className="w-full"
+              />
+            </div>
+            <div className=" hidden md:block order-1 md:order-2">
+              <span
+                onClick={showModal}
+                className="button_ready-animation cursor-pointer !text-sm border-2 rounded-lg py-[10px] px-3 bg-blue-600 text-white hover:bg-blue-700 transition-all ease-in-out duration-300 flex gap-2 items-center"
+              >
+                <FontAwesomeIcon icon={faCirclePlus} />
+                Create New Log
+              </span>
+            </div>
+          </div>
+        </div>
         <LoadingWrapper loading={loading}>
           <div className="overflow-auto h-[700px]">
             {" "}
