@@ -34,10 +34,10 @@ const AlertsStats = () => {
         {alertStats ? <div className=' grid grid-cols-1 md:grid-cols-2 gap-5'>
           <div className=' w-full flex flex-col gap-5 '>
             <div className='flex-1'>
-              <DeviceTypeDetail title="Active Alerts" value={alertStats?.totalActiveAlerts} notDecimal={true} image="/devices.png" bigHeadings={true} />
+              <DeviceTypeDetail title="Active Alerts" value={alertStats?.totalActiveAlerts} notDecimal={true} image="/icons/active-alerts.png" bigHeadings={true} />
             </div>
             <div className='flex-1'>
-              <DeviceTypeDetail title="Non Active Alerts" value={alertStats?.totalNonActiveAlerts} notDecimal={true} image="/devices.png" bigHeadings={true} />
+              <DeviceTypeDetail title="Non Active Alerts" value={alertStats?.totalNonActiveAlerts} notDecimal={true} image="/icons/non-active-alerts.png" bigHeadings={true} />
             </div>
           </div>
           <Card className=' flex justify-center items-center'>
