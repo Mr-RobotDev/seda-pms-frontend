@@ -59,7 +59,7 @@ const UserMainView = () => {
   const { user: loggedInUser } = useSelector((state: RootState) => state.authReducer);
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(8);
   const [totalItems, setTotalItems] = useState(0);
 
   const fetchUsers = useCallback(async (page: number, limit: number) => {
@@ -95,7 +95,7 @@ const UserMainView = () => {
 
   const handleTableChange = (newPagination: any) => {
     setCurrentPage(newPagination);
-    setPageSize(10);
+    setPageSize(8);
   };
 
   const toggleStatus = async (id: string) => {
