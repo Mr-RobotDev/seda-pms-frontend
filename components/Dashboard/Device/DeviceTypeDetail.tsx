@@ -28,7 +28,7 @@ const DeviceTypeDetail = ({ title, value, image, notDecimal, bigHeadings }: Devi
               </span>
             </div>
           </div>
-          <div className=" w-12 h-12 flex items-center justify-center ml-auto">
+          <div className={`w-12 h-12 flex items-center justify-center ml-auto ${bigHeadings ? 'w-16 h-16' : ''}`}>
             <Image
               src={image}
               className=" w-full h-full"

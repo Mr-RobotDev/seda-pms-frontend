@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { AlertStatsType } from '@/type';
@@ -7,7 +7,11 @@ interface AlertsPieChartProps {
   data: AlertStatsType
 }
 
-const AlertsPieChart: React.FC<AlertsPieChartProps> = ({data}) => {
+const AlertsPieChart: React.FC<AlertsPieChartProps> = ({ data }) => {
+
+  useEffect(() => {
+    console.log('data->', data);
+  }, [data])
   const options: ApexOptions = {
     chart: {
       type: 'pie',
@@ -36,7 +40,7 @@ const AlertsPieChart: React.FC<AlertsPieChartProps> = ({data}) => {
         }
       }
     },
-    labels: ['Active Alerts', 'Non-Active Alerts'],
+    labels: ['Non-Active Alerts', 'Active Alerts'],
     tooltip: {
       enabled: true,
       custom: function ({ series, seriesIndex, dataPointIndex, w }) {
@@ -49,6 +53,31 @@ const AlertsPieChart: React.FC<AlertsPieChartProps> = ({data}) => {
         };
 
         if (seriesIndex === 0) {
+          if (data.nonActiveAlerts.length === 0) {
+            return `<div class="p-2 bg-white border border-gray-300 rounded shadow-md text-sm">No Non-Active Alerts</div>`;
+          }
+
+          const columns = chunkArray(data.nonActiveAlerts, 10);
+          const nonActiveAlertsTable = `
+            <div class="p-2 bg-white border border-gray-300 rounded shadow-md text-sm">
+              <table class="table-auto w-full">
+                <tbody>
+                  <tr>
+                    ${columns.map(column => `
+                      <td class="align-top">
+                        ${column.map(alert => `<div class="p-1 border-b border-gray-200">${alert}</div>`).join('')}
+                      </td>
+                    `).join('')}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          `;
+
+          return nonActiveAlertsTable;
+
+        } else {
+
           if (data.activeAlerts.length === 0) {
             return `<div class="p-2 bg-white border border-gray-300 rounded shadow-md text-sm">No Active Alerts</div>`;
           }
@@ -71,25 +100,6 @@ const AlertsPieChart: React.FC<AlertsPieChartProps> = ({data}) => {
           `;
 
           return activeAlertsTable;
-        } else {
-          const columns = chunkArray(data.nonActiveAlerts, 10);
-          const nonActiveAlertsTable = `
-            <div class="p-2 bg-white border border-gray-300 rounded shadow-md text-sm">
-              <table class="table-auto w-full">
-                <tbody>
-                  <tr>
-                    ${columns.map(column => `
-                      <td class="align-top">
-                        ${column.map(alert => `<div class="p-1 border-b border-gray-200">${alert}</div>`).join('')}
-                      </td>
-                    `).join('')}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          `;
-
-          return nonActiveAlertsTable;
         }
       },
     },
@@ -98,7 +108,7 @@ const AlertsPieChart: React.FC<AlertsPieChartProps> = ({data}) => {
     }
   };
 
-  const series = [data.totalActiveAlerts, data.totalNonActiveAlerts];
+  const series = [data.totalNonActiveAlerts, data.totalActiveAlerts];
 
   return (
     <div>
