@@ -62,7 +62,10 @@ const AlertsStats = () => {
                       {Array.from({ length: Math.ceil(alertStats.activeAlerts.length / 10) }).map((_, columnIndex) => (
                         <ul className=" mb-0" key={columnIndex}>
                           {alertStats.activeAlerts.slice(columnIndex * 10, (columnIndex + 1) * 10).map((alert) => (
-                            <li className="mb-[6px] w-56" key={alert}>{alert}</li>
+                            <li className="mb-[6px] w-64 flex flex-row gap-2 items-center" key={alert}>
+                              <div className=' w-[6px] h-[6px] bg-red-500 rounded-full'></div>
+                              {alert}
+                            </li>
                           ))}
                         </ul>
                       ))}
