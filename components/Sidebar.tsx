@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Menu } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "@/app/store/slice/authSlice";
+import { getLatestVersionNumber, logout } from "@/app/store/slice/authSlice";
 import Image from "next/image";
 import {
   ClipboardIcon,
@@ -19,7 +19,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import axiosInstance from "@/lib/axiosInstance";
-import { RootState } from "@/app/store/store";
+import { AppDispatch, RootState } from "@/app/store/store";
 import SidebarMenu from "@/app/ui/SidebarMenu";
 import { activeSidebar } from "@/utils/helper_functions";
 
@@ -30,23 +30,16 @@ interface SidenavProps {
 const Sidebar: React.FC<SidenavProps> = ({ color }) => {
   const page = usePathname();
   const [activeMenu, setActiveMenu] = useState<string>(activeSidebar(page));
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const { isAdmin } = useSelector((state: RootState) => state.authReducer);
-  const [currentVersion, setCurrentVersion] = useState('')
+  const { isAdmin, version } = useSelector((state: RootState) => state.authReducer);
+
 
   useEffect(() => {
-    (async () => {
-      try {
-        const response = await axiosInstance.get('/changelogs/latest-version')
-        if (response.status === 200) {
-          setCurrentVersion(response.data.version)
-        }
-      } catch (e) {
-        console.log('Error ->', e)
-      }
-    })()
-  }, [])
+    if(version === ''){
+      dispatch(getLatestVersionNumber())
+    }
+  }, [version, dispatch])
 
   useEffect(() => {
     setActiveMenu(activeSidebar(page));
@@ -175,7 +168,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
             </div>
           </div>
           <div className=" flex justify-center mt-2">
-            {currentVersion ? <p className=" text-sm">(<strong>Version </strong>{currentVersion})</p>: <p className=" text-sm">-</p>}
+            {version ? <p className=" text-sm">(<strong>Version </strong>{version})</p>: <p className=" text-sm">-</p>}
           </div>
         </div>
         <hr className=" !my-2" />
@@ -198,10 +191,10 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 onClick={LogoutButtonHandler}
               >
                 <ArrowLeftStartOnRectangleIcon
-                  width={25}
+                  width={27}
                   className="!text-black"
                 />
-                <span className="label text-black">Log Out</span>
+                <span className="text-black text-lg">Log Out</span>
               </div>
             </div>
           </div>

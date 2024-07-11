@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "@/lib/axiosInstance";
 import Cookies from "js-cookie";
 
@@ -7,6 +7,7 @@ type AuthState = {
   user: any;
   token: string;
   isAdmin: boolean;
+  version: string;
 };
 
 const initialState: AuthState = {
@@ -14,6 +15,7 @@ const initialState: AuthState = {
   user: null,
   token: "",
   isAdmin: false,
+  version: '',
 };
 
 const authSlice = createSlice({
@@ -53,7 +55,20 @@ const authSlice = createSlice({
       state.user.profile = profile;
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(getLatestVersionNumber.fulfilled, (state, action) => {
+      state.version = action.payload
+    });
+    builder.addCase(getLatestVersionNumber.rejected, (state, action) => {
+      state.version = 'X.X.X'
+    });
+  },
 });
+
+export const getLatestVersionNumber = createAsyncThunk('changeLogs/lastest-version', async() => {
+  const response = await axiosInstance.get('/changelogs/latest-version')
+  return response.data.version
+})
 
 export const { login, logout, updateUserDetails, updateProfileImage } =
   authSlice.actions;

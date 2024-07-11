@@ -3,11 +3,12 @@ import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Form, Input, Typography } from "antd";
 import { useDispatch } from "react-redux";
-import { login } from "@/app/store/slice/authSlice";
+import { getLatestVersionNumber, login } from "@/app/store/slice/authSlice";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-hot-toast";
 import Image from "next/image";
 import Link from "next/link"; // Add Link import
+import { AppDispatch } from "@/app/store/store";
 
 const { Title } = Typography;
 
@@ -18,7 +19,7 @@ interface FormValues {
 
 export default function MainLoginView() {
   const searchParams = useSearchParams();
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const next = searchParams.get("next");
@@ -29,6 +30,7 @@ export default function MainLoginView() {
       const response = await axiosInstance.post("/auth/login", values);
       if (response.status === 200) {
         dispatch(login(response.data));
+        dispatch(getLatestVersionNumber())
         router.push(next || "/dashboard");
       } else {
         toast.error("Error logging in to the system");
