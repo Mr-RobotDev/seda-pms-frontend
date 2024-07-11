@@ -33,6 +33,20 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { isAdmin } = useSelector((state: RootState) => state.authReducer);
+  const [currentVersion, setCurrentVersion] = useState('')
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axiosInstance.get('/changelogs/latest-version')
+        if (response.status === 200) {
+          setCurrentVersion(response.data.version)
+        }
+      } catch (e) {
+        console.log('Error ->', e)
+      }
+    })()
+  }, [])
 
   useEffect(() => {
     setActiveMenu(activeSidebar(page));
@@ -140,7 +154,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
       <div>
         <div className="brand p-5 pb-0">
           <div className=" flex flex-row items-center justify-center gap-5">
-            <div className=" w-24">
+            <div className=" w-20">
               <Image
                 src="/OriginLogo.svg"
                 alt="Website logo"
@@ -149,7 +163,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
                 className=" w-full h-full"
               />
             </div>
-            <div>
+            <div className="">
               <Image
                 src="/new-logo.jpg"
                 alt="Website logo"
@@ -160,8 +174,11 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
               />
             </div>
           </div>
+          <div className=" flex justify-center mt-2">
+            {currentVersion ? <p className=" text-sm">(<strong>Version </strong>{currentVersion})</p>: <p className=" text-sm">-</p>}
+          </div>
         </div>
-        <hr />
+        <hr className=" !my-2" />
         <Menu theme="dark" mode="inline">
           <div className="flex flex-col justify-between h-full w-full">
             <div className="h-full">{renderMenuItems(menuItems)}</div>
