@@ -158,6 +158,7 @@ const SingleAlertDetailsView = ({ alert, device, creatingNewAlert }: SingleAlert
       setLoading(true);
       const dataToSend = { ...formData };
       delete dataToSend.id;
+      delete dataToSend.active;
 
       try {
         const response = await axiosInstance.patch(
