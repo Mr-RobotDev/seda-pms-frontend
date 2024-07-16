@@ -10,6 +10,7 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline'
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState('')
   const [isValidEmail, setIsValidEmail] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -33,6 +34,7 @@ const ForgotPasswordForm = () => {
     }
 
     try {
+      setIsLoading(true)
       const response = await axiosInstance.post('/auth/forgot-password', formData)
       if (response.status === 200) {
         toast.success('Reset instructions sent to your email')
@@ -40,7 +42,10 @@ const ForgotPasswordForm = () => {
         toast.error('Error sending reset instructions')
       }
     } catch (error) {
+      toast.error('Error sending reset instructions')
       console.log(error)
+    } finally{
+      setIsLoading(false)
     }
   }
 
@@ -82,6 +87,7 @@ const ForgotPasswordForm = () => {
             disabled={email === '' || !isValidEmail}
             className='mt-7'
             onClick={handleSubmit}
+            loading={isLoading}
           >
             Send Reset Instructions
           </Button>

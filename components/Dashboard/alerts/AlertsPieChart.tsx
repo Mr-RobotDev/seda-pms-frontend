@@ -51,9 +51,9 @@ const AlertsPieChart: React.FC<AlertsPieChartProps> = ({ data }) => {
         };
 
         if (seriesIndex === 0) {
-          return `<div class="p-2 bg-white border border-gray-300 rounded shadow-md text-sm">${data.activeAlerts.length} Active Alerts</div>`;
+          return `<div class="p-2 bg-white border border-gray-300 rounded shadow-md text-sm">${data.totalActiveAlerts} Active Alerts</div>`;
         } else {
-          return `<div class="p-2 bg-white border border-gray-300 rounded shadow-md text-sm">${data.nonActiveAlerts.length} Non-Active Alerts</div>`;
+          return `<div class="p-2 bg-white border border-gray-300 rounded shadow-md text-sm">${data.totalNonActiveAlerts} Non-Active Alerts</div>`;
         }
       },
     },
