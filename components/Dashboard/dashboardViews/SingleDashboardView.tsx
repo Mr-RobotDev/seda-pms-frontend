@@ -8,6 +8,7 @@ import {
   getDashboardCards,
   getDashboards,
   setCurrentDashboard,
+  setDashboardFromDashboards,
   setTimeFrame,
   updateCard,
 } from "@/app/store/slice/dashboardSlice";
@@ -56,6 +57,10 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
   }, [dispatch, id]);
 
   useEffect(() => {
+    dispatch(setDashboardFromDashboards(id))
+  }, [dashboards, id, dispatch])
+
+  useEffect(() => {
     function handleResize() {
       setIsSmallScreen(window.innerWidth < 500);
     }
@@ -85,7 +90,6 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
           console.log('first called')
           dispatch(setTimeFrame(timeFrame));
         }
-
       }
     }
   }, [id, dispatch]);

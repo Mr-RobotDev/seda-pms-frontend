@@ -75,7 +75,7 @@ export const getDashboard = createAsyncThunk('dashboard/getDashboard', async ({ 
 export const getDashboardCards = createAsyncThunk('dashboard/getDashboardCards', async ({ dashboardId }: { dashboardId: string }) => {
   const response = await axiosInstance.get(`/dashboards/${dashboardId}/cards`)
   if (response.status === 200) {
-    return response.data
+    return {cards: response.data, dashboardId: dashboardId}
   }
 
   throw new Error('Failed to fetch dashboard cards');
@@ -185,6 +185,11 @@ const dashboardSlice = createSlice({
     },
     clearDashboardCards: (state) => {
       state.dashboardCards = []
+    },
+    setDashboardFromDashboards: (state, action) => {
+      if(state.dashboards.length > 0){
+        state.currentDashboard = state.dashboards.find(dashboard => dashboard.id === action.payload)
+      }
     }
   },
   extraReducers: (builder) => {
@@ -217,7 +222,7 @@ const dashboardSlice = createSlice({
         state.isLoading.gettingDashboardCards = true;
       })
       .addCase(getDashboardCards.fulfilled, (state, action) => {
-        state.dashboardCards = action.payload
+        state.dashboardCards = action.payload.cards
         state.isLoading.get = false;
         state.isLoading.gettingDashboardCards = false;
       })
@@ -308,7 +313,8 @@ export const {
   setCurrentDashboard,
   setTimeFrame,
   setFullScreen,
-  clearDashboardCards
+  clearDashboardCards,
+  setDashboardFromDashboards
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;
