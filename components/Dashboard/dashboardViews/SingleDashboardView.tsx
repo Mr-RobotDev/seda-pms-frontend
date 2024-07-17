@@ -217,6 +217,8 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
           }
         </div>
 
+        <AlertsStats dashboardView={true} />
+
         {(dashboardCards.length === 0 && !isLoading.gettingDashboardCards) &&
           <EmptyDashboard />
         }
@@ -226,8 +228,6 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
             <Spin size="large" />
           </div>
         }
-
-        <AlertsStats dashboardView={true} />
 
         {dashboardCards.length !== 0 &&
           <div className="mt-3">

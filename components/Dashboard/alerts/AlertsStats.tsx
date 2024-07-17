@@ -15,11 +15,14 @@ interface AlertsStatsProps {
 const AlertsStats: React.FC<AlertsStatsProps> = ({ dashboardView }) => {
   const [alertStats, setAlertStats] = useState<AlertStatsType>()
   const [loading, setLoading] = useState(false)
-  const thresholds =  dashboardView ? 7 : 10
+  const thresholds = dashboardView ? 7 : 10
 
   useEffect(() => {
     (async () => {
-      setLoading(true)
+      if (!dashboardView) {
+        setLoading(true)
+      }
+
       try {
         const response = await axiosInstance.get('/alerts/stats')
         if (response.status === 200) {
@@ -33,12 +36,12 @@ const AlertsStats: React.FC<AlertsStatsProps> = ({ dashboardView }) => {
         setLoading(false)
       }
     })()
-  }, [])
+  }, [dashboardView])
 
   return (
     <div className=' my-4'>
       <LoadingWrapper loading={loading}>
-        {alertStats ?
+        {alertStats &&
           <div className={`grid grid-cols-1 gap-5 ${dashboardView ? '' : 'md:grid-cols-2'}`}>
             <div className='!h-full'>
               <Card bordered={false} className="criclebox h-full">
@@ -81,12 +84,10 @@ const AlertsStats: React.FC<AlertsStatsProps> = ({ dashboardView }) => {
                 </div>
               </Card>
             </div>
-            { !dashboardView && <Card className=' flex justify-center items-center'>
+            {!dashboardView && <Card className=' flex justify-center items-center'>
               <AlertsPieChart data={alertStats} />
             </Card>}
           </div>
-          :
-          !loading && <div className=' text-center my-4 text-xl '>Could Not Fetch the Alerts Stats</div>
         }
       </LoadingWrapper>
     </div>
