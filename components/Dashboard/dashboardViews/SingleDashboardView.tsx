@@ -26,6 +26,7 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import toast from "react-hot-toast";
 import timeFrames from "@/utils/time_frames";
 import dayjs, { Dayjs } from "dayjs";
+import AlertsStats from "../alerts/AlertsStats";
 
 const { RangePicker } = DatePicker;
 
@@ -225,6 +226,8 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
             <Spin size="large" />
           </div>
         }
+
+        <AlertsStats dashboardView={true} />
 
         {dashboardCards.length !== 0 &&
           <div className="mt-3">

@@ -8,9 +8,14 @@ import LoadingWrapper from '@/components/ui/LoadingWrapper/LoadingWrapper'
 import CountUp from "react-countup";
 import Image from 'next/image'
 
-const AlertsStats = () => {
+interface AlertsStatsProps {
+  dashboardView?: boolean
+}
+
+const AlertsStats: React.FC<AlertsStatsProps> = ({ dashboardView }) => {
   const [alertStats, setAlertStats] = useState<AlertStatsType>()
   const [loading, setLoading] = useState(false)
+  const thresholds =  dashboardView ? 7 : 10
 
   useEffect(() => {
     (async () => {
@@ -34,7 +39,7 @@ const AlertsStats = () => {
     <div className=' my-4'>
       <LoadingWrapper loading={loading}>
         {alertStats ?
-          <div className=' grid grid-cols-1 md:grid-cols-2 gap-5'>
+          <div className={`grid grid-cols-1 gap-5 ${dashboardView ? '' : 'md:grid-cols-2'}`}>
             <div className='!h-full'>
               <Card bordered={false} className="criclebox h-full">
                 <div className="text-2xl flex flex-row justify-between">
@@ -59,9 +64,9 @@ const AlertsStats = () => {
                 <div className="mt-5">
                   {alertStats.activeAlerts.length > 0 ? (
                     <div className="flex flex-wrap md:flex-nowrap gap-0 md:gap-3 w-full overflow-x-auto">
-                      {Array.from({ length: Math.ceil(alertStats.activeAlerts.length / 10) }).map((_, columnIndex) => (
+                      {Array.from({ length: Math.ceil(alertStats.activeAlerts.length / thresholds) }).map((_, columnIndex) => (
                         <ul className=" mb-0" key={columnIndex}>
-                          {alertStats.activeAlerts.slice(columnIndex * 10, (columnIndex + 1) * 10).map((alert) => (
+                          {alertStats.activeAlerts.slice(columnIndex * thresholds, (columnIndex + 1) * thresholds).map((alert) => (
                             <li className="mb-[6px] w-64 flex flex-row gap-2 items-center" key={alert}>
                               <div className=' w-[6px] h-[6px] bg-red-500 rounded-full'></div>
                               {alert}
@@ -75,14 +80,10 @@ const AlertsStats = () => {
                   )}
                 </div>
               </Card>
-
-
-
-
             </div>
-            <Card className=' flex justify-center items-center'>
+            { !dashboardView && <Card className=' flex justify-center items-center'>
               <AlertsPieChart data={alertStats} />
-            </Card>
+            </Card>}
           </div>
           :
           !loading && <div className=' text-center my-4 text-xl '>Could Not Fetch the Alerts Stats</div>
