@@ -19,7 +19,7 @@ const EmptyDashboard: React.FC = () => {
 
   return (
     <>
-      <div className="flex justify-center md:mt-36 mt-24">
+      <div className="flex justify-center">
         <div>
           <div className="flex justify-center">
             <div className="empty-boxes">

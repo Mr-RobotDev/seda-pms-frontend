@@ -174,7 +174,6 @@ const dashboardSlice = createSlice({
       Object.assign(state, initialState);
     },
     setCurrentDashboard: (state, action: PayloadAction<any>) => {
-      state.dashboardCards = []
       state.currentDashboard = action.payload
     },
     setTimeFrame: (state, action) => {
@@ -218,6 +217,7 @@ const dashboardSlice = createSlice({
         state.isLoading.get = false
       })
       .addCase(getDashboardCards.pending, (state, action) => {
+        state.dashboardCards = []
         state.isLoading.get = true
         state.isLoading.gettingDashboardCards = true;
       })

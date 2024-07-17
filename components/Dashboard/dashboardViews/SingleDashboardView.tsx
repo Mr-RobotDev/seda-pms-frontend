@@ -154,7 +154,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
     }
   };
 
-  return (currentSelectedDashboard && !isLoading.list) ? (
+  return (currentSelectedDashboard && !isLoading.list && !isLoading.gettingDashboardCards) ? (
     <>
       <div className=" overflow-hidden py-3">
         <div className=" flex justify-end">
@@ -223,7 +223,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
 
         <AlertsStats dashboardView={true} />
 
-        {(dashboardCards.length === 0 && !isLoading.gettingDashboardCards) &&
+        {(!isLoading.gettingDashboardCards && !isLoading.list && dashboardCards.length === 0 && currentSelectedDashboard) &&
           <EmptyDashboard />
         }
 
