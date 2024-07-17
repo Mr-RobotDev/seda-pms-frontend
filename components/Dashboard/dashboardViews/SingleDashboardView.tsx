@@ -150,7 +150,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
     }
   };
 
-  return currentSelectedDashboard ? (
+  return (currentSelectedDashboard && !isLoading.list) ? (
     <>
       <div className=" overflow-hidden py-3">
         <div className=" flex justify-end">
