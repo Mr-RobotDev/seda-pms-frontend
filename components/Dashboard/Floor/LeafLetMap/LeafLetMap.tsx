@@ -28,7 +28,6 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, fullScreen }) => {
   const [devices, setDevices] = useState<DevicesType[]>([]);
   const [events, setEvents] = useState<DevicesType[]>([]);
   const { token } = useSelector((state: RootState) => state.authReducer);
-  const devicesToRemove = ['664dc3b9339da03801c88133', '664dc3ac339da03801c88131']
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -178,8 +177,7 @@ const LeafLetMap: React.FC<LeafLetMapProps> = ({ diagram, fullScreen }) => {
         style={{ width: "100%", height: "100%", backgroundColor: "white" }}
       >
         <ImageOverlay url={imageUrl} bounds={bounds} />
-
-        {devices.filter(device => !devicesToRemove.includes(device.id)).map((device) => (
+        {devices.map((device) => (
           <Marker
             key={device.oem}
             position={[device.location.lat, device.location.long]}
