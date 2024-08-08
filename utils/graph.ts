@@ -161,7 +161,7 @@ export const calculateMinMaxValues = (data: any, annotations: any, isAlertPresen
       return 13
     }
     if (field === 'humidity') {
-      return 25
+      return 20
     }
     if (type === 'outside' || type === 'lower') {
       return adjustMinMax(Math.min(dataMinMax.dataMin, lower), 10, true);
@@ -178,7 +178,7 @@ export const calculateMinMaxValues = (data: any, annotations: any, isAlertPresen
       return 25
     }
     if (field === 'humidity') {
-      return 75
+      return 80
     }
     if (type === 'outside' || type === 'upper') {
       return adjustMinMax(Math.max(dataMinMax.dataMax, upper), 10, false);
