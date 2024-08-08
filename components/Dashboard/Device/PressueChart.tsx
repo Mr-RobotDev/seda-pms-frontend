@@ -28,13 +28,6 @@ const PressueChart = ({ pressureData }: PressureChartProp) => {
         pressureData,
       },
     ],
-    markers: {
-      size: 4,
-      strokeWidth: 2,
-      hover: {
-        size: 6,
-      },
-    },
     colors: temperatureColors,
   };
 

@@ -93,13 +93,6 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           data,
         },
       ],
-      markers: {
-        size: 4,
-        strokeWidth: 2,
-        hover: {
-          size: 6,
-        },
-      },
       colors: temperatureColors,
     };
 
@@ -154,13 +147,6 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             data,
           },
         ],
-        markers: {
-          size: 4,
-          strokeWidth: 2,
-          hover: {
-            size: 6,
-          },
-        },
         colors: humidityColors,
       }),
       [data, annotations, minValue, maxValue]
@@ -216,13 +202,6 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             data,
           },
         ],
-        markers: {
-          size: 4,
-          strokeWidth: 2,
-          hover: {
-            size: 6,
-          },
-        },
         colors: humidityColors,
       }),
       [data, isAlertPresent, minValue, maxValue]
