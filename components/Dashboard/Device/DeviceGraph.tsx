@@ -37,12 +37,12 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   const [data, setData] = useState<DataPoint[]>([]);
   const [deviceData, setDeviceData] = useState<DevicesType>();
   const [range, setRange] = useState<[Dayjs, Dayjs]>([
-    dayjs().subtract(1, "day").startOf("day"),
+    dayjs().subtract(3, "day").startOf("day"),
     dayjs().endOf("day"),
   ]);
   const [loading, setLoading] = useState<boolean>(true);
   const [graphloading, setGraphLoading] = useState<boolean>(false);
-  const [currentPreset, setCurrentPreset] = useState<string>("Yesterday");
+  const [currentPreset, setCurrentPreset] = useState<string>("Last 3 Days");
 
   const [temperatureData, setTemperatureData] = useState<DataPoint[]>([]);
   const [humidityData, setHumidityData] = useState<DataPoint[]>([]);
@@ -58,6 +58,14 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   }, []);
 
   const TemperatureChart = React.memo(({ data, deviceData }: { data: any, deviceData: any }) => {
+    const isAlertPresent = deviceData?.alerts?.find((alert: any) => alert.field === 'temperature')
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
     const options = {
       ...commonApexOptions,
       chart: {
@@ -69,10 +77,13 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         title: {
           text: "Temperature (°C)",
         },
+        min: minValue,
+        max: maxValue,
         labels: {
           formatter: (value: number) => `${value.toFixed(2)} °C`,
         },
       },
+      annotations: isAlertPresent ? generateAnnotations(isAlertPresent.range) : {},
       xaxis: {
         type: "datetime",
       },
@@ -99,6 +110,15 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   TemperatureChart.displayName = "TemperatureChart";
 
   const HumidityChart = React.memo(({ data, deviceData }: { data: any; deviceData: any }) => {
+    const isAlertPresent = deviceData?.alerts?.find((alert: any) => alert.field === 'relativeHumidity');
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+
     const options = useMemo(
       () => ({
         ...commonApexOptions,
@@ -113,8 +133,11 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           },
           labels: {
             formatter: (value: number) => `${value.toFixed(2)} %`,
-          }
+          },
+          min: minValue,
+          max: maxValue,
         },
+        annotations: annotations,
         xaxis: {
           type: "datetime",
         },
@@ -126,7 +149,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         ],
         colors: humidityColors,
       }),
-      [data]
+      [data, annotations, minValue, maxValue]
     );
 
     return (
@@ -143,6 +166,15 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   HumidityChart.displayName = "HumidityChart";
 
   const PressureChart = React.memo(({ data }: { data: any }) => {
+    const isAlertPresent = deviceData?.alerts?.find((alert) => alert.field === 'pressure')
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+
     const options = useMemo(
       () => ({
         ...commonApexOptions,
@@ -154,10 +186,13 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           title: {
             text: "Pressure (Pa)",
           },
+          min: minValue,
+          max: maxValue,
           labels: {
             formatter: (value: number) => `${value.toFixed(2)} Pa`,
           },
         },
+        annotations: isAlertPresent ? generateAnnotations(isAlertPresent.range) : {},
         xaxis: {
           type: "datetime",
         },
@@ -169,7 +204,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         ],
         colors: humidityColors,
       }),
-      [data]
+      [data, isAlertPresent, minValue, maxValue]
     );
 
     return (

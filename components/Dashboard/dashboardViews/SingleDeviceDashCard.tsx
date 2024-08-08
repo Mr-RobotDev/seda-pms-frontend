@@ -67,6 +67,16 @@ const SingleDeviceDashCard = ({
   }, [data]);
 
   const TemperatureChart = ({ data }: { data: any }) => {
+
+    const isAlertPresent = alerts?.find((alert: any) => alert.field === 'temperature');
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data[0].data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+
     const temperatureOptions: ApexOptions = {
       ...commonApexOptions,
       chart: {
@@ -82,10 +92,13 @@ const SingleDeviceDashCard = ({
         title: {
           text: "Temperature",
         },
+        min: minValue,
+        max: maxValue,
         labels: {
           formatter: (value: number) => `${value.toFixed(2)} °C`,
         },
       },
+      annotations: annotations,
       series: [
         {
           name: "Temperature",
@@ -110,6 +123,16 @@ const SingleDeviceDashCard = ({
   };
 
   const RelativeHumidityChart = ({ data }: { data: any }) => {
+
+    const isAlertPresent = alerts?.find((alert: any) => alert.field === 'relativeHumidity');
+
+    const annotations = useMemo(
+      () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
+      [isAlertPresent]
+    );
+
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data[0].data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+
     const relativeHmidityOptions: ApexOptions = {
       ...commonApexOptions,
       chart: {
@@ -125,10 +148,13 @@ const SingleDeviceDashCard = ({
         title: {
           text: "Relative Humidity",
         },
+        min: minValue,
+        max: maxValue,
         labels: {
           formatter: (value: number) => `${value.toFixed(2)} %`,
         },
       },
+      annotations: annotations,
       series: [
         {
           name: "Relative Humidity",
