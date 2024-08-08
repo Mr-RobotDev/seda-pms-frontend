@@ -73,27 +73,18 @@ export const generateAnnotations = (range: alertRange | undefined): Annotation =
           y2: upper,
           borderColor: 'rgba(0,0,0,0)',
           fillColor: 'rgba(0,0,0,0)',
-          label: {
-            text: ''
-          }
         },
         {
           y: -Infinity,
           y2: lower,
           borderColor: '#FF4560',
           fillColor: 'rgba(255, 69, 96, 0.2)',
-          label: {
-            text: `Below ${lower}`
-          }
         },
         {
           y: upper,
           y2: Infinity,
           borderColor: '#FF4560',
           fillColor: 'rgba(255, 69, 96, 0.2)',
-          label: {
-            text: `Above ${upper}`
-          }
         }
       ]
     };
@@ -131,9 +122,6 @@ export const generateAnnotations = (range: alertRange | undefined): Annotation =
           y2: Infinity,
           borderColor: '#FF4560',
           fillColor: 'rgba(255, 69, 96, 0.2)',
-          label: {
-            text: `Above ${upper}`
-          }
         }
       ]
     };
@@ -145,9 +133,6 @@ export const generateAnnotations = (range: alertRange | undefined): Annotation =
           y2: lower,
           borderColor: '#FF4560',
           fillColor: 'rgba(255, 69, 96, 0.2)',
-          label: {
-            text: `Below ${lower}`
-          }
         }
       ]
     };
