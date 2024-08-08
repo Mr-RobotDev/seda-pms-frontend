@@ -37,12 +37,12 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   const [data, setData] = useState<DataPoint[]>([]);
   const [deviceData, setDeviceData] = useState<DevicesType>();
   const [range, setRange] = useState<[Dayjs, Dayjs]>([
-    dayjs().subtract(3, "day").startOf("day"),
+    dayjs().subtract(1, "day").startOf("day"),
     dayjs().endOf("day"),
   ]);
   const [loading, setLoading] = useState<boolean>(true);
   const [graphloading, setGraphLoading] = useState<boolean>(false);
-  const [currentPreset, setCurrentPreset] = useState<string>("Last 3 Days");
+  const [currentPreset, setCurrentPreset] = useState<string>("Yesterday");
 
   const [temperatureData, setTemperatureData] = useState<DataPoint[]>([]);
   const [humidityData, setHumidityData] = useState<DataPoint[]>([]);
