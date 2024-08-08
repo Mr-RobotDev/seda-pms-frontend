@@ -62,9 +62,10 @@ const ProfileView = () => {
 
     try {
       setPasswordChangeLoading(true);
+      const {confirmpassword, ...changedPassword} = password
       const response = await axiosInstance.patch(
         "/users/update-password",
-        password
+        changedPassword
       );
       if (response.status === 200) {
         toast.success("Password updated Successfully");
