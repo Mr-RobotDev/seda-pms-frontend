@@ -75,7 +75,7 @@ const SingleDeviceDashCard = ({
       [isAlertPresent]
     );
 
-    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data[0].data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data[0].data, annotations, isAlertPresent, 'temperature'), [data, annotations, isAlertPresent]);
 
     const temperatureOptions: ApexOptions = {
       ...commonApexOptions,
@@ -131,7 +131,7 @@ const SingleDeviceDashCard = ({
       [isAlertPresent]
     );
 
-    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data[0].data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data[0].data, annotations, isAlertPresent, 'humidity'), [data, annotations, isAlertPresent]);
 
     const relativeHmidityOptions: ApexOptions = {
       ...commonApexOptions,

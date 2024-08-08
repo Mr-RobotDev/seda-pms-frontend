@@ -65,7 +65,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       [isAlertPresent]
     );
 
-    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent, 'temperature'), [data, annotations, isAlertPresent]);
     const options = {
       ...commonApexOptions,
       chart: {
@@ -117,7 +117,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       [isAlertPresent]
     );
 
-    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent, 'humidity'), [data, annotations, isAlertPresent]);
 
     const options = useMemo(
       () => ({
@@ -173,7 +173,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
       [isAlertPresent]
     );
 
-    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent), [data, annotations, isAlertPresent]);
+    const { minValue, maxValue } = useMemo(() => calculateMinMaxValues(data, annotations, isAlertPresent, 'pressure'), [data, annotations, isAlertPresent]);
 
     const options = useMemo(
       () => ({
