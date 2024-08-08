@@ -97,7 +97,7 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
     {
       key: "12",
       title: "Users",
-      url: "/dashboard/users",
+      url: "/dashboard/users?tab=active",
       menuKey: "users",
       icon: UserIcon,
       adminOnly: true,

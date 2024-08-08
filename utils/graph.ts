@@ -45,13 +45,6 @@ export const commonApexOptions: ApexOptions = {
     width: 2,
     curve: "smooth",
   },
-  markers: {
-    size: 3,
-    strokeWidth: 2,
-    hover: {
-      size: 4,
-    },
-  }
 }
 // Define the Annotation type
 interface Annotation {
