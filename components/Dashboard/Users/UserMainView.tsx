@@ -9,7 +9,7 @@ import {
   Tag,
   Form,
   Input,
-  Select,
+  Tabs,
   Card,
 } from "antd";
 import axiosInstance from "@/lib/axiosInstance";
@@ -59,14 +59,15 @@ const UserMainView = () => {
   const { user: loggedInUser } = useSelector((state: RootState) => state.authReducer);
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(8);
+  const [pageSize, setPageSize] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
+  const [activeTab, setActiveTab] = useState("active");
 
-  const fetchUsers = useCallback(async (page: number, limit: number) => {
+  const fetchUsers = useCallback(async (page: number, limit: number, isActive: boolean) => {
     try {
       setLoading(true);
       const response = await axiosInstance.get("/users", {
-        params: { page, limit },
+        params: { page, limit, isActive },
       });
       if (response.status === 200) {
         setUsers(response.data.results);
@@ -90,36 +91,48 @@ const UserMainView = () => {
   }, [loggedInUser, router]);
 
   useEffect(() => {
-    fetchUsers(currentPage, pageSize);
+    const queryParams = new URLSearchParams(window.location.search);
+    const tab = queryParams.get("tab") || "active";
+    setActiveTab(tab);
+    fetchUsers(currentPage, pageSize, tab === "active");
   }, [fetchUsers, currentPage, pageSize]);
 
   const handleTableChange = (newPagination: any) => {
     setCurrentPage(newPagination);
-    setPageSize(8);
+    setPageSize(10);
+  };
+
+  const handleTabChange = (key: string) => {
+    setActiveTab(key);
+
+    const queryParams = new URLSearchParams();
+    queryParams.append('tab', key);
+
+    const queryString = queryParams.toString();
+    router.push(`/dashboard/users?${queryString}`);
+    fetchUsers(1, pageSize, key === "active");
   };
 
   const toggleStatus = async (id: string) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await axiosInstance.patch(`/users/${id}/toggle-active`)
+      const response = await axiosInstance.patch(`/users/${id}/toggle-active`);
       if (response.status === 200) {
-        toast.success('User status updated successfully')
+        toast.success("User status updated successfully");
         const updatedUsers = users.map((user) =>
           user.id === id ? { ...user, isActive: !user.isActive } : user
         );
         setUsers(updatedUsers);
       } else {
-        toast.error('Error, updating the user status')
+        toast.error("Error, updating the user status");
       }
     } catch (error) {
-      console.log(error)
-      toast.error('Error, updating the user status')
+      console.log(error);
+      toast.error("Error, updating the user status");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-
-    console.log(id)
-  }
+  };
 
   const columns: TableProps<any>["columns"] = [
     {
@@ -291,20 +304,37 @@ const UserMainView = () => {
           </div>
         </div>
 
-        <div className=" mt-6">
-          <Table
-            columns={columns}
-            dataSource={users}
-            scroll={{ x: 500 }}
-            loading={loading}
-            pagination={{
-              current: currentPage,
-              pageSize: pageSize,
-              total: totalItems,
-              onChange: handleTableChange,
-            }}
-          />
-        </div>
+        <Tabs activeKey={activeTab} onChange={handleTabChange}>
+          <Tabs.TabPane tab="Active Users" key="active">
+            <Table
+              columns={columns}
+              dataSource={users}
+              scroll={{ x: 500 }}
+              loading={loading}
+              pagination={{
+                current: currentPage,
+                pageSize: pageSize,
+                total: totalItems,
+                onChange: handleTableChange,
+              }}
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Inactive Users" key="inactive">
+            <Table
+              columns={columns}
+              dataSource={users}
+              scroll={{ x: 500 }}
+              loading={loading}
+              pagination={{
+                current: currentPage,
+                pageSize: pageSize,
+                total: totalItems,
+                onChange: handleTableChange,
+              }}
+            />
+          </Tabs.TabPane>
+        </Tabs>
+
         <Modal
           title="Create New User"
           open={isModalOpen}
