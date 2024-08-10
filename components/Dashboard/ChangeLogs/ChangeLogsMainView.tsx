@@ -15,13 +15,13 @@ import TextArea from "antd/es/input/TextArea";
 import LoadingWrapper from "@/components/ui/LoadingWrapper/LoadingWrapper";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const { RangePicker } = DatePicker;
 
 interface ChangeLogs {
   version: string;
-  change: string
+  change: string;
   createdAt: string;
   id: string;
 }
@@ -34,23 +34,31 @@ interface ChangeLogFormData {
 const defaultState: ChangeLogFormData = {
   version: '',
   change: '',
-}
+};
 
 const ChangeLogsMainView = () => {
-  const [range, setRange] = useState<[Dayjs, Dayjs]>([
-    dayjs().subtract(1, 'month').startOf('day'), // Same date of the previous month
-    dayjs().startOf('day') // Current date
-  ]);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const fromParam = searchParams.get("from");
+  const toParam = searchParams.get("to");
+
+  const [range, setRange] = useState<[Dayjs, Dayjs]>(() => {
+    const fromDate = fromParam ? dayjs(fromParam) : dayjs().subtract(1, 'month').startOf('day');
+    const toDate = toParam ? dayjs(toParam) : dayjs().startOf('day');
+    return [fromDate, toDate];
+  });
+
   const [activityLogs, setActivityLogs] = useState<ChangeLogs[]>([]);
-  const { isAdmin } = useSelector((state: RootState) => state.authReducer)
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer);
   const [loading, setLoading] = useState<boolean>(false);
   const [createLoading, setCreateLoading] = useState<boolean>(false);
   const [error, setError] = useState({
     version: '',
     change: '',
     isValid: true,
-  })
-  const router = useRouter();
+  });
+
   const initialFetchRef = useRef(true);
   const [formData, setFormData] = useState<ChangeLogFormData>(defaultState);
 
@@ -63,9 +71,20 @@ const ChangeLogsMainView = () => {
   useEffect(() => {
     if (!isAdmin) {
       router.push('/dashboard');
-      toast.error('Cannot Access this page')
+      toast.error('Cannot Access this page');
     }
-  }, [isAdmin, router])
+  }, [isAdmin, router]);
+
+  useEffect(() => {
+    // On component mount, if from and to are not in the URL, add them
+    if (!fromParam || !toParam) {
+      const from = range[0].format('YYYY-MM-DD');
+      const to = range[1].format('YYYY-MM-DD');
+      const newUrl = `/dashboard/change-logs?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+
+      router.replace(newUrl); // Using replace so it doesn't add another entry in the history
+    }
+  }, [fromParam, toParam, range, router]);
 
   const handleCreateNewLog = async () => {
     const versionRegex = /^\d+\.\d+\.\d+$/;
@@ -88,18 +107,17 @@ const ChangeLogsMainView = () => {
     setError(validationErrors);
 
     if (validationErrors.isValid) {
-      setCreateLoading(true)
+      setCreateLoading(true);
       try {
-        const response = await axiosInstance.post(`/changelogs`, formData)
+        const response = await axiosInstance.post(`/changelogs`, formData);
         if (response.status === 200) {
           toast.success("Change log created successfully");
-          console.log(activityLogs)
 
-          const data = [...activityLogs, response.data]
+          const data = [...activityLogs, response.data];
           const sortedData = data.sort(
             (a: any, b: any) => {
               return (
-                new Date(b.createdAt).getTime()-
+                new Date(b.createdAt).getTime() -
                 new Date(a.createdAt).getTime()
               );
             }
@@ -108,14 +126,13 @@ const ChangeLogsMainView = () => {
           setActivityLogs(sortedData);
         }
       } catch (error) {
-        console.log('Error->', error)
+        console.log('Error->', error);
       } finally {
         setIsModalOpen(false);
-        setFormData(defaultState)
-        setCreateLoading(false)
+        setFormData(defaultState);
+        setCreateLoading(false);
       }
     }
-
   };
 
   const handleCancel = () => {
@@ -136,13 +153,13 @@ const ChangeLogsMainView = () => {
           const sortedData = response.data.sort(
             (a: any, b: any) => {
               return (
-                new Date(b.createdAt).getTime()-
+                new Date(b.createdAt).getTime() -
                 new Date(a.createdAt).getTime()
               );
             }
           );
 
-          setActivityLogs(sortedData)
+          setActivityLogs(sortedData);
         } else {
           toast.error("Error fetching the activity logs");
         }
@@ -160,6 +177,12 @@ const ChangeLogsMainView = () => {
       setRange(dates);
       setActivityLogs([]);
       initialFetchRef.current = true;
+
+      const from = dates[0].format('YYYY-MM-DD');
+      const to = dates[1].format('YYYY-MM-DD');
+      const newUrl = `/dashboard/change-logs?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+
+      router.push(newUrl);
     } else {
       toast.error("Date Range cannot be empty");
     }
@@ -205,7 +228,7 @@ const ChangeLogsMainView = () => {
       return (
         <div key={index}>
           {showDateTag && (
-            <div className="my-4 flex items-center">
+            <div className="my-2 flex items-center">
               <div className="flex-grow border-t border-gray-300"></div>
               <Tag color="blue" className="!text-base mx-4">
                 {dateTag}
@@ -213,7 +236,7 @@ const ChangeLogsMainView = () => {
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
           )}
-          <div className="p-3 mb-3 rounded-lg">
+          <div className="py-1 px-3 mb-3 rounded-lg">
             <div className="flex flex-row items-start gap-1">
               <div>
                 <div
