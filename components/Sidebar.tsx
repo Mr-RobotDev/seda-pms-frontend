@@ -74,6 +74,14 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
       icon: BellAlertIcon,
     },
     {
+      key: "14",
+      title: "Alert Logs",
+      url: "/dashboard/alert-logs",
+      menuKey: "alert-logs",
+      icon: BookOpenIcon,
+      adminOnly: true,
+    },
+    {
       key: "9",
       title: "Data Sources",
       url: "/dashboard/data-sources",
