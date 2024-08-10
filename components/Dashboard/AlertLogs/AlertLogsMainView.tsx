@@ -228,13 +228,12 @@ const AlertLogsMainView = () => {
       <Modal title="Alert Notes" open={isModalOpen} onOk={handleUpdateLogNotes} okText="Update" onCancel={handleCancel}>
         <LoadingWrapper loading={loading}>
           <div>
-            {/* <p className=" font-semibold mb-1">Alert Notes</p> */}
             <TextArea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={10}
               className=" !text-black !font-medium"
-              placeholder="Describe the changes made in this version"
+              placeholder="Add Notes for Alert Logs"
               name="change"
             />
           </div>
