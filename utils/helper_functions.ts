@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 export const activeSidebar = (path: string): string => {
   const routes = [
     { name: 'floor', path: '/dashboard/floor' },
+    { name: 'alert-logs', path: '/dashboard/alert-logs' },
     { name: 'users', path: '/dashboard/users' },
     { name: 'devices', path: '/dashboard/devices' },
     { name: 'alerts', path: '/dashboard/alerts' },
