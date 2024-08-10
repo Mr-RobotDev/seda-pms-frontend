@@ -38,8 +38,8 @@ const defaultState: ChangeLogFormData = {
 
 const ChangeLogsMainView = () => {
   const [range, setRange] = useState<[Dayjs, Dayjs]>([
-    dayjs().subtract(1, 'day').startOf('day'),
-    dayjs().startOf('day').add(1, 'day').subtract(1, 'millisecond'),
+    dayjs().subtract(1, 'month').startOf('day'), // Same date of the previous month
+    dayjs().startOf('day') // Current date
   ]);
   const [activityLogs, setActivityLogs] = useState<ChangeLogs[]>([]);
   const { isAdmin } = useSelector((state: RootState) => state.authReducer)
@@ -93,7 +93,19 @@ const ChangeLogsMainView = () => {
         const response = await axiosInstance.post(`/changelogs`, formData)
         if (response.status === 200) {
           toast.success("Change log created successfully");
-          setActivityLogs([response.data, ...activityLogs]);
+          console.log(activityLogs)
+
+          const data = [...activityLogs, response.data]
+          const sortedData = data.sort(
+            (a: any, b: any) => {
+              return (
+                new Date(b.createdAt).getTime()-
+                new Date(a.createdAt).getTime()
+              );
+            }
+          );
+
+          setActivityLogs(sortedData);
         }
       } catch (error) {
         console.log('Error->', error)
@@ -121,8 +133,16 @@ const ChangeLogsMainView = () => {
           },
         });
         if (response.status === 200) {
-          console.log(response.data)
-          setActivityLogs(response.data)
+          const sortedData = response.data.sort(
+            (a: any, b: any) => {
+              return (
+                new Date(b.createdAt).getTime()-
+                new Date(a.createdAt).getTime()
+              );
+            }
+          );
+
+          setActivityLogs(sortedData)
         } else {
           toast.error("Error fetching the activity logs");
         }
