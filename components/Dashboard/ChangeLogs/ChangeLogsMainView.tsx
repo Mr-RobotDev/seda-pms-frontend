@@ -255,10 +255,8 @@ const ChangeLogsMainView = () => {
                   </p>
                   <p className="!mb-0">
                     at{" "}
-                    <strong>{`${formatDateTime(item.createdAt).formattedDate
-                      }`}</strong>{" "}
-                    <span>{`${formatDateTime(item.createdAt).formattedTime
-                      }`}</span>
+                    <strong>{`${formatDateTime(item.createdAt).formattedTime
+                      }`}</strong>
                   </p>
                 </div>
               </div>

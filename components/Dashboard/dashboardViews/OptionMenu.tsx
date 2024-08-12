@@ -1,5 +1,5 @@
 import { AppDispatch, RootState } from "@/app/store/store";
-import { Button, Modal, Popover } from "antd";
+import { Modal, Popover } from "antd";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,12 +7,13 @@ import {
   PencilSquareIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { deleteCard, updateCard, updateCardDevices } from "@/app/store/slice/dashboardSlice";
+import { deleteCard, updateCardDevices } from "@/app/store/slice/dashboardSlice";
 import DevicesSelector from "../Modals/DeviceSelector";
 import { DashboardCardType } from "@/type";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import LoadingWrapper from "@/components/ui/LoadingWrapper/LoadingWrapper";
+import { RiExchangeBoxLine } from "react-icons/ri";
 
 interface OptionMenuProps {
   setIsRenaming: Dispatch<SetStateAction<boolean>>;
@@ -63,7 +64,7 @@ const OptionsMenu = ({ card, setIsRenaming }: OptionMenuProps) => {
       <Popover
         getPopupContainer={(triggerNode) => triggerNode.parentNode as HTMLElement}
         content={
-          <div className="flex flex-col">
+          <div className="flex flex-col w-48">
             <div
               className="flex gap-2 p-1 hover:bg-hover-primary transition-all ease-in-out duration-300 rounded-md cursor-pointer hover:bg-blue-50"
               onClick={() => {
@@ -74,7 +75,7 @@ const OptionsMenu = ({ card, setIsRenaming }: OptionMenuProps) => {
               <span className="flex flex-col justify-center">
                 <PencilSquareIcon width={15} />
               </span>
-              <span className="!text-xs font-medium">Rename Card</span>
+              <span className="text-[14px] font-medium">Rename Card</span>
             </div>
             { card.field !== 'temperature,relativeHumidity' && <div
               className="flex gap-2 p-1 hover:bg-hover-primary transition-all ease-in-out duration-300 rounded-md cursor-pointer hover:bg-blue-50"
@@ -84,9 +85,9 @@ const OptionsMenu = ({ card, setIsRenaming }: OptionMenuProps) => {
               }}
             >
               <span className="flex flex-col justify-center">
-                <PencilSquareIcon width={15} />
+                <RiExchangeBoxLine width={15} />
               </span>
-              <span className="!text-xs font-medium">Update Devices</span>
+              <span className="text-[14px] font-medium">Update Devices</span>
             </div>}
             <div
               className="bg-slate-300 dark:bg-slate-700 my-2"
@@ -103,12 +104,12 @@ const OptionsMenu = ({ card, setIsRenaming }: OptionMenuProps) => {
               <span className="flex flex-col justify-center">
                 <XMarkIcon width={15} />
               </span>
-              <span className="!text-xs font-medium">Remove Card</span>
+              <span className="text-[14px] font-medium">Remove Card</span>
             </div>
           </div>
         }
         trigger="click"
-        placement="left"
+        placement="leftTop"
         open={visible}
         onOpenChange={(visible) => setVisible(visible)}
       >
