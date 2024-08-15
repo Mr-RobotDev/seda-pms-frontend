@@ -156,8 +156,6 @@ export const calculateMinMaxValues = (data: any, annotations: any, isAlertPresen
   const minValue = () => {
     if (annotations.yaxis.length === 0) return adjustMinMax(dataMinMax.dataMin, 10, true);
 
-    console.log('annotations->', annotations.yaxis[0].y)
-    console.log('annotations->', annotations.yaxis[0].y2)
     const { lower, upper, type } = isAlertPresent.range as alertRange;
     if (field === 'temperature') {
       return 13
@@ -169,10 +167,8 @@ export const calculateMinMaxValues = (data: any, annotations: any, isAlertPresen
       return annotations.yaxis[0].y - 10
     }
     if (type === 'outside' || type === 'lower') {
-      console.log(dataMinMax.dataMin)
       return adjustMinMax(Math.min(dataMinMax.dataMin, lower), 10, true);
     } else {
-      console.log(dataMinMax.dataMin)
       return adjustMinMax(dataMinMax.dataMin, 10, true);
     }
   };
@@ -193,8 +189,6 @@ export const calculateMinMaxValues = (data: any, annotations: any, isAlertPresen
     }
     
     if (type === 'outside' || type === 'upper') {
-      console.log(dataMinMax.dataMax)
-      console.log(adjustMinMax(Math.max(dataMinMax.dataMax, upper), 10, false))
       return adjustMinMax(Math.max(dataMinMax.dataMax, upper), 10, false);
     } else {
       return adjustMinMax(dataMinMax.dataMax, 10, false);
