@@ -165,8 +165,9 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
 
   HumidityChart.displayName = "HumidityChart";
 
+  
   const PressureChart = React.memo(({ data }: { data: any }) => {
-    const isAlertPresent = deviceData?.alerts?.find((alert) => alert.field === 'pressure')
+    const isAlertPresent = deviceData?.alerts?.find((alert) => alert.field === 'pressure');
 
     const annotations = useMemo(
       () => (isAlertPresent ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }),
@@ -196,6 +197,27 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         xaxis: {
           type: "datetime",
         },
+        tooltip: {
+          x: {
+            formatter: function (value: any) {
+              const date = new Date(value);
+              
+              // Adjust the time to match x-axis
+              date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+
+              const formattedDate = date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+              });
+              const formattedTime = date.toLocaleTimeString('en-GB', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+              });
+              return `${formattedDate} ${formattedTime}`; // '15 Aug 04:00'
+            }
+          }
+        },
         series: [
           {
             name: "Pressure",
@@ -219,6 +241,8 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
   });
 
   PressureChart.displayName = "PressureChart";
+
+
 
 
   const fetchData = useCallback(
