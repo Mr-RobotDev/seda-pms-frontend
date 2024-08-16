@@ -24,16 +24,8 @@ const MainDashboardView = () => {
     dispatch(getDashboards());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (dashboards.length > 0) {
-  //     setFirstDashboard(dashboards[0]);
-  //     dispatch(setCurrentDashboard(dashboards[0]));
-  //   }
-  // }, [dashboards, dispatch]);
-
   useEffect(() => {
     if (currentSelectedDashboard.id !== "") {
-      console.log('called!!!')
       router.push(`/dashboard/${currentSelectedDashboard.id}`);
       dispatch(getDashboardCards({ dashboardId: currentSelectedDashboard.id }));
     }

@@ -24,11 +24,6 @@ const ReportsMainView = () => {
     dispatch(getDashboards());
   }, [dispatch]);
 
-  useEffect(() => {
-    console.log(currentDashboard)
-  }, [currentDashboard])
-
-
   return (
     <div>
       <>

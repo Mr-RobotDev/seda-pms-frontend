@@ -19,6 +19,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { MdOutlineDashboard } from "react-icons/md";
 import LoadingWrapper from "@/components/ui/LoadingWrapper/LoadingWrapper";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 interface DashboardTypeProps {
   dashboardsList: DashboardType[];
@@ -59,10 +60,11 @@ const DashboardMenu = ({
     if (currentDashboard.id === dashboard.id) {
       return;
     }
-    dispatch(setCurrentDashboard(dashboard));
-    if (routingFunctionality) {
-      router.push(`/dashboard/${dashboard.id}`);
+
+    if(!routingFunctionality){
+      dispatch(setCurrentDashboard(dashboard));
     }
+
     setVisible(false);
   };
 
@@ -104,7 +106,7 @@ const DashboardMenu = ({
         const resultAction = await dispatch(updateDashboard({ dashboardId: editingId, dashboardName: editedName }));
         if (updateDashboard.fulfilled.match(resultAction)) {
           toast.success('Dashboard updated successfully')
-        }else{
+        } else {
           toast.error('Error while updating the dashboard')
         }
       } catch (error) {
@@ -150,28 +152,29 @@ const DashboardMenu = ({
                   </div>
                 ) : (
                   <>
-                    <div
-                      onClick={() => setDashboard(dashboard)}
-                      className="p-2 flex-1 rounded-md cursor-pointer hover:bg-hover-primary flex flex-col justify-between gap-1 transition-all ease-in-out duration-300 hover:bg-gray-200"
-                    >
-                      <div className=" flex flex-row gap-2">
-                        <span className="flex flex-col justify-start mt-2 w-[6px]">
-                          <span
-                            className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${currentDashboard.id === dashboard.id ? "visible" : "hidden"}`}
-                          ></span>
-                        </span>
-                        <div className=" flex flex-col gap-1">
-                          <span className="!text-sm !text-black">
-                            {dashboard.name}
+                    <Link href={`${(routingFunctionality && currentDashboard.id !== dashboard.id ) ? `/dashboard/${dashboard.id}` : ''}`}>
+                      <div
+                        onClick={() => setDashboard(dashboard)}
+                        className="p-2 flex-1 rounded-md cursor-pointer hover:bg-hover-primary flex flex-col justify-between gap-1 transition-all ease-in-out duration-300 hover:bg-gray-200"
+                      >
+                        <div className=" flex flex-row gap-2">
+                          <span className="flex flex-col justify-start mt-2 w-[6px]">
+                            <span
+                              className={`w-[6px] h-[6px] rounded-[50%] bg-blue-600 ${currentDashboard.id === dashboard.id ? "visible" : "hidden"}`}
+                            ></span>
                           </span>
-                          <span className="text-xs text-slate-400 dark:text-slate-400">
-                            {`${dashboard.devicesCount || "0"} sensors - ${dashboard.cardsCount || "0"
-                              } cards`}
-                          </span>
+                          <div className=" flex flex-col gap-1">
+                            <span className="!text-sm !text-black">
+                              {dashboard.name}
+                            </span>
+                            <span className="text-xs text-slate-400 dark:text-slate-400">
+                              {`${dashboard.devicesCount || "0"} sensors - ${dashboard.cardsCount || "0"
+                                } cards`}
+                            </span>
+                          </div>
                         </div>
                       </div>
-
-                    </div>
+                    </Link>
 
                     {isAdmin && routingFunctionality && (
                       <>
