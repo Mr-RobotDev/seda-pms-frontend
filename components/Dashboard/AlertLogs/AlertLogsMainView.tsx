@@ -80,36 +80,6 @@ const AlertLogsMainView = () => {
     }
   };
 
-  const handleAlertLogAccepted = async (id: string, accepted: boolean) => {
-    if (accepted) {
-      return;
-    }
-
-    try {
-      setLoading(true)
-      const response = await axiosInstance.patch(`/alertLogs/${id}/accept`)
-
-      if (response.status === 200) {
-        toast.success("Log Accepted");
-        
-        const responseNote = response.data
-        setAlertLogs((prevState) =>
-          prevState.map((item) =>
-            item.id === id
-              ? { ...item, ...responseNote, accepted: true }
-              : item
-          )
-        );
-      }
-
-    } catch (error) {
-      console.log(error)
-      toast.error("Error accepting the log");
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const handleUpdateLogNotes = async () => {
     try {
       setLoading(true)
@@ -146,15 +116,6 @@ const AlertLogsMainView = () => {
         const formatedDateTime = formatDateTime(createdAt)
         return (
           <p className='!text-black'>{formatedDateTime.formattedDate} {formatedDateTime.formattedTime}</p>
-        )
-      },
-    },
-    {
-      title: "ACCEPTED",
-      dataIndex: "accepted",
-      render: (_, { id, accepted }) => {
-        return (
-          <Checkbox className='ml-3' onChange={() => handleAlertLogAccepted(id, accepted)} disabled={accepted} checked={accepted} />
         )
       },
     },

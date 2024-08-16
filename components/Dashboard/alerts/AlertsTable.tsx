@@ -1,13 +1,14 @@
 'use client'
 import { scheduletypeOptions, timeFrameOptions } from '@/utils/form';
 import { CheckIcon, TrashIcon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Image, Table, TableProps } from 'antd';
+import { Checkbox, Image, Table, TableProps } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
 import { AlertDataType } from '@/type';
 import axiosInstance from '@/lib/axiosInstance';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
+import toast from 'react-hot-toast';
 
 const AlertsTable = () => {
 
@@ -33,6 +34,38 @@ const AlertsTable = () => {
       }
     } catch (err) {
       console.log('Error->', err);
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAlertLogAccepted = async (e: any, id: string, accepted: boolean) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (accepted) {
+      return;
+    }
+
+    try {
+      setLoading(true)
+      const response = await axiosInstance.patch(`/alerts/${id}/accept`)
+
+      if (response.status === 200) {
+        toast.success("Log Accepted");
+
+        const responseNote = response.data
+        setAlerts((prevState) =>
+          prevState.map((item) =>
+            item.id === id
+              ? { ...item, ...responseNote, accepted: true }
+              : item
+          )
+        );
+      }
+
+    } catch (error) {
+      console.log(error)
+      toast.error("Error accepting the log");
     } finally {
       setLoading(false)
     }
@@ -101,23 +134,33 @@ const AlertsTable = () => {
   ];
 
   if (isAdmin) {
-    columns.push({
-      title: "ACTIONS",
-      key: "actions",
-      dataIndex: "aactions",
-      render: (_, { id }) => {
-        return (
-          <div className=" flex flex-row gap-4 items-center">
-            <p
-              onClick={(e) => handleDeleteAlert(e, id)}
-              className="  !text-red-400 hover:!text-red-600 duration-200 transition-all transform cursor-pointer flex flex-row gap-2 items-center"
-            >
-              <TrashIcon width={20} />
-            </p>
-          </div>
-        );
+    columns.push(
+      {
+        title: "ACCEPTED",
+        dataIndex: "accepted",
+        render: (_, { id, accepted }) => {
+          return (
+            <Checkbox className='ml-3' onClick={e => e.stopPropagation()} onChange={(e) => handleAlertLogAccepted(e, id, accepted)} disabled={accepted} checked={accepted} />
+          )
+        },
       },
-    },)
+      {
+        title: "ACTIONS",
+        key: "actions",
+        dataIndex: "aactions",
+        render: (_, { id }) => {
+          return (
+            <div className=" flex flex-row gap-4 items-center">
+              <p
+                onClick={(e) => handleDeleteAlert(e, id)}
+                className="  !text-red-400 hover:!text-red-600 duration-200 transition-all transform cursor-pointer flex flex-row gap-2 items-center"
+              >
+                <TrashIcon width={20} />
+              </p>
+            </div>
+          );
+        },
+      },)
   }
 
   const fetchAlerts = useCallback(async (page: number, limit: number) => {
@@ -126,7 +169,7 @@ const AlertsTable = () => {
       const response = await axiosInstance.get(`/alerts`, {
         params: { page, limit },
       })
-      
+
       setAlerts(response.data.results)
       setCurrentPage(response.data.pagination.page);
       setPageSize(response.data.pagination.limit);
