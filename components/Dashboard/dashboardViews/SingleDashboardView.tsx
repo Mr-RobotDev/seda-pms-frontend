@@ -85,9 +85,7 @@ const SingleDashboardView = ({ id }: singleDashboardViewProps) => {
         timeFrame.startDate = from;
         timeFrame.endDate = to;
 
-        console.log('key->', key)
         if (key !== 'CUSTOM') {
-          console.log('first called')
           dispatch(setTimeFrame(timeFrame));
         }
       }

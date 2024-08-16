@@ -41,6 +41,27 @@ export const commonApexOptions: ApexOptions = {
       },
     },
   },
+  tooltip: {
+    x: {
+      formatter: function (value: any) {
+        const date = new Date(value);
+        
+        // Adjust the time to match x-axis
+        date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+
+        const formattedDate = date.toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+        });
+        const formattedTime = date.toLocaleTimeString('en-GB', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        });
+        return `${formattedDate} ${formattedTime}`; // '15 Aug 04:00'
+      }
+    }
+  },
   stroke: {
     width: 2,
     curve: "smooth",

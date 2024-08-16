@@ -1,15 +1,19 @@
 import dynamic from "next/dynamic";
 import React from "react";
 import { ApexOptions } from "apexcharts";
-import { EventsMap, Event } from "@/type";
+import { EventsMap, Event, alertRange } from "@/type";
 import { SeriesType } from "@/type";
-import { commonApexOptions } from "@/utils/graph";
+import { calculateMinMaxValues, commonApexOptions, generateAnnotations } from "@/utils/graph";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 type TemperatureChartProps = {
   data: EventsMap;
   eventTypes: string;
+  alerts: {
+    field: string,
+    range: alertRange
+  }[] | undefined;
 };
 
 const valueToGet = (value: string, event: Event) => {
@@ -41,8 +45,13 @@ const transformDataForChart = (
 const TemperatureChart: React.FC<TemperatureChartProps> = ({
   data,
   eventTypes,
+  alerts
 }) => {
   const seriesData = transformDataForChart(data, eventTypes);
+  const isAlertPresent = alerts?.find((alert: any) => alert.field === eventTypes);
+
+  const annotations = (isAlertPresent && Object.keys(data).length === 1) ? generateAnnotations(isAlertPresent.range) : { yaxis: [] }
+  const { minValue, maxValue } = calculateMinMaxValues(seriesData[0].data, annotations, isAlertPresent, eventTypes);
 
   const options: ApexOptions = {
     ...commonApexOptions,
@@ -56,18 +65,21 @@ const TemperatureChart: React.FC<TemperatureChartProps> = ({
     },
     yaxis: {
       forceNiceScale: true,
+      min: Object.keys(data).length === 1 ? minValue : undefined,
+      max: Object.keys(data).length === 1 ? maxValue : undefined,
       title: {
         text:
           eventTypes === "temperature"
             ? "Temperature (°C)"
-            : eventTypes === 'pressure' 
-            ? 'Pressure'
-            : "Relative Humidity (%)",
+            : eventTypes === 'pressure'
+              ? 'Pressure'
+              : "Relative Humidity (%)",
       },
       labels: {
         formatter: (value: number) => `${value.toFixed(2)}`,
       },
     },
+    annotations: annotations,
   };
 
   return (
