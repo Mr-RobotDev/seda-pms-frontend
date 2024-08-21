@@ -1,4 +1,5 @@
 'use client'
+import { RootState } from '@/app/store/store';
 import LoadingWrapper from '@/components/ui/LoadingWrapper/LoadingWrapper';
 import withDashboardLayout from '@/hoc/withDashboardLayout'
 import axiosInstance from '@/lib/axiosInstance';
@@ -8,6 +9,7 @@ import TextArea from 'antd/es/input/TextArea';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 
 const { RangePicker } = DatePicker;
 
@@ -18,6 +20,7 @@ const AlertLogsMainView = () => {
     dayjs().startOf('day').add(1, 'day').subtract(1, 'millisecond'),
   ]);
 
+  const { isAdmin } = useSelector((state: RootState) => state.authReducer)
   const [alertLogs, setAlertLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const initialFetchRef = useRef(true);
@@ -101,6 +104,38 @@ const AlertLogsMainView = () => {
     }
   }
 
+  const handleAlertLogAccepted = async (e: any, id: string, accepted: boolean) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (accepted) {
+      return;
+    }
+
+    try {
+      setLoading(true)
+      const response = await axiosInstance.patch(`/alertLogs/${id}/accept`)
+
+      if (response.status === 200) {
+        toast.success("Log Accepted");
+
+        const responseNote = response.data
+        setAlertLogs((prevState) =>
+          prevState.map((item) =>
+            item.id === id
+              ? { ...item, ...responseNote, accepted: true }
+              : item
+          )
+        );
+      }
+
+    } catch (error) {
+      console.log(error)
+      toast.error("Error accepting the log");
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const columns: TableProps<any>["columns"] = [
     {
       title: "ALERT NAME",
@@ -138,6 +173,20 @@ const AlertLogsMainView = () => {
       },
     },
   ];
+
+  if (isAdmin) {
+    columns.push(
+      {
+        title: "ACCEPTED",
+        dataIndex: "accepted",
+        render: (_, { id, accepted }) => {
+          return (
+            <Checkbox className='ml-3' onClick={e => e.stopPropagation()} onChange={(e) => handleAlertLogAccepted(e, id, accepted)} disabled={accepted} checked={accepted} />
+          )
+        },
+      },
+    )
+  }
 
   const handleTablePaginationChange = (newPagination: any) => {
     setCurrentPage(newPagination);

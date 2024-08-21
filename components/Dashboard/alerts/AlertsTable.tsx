@@ -39,38 +39,6 @@ const AlertsTable = () => {
     }
   }
 
-  const handleAlertLogAccepted = async (e: any, id: string, accepted: boolean) => {
-    e.stopPropagation();
-    e.preventDefault();
-    if (accepted) {
-      return;
-    }
-
-    try {
-      setLoading(true)
-      const response = await axiosInstance.patch(`/alerts/${id}/accept`)
-
-      if (response.status === 200) {
-        toast.success("Log Accepted");
-
-        const responseNote = response.data
-        setAlerts((prevState) =>
-          prevState.map((item) =>
-            item.id === id
-              ? { ...item, ...responseNote, accepted: true }
-              : item
-          )
-        );
-      }
-
-    } catch (error) {
-      console.log(error)
-      toast.error("Error accepting the log");
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const columns: TableProps<any>["columns"] = [
     {
       title: "ALERT NAME",
@@ -112,16 +80,6 @@ const AlertsTable = () => {
       ),
     },
     {
-      title: "ACTIVE",
-      key: "active",
-      dataIndex: "active",
-      render: (_, { active }) => (
-        <div className="flex flex-row gap-4 items-center">
-          {active ? <CheckIcon className=" text-green-700" width={20} /> : <XMarkIcon className=" text-red-700" width={20} />}
-        </div>
-      ),
-    },
-    {
       title: "ENABLED",
       key: "enabled",
       dataIndex: "enabled",
@@ -135,15 +93,6 @@ const AlertsTable = () => {
 
   if (isAdmin) {
     columns.push(
-      {
-        title: "ACCEPTED",
-        dataIndex: "accepted",
-        render: (_, { id, accepted }) => {
-          return (
-            <Checkbox className='ml-3' onClick={e => e.stopPropagation()} onChange={(e) => handleAlertLogAccepted(e, id, accepted)} disabled={accepted} checked={accepted} />
-          )
-        },
-      },
       {
         title: "ACTIONS",
         key: "actions",
