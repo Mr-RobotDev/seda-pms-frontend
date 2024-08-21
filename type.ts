@@ -20,13 +20,17 @@ export interface DevicesType {
   signalStrength: number;
   lastUpdated: string;
   isOffline: boolean;
+  humidityAlert?: boolean;
+  temperatureAlert?: boolean;
+  pressureAlert?: boolean;
+}
+
+export interface DeviceWithAlerts {
+  device: DevicesType;
   alerts?: {
     field: string,
     range: alertRange
   }[]
-  humidityAlert?: boolean;
-  temperatureAlert?: boolean;
-  pressureAlert?: boolean;
 }
 
 
@@ -148,7 +152,7 @@ interface Dashboard {
 
 export interface AlertDataType {
   name: string;
-  device: string ;
+  device: string;
   recipients: string[];
   trigger: Trigger;
   scheduleType: string;

@@ -5,7 +5,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import toast from "react-hot-toast";
-import { DevicesType, DataPoint, alertRange } from "@/type";
+import { DevicesType, DataPoint, alertRange, DeviceWithAlerts } from "@/type";
 import Image from "next/image";
 import CountUp from "react-countup";
 import ReactApexChart from "react-apexcharts";
@@ -35,7 +35,7 @@ interface DeviceGraphProps {
 
 const DeviceGraph = ({ id }: DeviceGraphProps) => {
   const [data, setData] = useState<DataPoint[]>([]);
-  const [deviceData, setDeviceData] = useState<DevicesType>();
+  const [deviceData, setDeviceData] = useState<DeviceWithAlerts>();
   const [range, setRange] = useState<[Dayjs, Dayjs]>([
     dayjs().subtract(1, "day").startOf("day"),
     dayjs().endOf("day"),
@@ -165,7 +165,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
 
   HumidityChart.displayName = "HumidityChart";
 
-  
+
   const PressureChart = React.memo(({ data }: { data: any }) => {
     const isAlertPresent = deviceData?.alerts?.find((alert) => alert.field === 'pressure');
 
@@ -201,7 +201,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
           x: {
             formatter: function (value: any) {
               const date = new Date(value);
-              
+
               // Adjust the time to match x-axis
               date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
 
@@ -251,7 +251,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         try {
           setGraphLoading(true);
           const response = await axiosInstance.get(
-            `/devices/${deviceData.id}/events?from=${from}&to=${to}`
+            `/devices/${deviceData.device.id}/events?from=${from}&to=${to}`
           );
           if (response.status === 200) {
             const sortedData = response.data.sort(
@@ -483,7 +483,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
     </div>
   ) : (
     <>
-      <div className={`gap-3 mx-auto mb-3 ${deviceData?.type === 'pressure' ? 'grid grid-cols-1 md:grid-cols-2' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
+      <div className={`gap-3 mx-auto mb-3 ${deviceData?.device.type === 'pressure' ? 'grid grid-cols-1 md:grid-cols-2' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'}`}>
         <div className=" h-full">
           <Card bordered={false} className="criclebox h-full">
             <div className=" text-2xl flex flex-row justify-between">
@@ -492,14 +492,14 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                 <div className="">
                   <span className="">
                     <p className="!text-2xl !font-bold !mb-0">
-                      {deviceData?.name}
+                      {deviceData?.device.name}
                     </p>
                   </span>
                 </div>
               </div>
               <div className=" w-12 h-12 flex items-center justify-center ml-auto">
                 <Image
-                  src={iconsBasedOnType(deviceData?.type as string)}
+                  src={iconsBasedOnType(deviceData?.device.type as string)}
                   className=" w-full h-full"
                   alt="icon"
                   width={100}
@@ -511,28 +511,28 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
         </div>
 
         {
-          deviceData?.type === 'pressure' ?
-            <DeviceTypeDetail title="Highest Pressure" value={deviceData?.pressure as number} image="/icons/highest-pressure.png" />
+          deviceData?.device.type === 'pressure' ?
+            <DeviceTypeDetail title="Highest Pressure" value={deviceData?.device.pressure as number} image="/icons/highest-pressure.png" />
             :
             <>
-              <DeviceTypeDetail title="Highest Temperature" value={deviceData?.temperature as number} image="/icons/highest-temperature.png" />
-              <DeviceTypeDetail title="Highest Humidity" value={deviceData?.relativeHumidity as number} image="/icons/highest-humidity.png" />
+              <DeviceTypeDetail title="Highest Temperature" value={deviceData?.device.temperature as number} image="/icons/highest-temperature.png" />
+              <DeviceTypeDetail title="Highest Humidity" value={deviceData?.device.relativeHumidity as number} image="/icons/highest-humidity.png" />
               <div>
                 <Card bordered={false} className="criclebox h-full">
                   <div className=" text-2xl flex flex-row justify-between">
                     <div>
                       <span className=" text-lg">
-                        {deviceData?.isOffline ? "Connectivity" : "Signal Strength"}
+                        {deviceData?.device.isOffline ? "Connectivity" : "Signal Strength"}
                       </span>
                       <div className="">
                         <span className="!text-3xl !font-bold">
-                          {deviceData?.signalStrength && (
+                          {deviceData?.device.signalStrength && (
                             <CountUp
-                              end={deviceData?.signalStrength as number}
+                              end={deviceData?.device.signalStrength as number}
                               duration={2}
                             />
                           )}
-                          {!deviceData?.signalStrength && (
+                          {!deviceData?.device.signalStrength && (
                             <p className="!text-2xl !font-bold !mb-0 ">Offline</p>
                           )}
                         </span>
@@ -540,7 +540,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                     </div>
                     <div className=" w-12 h-12 flex items-center justify-center ml-auto">
                       <Image
-                        src={deviceData?.signalStrength ? '/icons/signal-strength.png' : '/icons/offline.png'}
+                        src={deviceData?.device.signalStrength ? '/icons/signal-strength.png' : '/icons/offline.png'}
                         className=" w-full h-full"
                         alt="icon"
                         width={100}
@@ -560,7 +560,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
             <div className=" flex flex-row items-center justify-end gap-3 ">
               {deviceData &&
                 <FileDownloadButton
-                  deviceId={deviceData?.id}
+                  deviceId={deviceData?.device.id}
                   from={range[0].format("YYYY-MM-DD")}
                   to={range[1].format("YYYY-MM-DD")}
                 />}
@@ -636,7 +636,7 @@ const DeviceGraph = ({ id }: DeviceGraphProps) => {
                 </div>
               ) : (
                 <>
-                  {deviceData?.type !== 'pressure' ?
+                  {deviceData?.device.type !== 'pressure' ?
                     <div>
                       <div className=" h-[275px]">
                         {temperatureData.length !== 0 && (

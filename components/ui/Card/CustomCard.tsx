@@ -1,9 +1,9 @@
 import TemperatureChart from "@/components/Dashboard/dashboardViews/TemperatureChart";
 import axiosInstance from "@/lib/axiosInstance";
-import { DashboardCardType, DevicesType } from "@/type";
+import { DashboardCardType, DevicesType, DeviceWithAlerts } from "@/type";
 import { memo, useEffect, useState } from "react";
 import { Button, Spin, Tooltip } from "antd";
-import { EventsMap, Event, DeviceData } from "@/type";
+import { EventsMap } from "@/type";
 import OptionsMenu from "@/components/Dashboard/dashboardViews/OptionMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/store/store";
@@ -18,7 +18,7 @@ interface CardProps {
 
 const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
   const [eventsMap, setEventsMap] = useState<EventsMap>({});
-  const [deviceData, setDeviceData] = useState<DevicesType>();
+  const [deviceData, setDeviceData] = useState<DeviceWithAlerts>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isRenaming, setIsRenaming] = useState(false);
   const [editingName, setEditingName] = useState(cardObj.name);
@@ -33,12 +33,6 @@ const CustomCard: React.FC<CardProps> = ({ cardObj }) => {
   useEffect(() => {
     setCard(cardObj);
   }, [cardObj]);
-
-
-  useEffect(() => {
-
-  })
-
 
   useEffect(() => {
     let isCancelled = false;
