@@ -474,6 +474,7 @@ const ReportsTable = ({
                         functionality={false}
                         initialValue={formData?.timeframe}
                         isAdmin={isAdmin}
+                        type='reports'
                       />
                     </div>
                   </div>

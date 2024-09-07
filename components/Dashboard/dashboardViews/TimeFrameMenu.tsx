@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { SelectSecondary } from "@/components/ui/Select/Select";
 import { setTimeFrame } from "@/app/store/slice/dashboardSlice";
-import timeFrames from "@/utils/time_frames";
+import defaultTimeFrames from "@/utils/time_frames";
 import { RootState } from "@/app/store/store";
 import { TimeFrameType } from "@/type";
 import { CalendarDaysIcon } from "@heroicons/react/24/outline";
@@ -13,11 +13,23 @@ interface TimeFrameProps {
   functionality: boolean;
   initialValue?: string;
   isAdmin?: boolean;
+  type?: string
 }
 
-const TimeFrameMenu = ({ functionality, initialValue, isAdmin= true }: TimeFrameProps) => {
+const getTimeFrames = (type: string) => {
+  const modifiedTimeFrames = { ...defaultTimeFrames };
+
+  if (type === 'reports') {
+    delete modifiedTimeFrames.CUSTOM;
+  }
+
+  return modifiedTimeFrames;
+};
+
+const TimeFrameMenu = ({ functionality, initialValue, isAdmin = true, type = 'default' }: TimeFrameProps) => {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
+  const timeFrames = getTimeFrames(type)
   const { timeFrame } = useSelector((state: RootState) => state.dashboardReducer);
 
   const handleTimeFrame = (selectedTimeFrame: TimeFrameType) => {
