@@ -52,7 +52,7 @@ const TimeFrameMenu = ({ functionality, initialValue, isAdmin = true, type = 'de
     if (initialValue) {
       dispatch(setTimeFrame(timeFrames[initialValue]));
     }
-  }, [initialValue, dispatch]);
+  }, [initialValue, dispatch, timeFrames]);
 
   const TimeFrameOption = ({ frameKey }: { frameKey: string }) => {
     const frame = timeFrames[frameKey];
