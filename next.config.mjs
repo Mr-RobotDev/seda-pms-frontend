@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['sedaems.ams3.cdn.digitaloceanspaces.com'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "sedaems.ams3.cdn.digitaloceanspaces.com",
+      },
+    ],
   },
 };
 
