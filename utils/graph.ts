@@ -173,46 +173,47 @@ export const calculateMinMaxValues = (data: any, annotations: any, isAlertPresen
   const dataMin = Math.min(...dataValues);
   const dataMax = Math.max(...dataValues);
   const dataMinMax = { dataMin, dataMax };
+  const adjustment = (dataMax - dataMin) * 0.1;
 
   const minValue = () => {
-    if (annotations.yaxis.length === 0) return adjustMinMax(dataMinMax.dataMin, 10, true);
+    if (annotations.yaxis.length === 0) return adjustMinMax(dataMinMax.dataMin, adjustment, true);
 
     const { lower, upper, type } = isAlertPresent.range as alertRange;
-    if (field === 'temperature') {
-      return 13
+    if (field === "temperature") {
+      return dataMin - adjustment;
     }
-    if (field === 'humidity') {
-      return 10
+    if (field === "humidity") {
+      return dataMin - adjustment;
     }
-    if (field === 'pressure' && type === 'outside') {
-      return annotations.yaxis[0].y - 10
+    if (field === "pressure" && type === "outside") {
+      return annotations.yaxis[0].y - adjustment;
     }
-    if (type === 'outside' || type === 'lower') {
-      return adjustMinMax(Math.min(dataMinMax.dataMin, lower), 10, true);
+    if (type === "outside" || type === "lower") {
+      return adjustMinMax(Math.min(dataMinMax.dataMin, lower), adjustment, true);
     } else {
-      return adjustMinMax(dataMinMax.dataMin, 10, true);
+      return adjustMinMax(dataMinMax.dataMin, adjustment, true);
     }
   };
 
   const maxValue = () => {
-    if (annotations.yaxis.length === 0) return adjustMinMax(dataMinMax.dataMax, 10, false);
+    if (annotations.yaxis.length === 0) return adjustMinMax(dataMinMax.dataMax, adjustment, false);
 
     const { lower, upper, type } = isAlertPresent.range as alertRange;
-    if (field === 'temperature') {
-      return 25
+    if (field === "temperature") {
+      return dataMax + adjustment;
     }
-    if (field === 'humidity') {
-      return 90
+    if (field === "humidity") {
+      return dataMax + adjustment;
     }
 
-    if (field === 'pressure' && type === 'outside') {
-      return annotations.yaxis[0].y2 + 10
+    if (field === "pressure" && type === "outside") {
+      return annotations.yaxis[0].y2 + adjustment;
     }
-    
-    if (type === 'outside' || type === 'upper') {
-      return adjustMinMax(Math.max(dataMinMax.dataMax, upper), 10, false);
+
+    if (type === "outside" || type === "upper") {
+      return adjustMinMax(Math.max(dataMinMax.dataMax, upper), adjustment, false);
     } else {
-      return adjustMinMax(dataMinMax.dataMax, 10, false);
+      return adjustMinMax(dataMinMax.dataMax, adjustment, false);
     }
   };
 

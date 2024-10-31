@@ -16,7 +16,7 @@ export async function generateMetadata(props: any) {
   });
 
   const data = await response.json();
-  const title = `${data.device.name}`;
+  const title = `${data.device?.name}`;
 
   return {
     title: title,

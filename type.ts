@@ -151,21 +151,25 @@ interface Dashboard {
 }
 
 export interface AlertDataType {
+  id: string;
   name: string;
-  device: string;
+  device: string | Device;
   recipients: string[];
   trigger: Trigger;
   scheduleType: string;
   weekdays: string[];
   enabled?: boolean;
-  id?: string;
   active?: boolean;
 }
 
-interface Trigger {
+// export interface AlertWithDevicePopulated ex
+
+export interface Trigger {
   field: string;
   range: Range;
   duration: number;
+  value?: number;
+  unit?: string;
 }
 
 interface Range {
