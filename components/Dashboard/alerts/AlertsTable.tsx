@@ -1,14 +1,20 @@
 'use client'
 import { scheduletypeOptions, timeFrameOptions } from '@/utils/form';
-import { CheckIcon, TrashIcon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Checkbox, Image, Table, TableProps } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react'
-import { AlertDataType } from '@/type';
-import axiosInstance from '@/lib/axiosInstance';
-import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/app/store/store';
-import toast from 'react-hot-toast';
+import {
+  CheckIcon,
+  ExclamationTriangleIcon,
+  TrashIcon,
+  UserIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { Checkbox, Image, Table, TableProps } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
+import { AlertDataType } from "@/type";
+import axiosInstance from "@/lib/axiosInstance";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import toast from "react-hot-toast";
 import { formatToTitleCase, generateTriggerMessage } from "@/utils/helper_functions";
 
 const AlertsTable = () => {
@@ -46,7 +52,12 @@ const AlertsTable = () => {
     {
       title: "ALERT REASON",
       dataIndex: "type",
-      render: (_, { trigger }) => <p className="!text-gray-800">{generateTriggerMessage(trigger)}</p>,
+      render: (_, { trigger }) => (
+        <div className="flex gap-x-2 items-center text-orange-500">
+          <ExclamationTriangleIcon width={24} />
+          <p className="!text-gray-800">{generateTriggerMessage(trigger)}</p>
+        </div>
+      ),
     },
     {
       title: "DEVICE",

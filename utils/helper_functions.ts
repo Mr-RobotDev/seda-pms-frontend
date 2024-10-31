@@ -196,12 +196,12 @@ export function generateTriggerMessage(trigger: Trigger): string {
 
   let rangeMessage;
   if (isNotNullOrUndefined(range.lower) && isNotNullOrUndefined(range.upper)) {
-    rangeMessage = `(${range.lower} to ${range.upper} ${unit})`;
+    rangeMessage = `(${range.lower} to ${range.upper} ${unit || ""})`;
   } else if (isNotNullOrUndefined(range.lower) || isNotNullOrUndefined(range.upper)) {
-    rangeMessage = `(${range?.lower || range?.upper} ${unit})`;
+    rangeMessage = `(${range?.lower || range?.upper} ${unit || ""})`;
   } else {
     rangeMessage = "";
   }
 
-  return `${formattedField} was ${unit ? `${value}${unit}` : ""} ${range.type} ${rangeMessage}`;
+  return `${formattedField} was ${unit ? `${value}${unit}` : ""} out of limit ${rangeMessage}`;
 }

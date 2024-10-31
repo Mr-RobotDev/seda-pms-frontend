@@ -4,6 +4,7 @@ import LoadingWrapper from '@/components/ui/LoadingWrapper/LoadingWrapper';
 import withDashboardLayout from '@/hoc/withDashboardLayout'
 import axiosInstance from '@/lib/axiosInstance';
 import { formatDateTime, formatToTitleCase, generateTriggerMessage } from "@/utils/helper_functions";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { Button, Card, Checkbox, DatePicker, Modal, Table, TableProps } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import dayjs, { Dayjs } from "dayjs";
@@ -139,7 +140,12 @@ const AlertLogsMainView = () => {
       title: "ALERT REASON",
       dataIndex: "type",
       render: (_, { alert: { trigger } }) =>
-        trigger ? <p className="!text-gray-800">{generateTriggerMessage(trigger)}</p> : null,
+        trigger ? (
+          <div className="flex gap-x-2 items-center text-orange-500">
+            <ExclamationTriangleIcon width={24} />
+            <p className="!text-gray-800">{generateTriggerMessage(trigger)}</p>
+          </div>
+        ) : null,
     },
     {
       title: "CREATED AT",
