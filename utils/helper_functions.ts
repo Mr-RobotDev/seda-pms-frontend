@@ -118,20 +118,29 @@ export const formatDateTime = (isoString: string) => {
   return { formattedDate, formattedTime };
 };
 
-export function formatToTitleCase(input: string): string {
+export function formatToTitleCase(input: string, splitCamelCase = false): string {
   if (!input) {
-    return '';
+    return "";
   }
-  const words = input.trim().split(/\s+/);
 
-  const formattedWords = words.map(word => {
+  let formattedInput = input.trim();
+
+  // Split camelCase if the option is enabled
+  if (splitCamelCase) {
+    formattedInput = formattedInput.replace(/([a-z])([A-Z])/g, "$1 $2");
+  }
+
+  // Split words by spaces
+  const words = formattedInput.split(/\s+/);
+
+  const formattedWords = words.map((word) => {
     if (word.length > 0) {
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     }
     return word;
   });
 
-  return formattedWords.join(' ');
+  return formattedWords.join(" ");
 }
 
 export const iconsBasedOnType = (key: string) => {
