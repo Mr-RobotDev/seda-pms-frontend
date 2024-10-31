@@ -136,13 +136,13 @@ const Sidebar: React.FC<SidenavProps> = ({ color }) => {
       return (
         <SidebarMenu
           key={item.key}
+          keyName={item.key}
           title={item.title}
           isActive={activeMenu === item.menuKey}
           icon={
             <item.icon
               width={25}
-              className={`${activeMenu === item.menuKey ? "!text-blue-700" : "!text-black"
-                }`}
+              className={`${activeMenu === item.menuKey ? "!text-blue-700" : "!text-black"}`}
             />
           }
           url={item.url}
