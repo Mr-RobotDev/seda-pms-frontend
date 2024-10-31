@@ -4,8 +4,8 @@ import { IncomingMessage } from "http";
 import cookie from "cookie";
 
 const axiosInstance = axios.create({
-  // baseURL: "https://api.sedaems.originsmartcontrols.com/v1",
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: "https://api.sedaems.originsmartcontrols.com/v1",
+  // baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 axiosInstance.interceptors.request.use(
