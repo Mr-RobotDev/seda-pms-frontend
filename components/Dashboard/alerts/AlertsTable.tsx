@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import toast from 'react-hot-toast';
-import { formatToTitleCase } from "@/utils/helper_functions";
+import { formatToTitleCase, generateTriggerMessage } from "@/utils/helper_functions";
 
 const AlertsTable = () => {
   const router = useRouter();
@@ -46,21 +46,14 @@ const AlertsTable = () => {
     {
       title: "ALERT REASON",
       dataIndex: "type",
-      render: (_, { trigger }) => (
-        <p className="!text-gray-800">
-          {formatToTitleCase(trigger.field, true)} was{" "}
-          <b>
-            {trigger.value}
-            {trigger.unit}
-          </b>{" "}
-          {trigger.range.type} ({trigger.range.lower} to {trigger.range.upper} {trigger.unit})
-        </p>
-      ),
+      render: (_, { trigger }) => <p className="!text-gray-800">{generateTriggerMessage(trigger)}</p>,
     },
     {
       title: "DEVICE",
       dataIndex: "type",
-      render: (_, { device: { name } }) => <p className="!text-black">{name}</p>,
+      render: (_, { device }) => (
+        <p className="!text-black">{typeof device === "string" ? device : device.name}</p>
+      ),
     },
     {
       title: "SCHEDULE TYPE",

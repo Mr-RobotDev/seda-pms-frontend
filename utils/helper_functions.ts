@@ -1,18 +1,18 @@
-import { AlertDataType, ReportsType, SingleNameIdObject } from "@/type";
-import dayjs from 'dayjs';
+import { AlertDataType, ReportsType, SingleNameIdObject, Trigger } from "@/type";
+import dayjs from "dayjs";
 
 export const activeSidebar = (path: string): string => {
   const routes = [
-    { name: 'floor', path: '/dashboard/floor' },
-    { name: 'alert-logs', path: '/dashboard/alert-logs' },
-    { name: 'users', path: '/dashboard/users' },
-    { name: 'devices', path: '/dashboard/devices' },
-    { name: 'alerts', path: '/dashboard/alerts' },
-    { name: 'data-sources', path: '/dashboard/data-sources' },
-    { name: 'profile', path: '/dashboard/profile' },
-    { name: 'reports', path: '/dashboard/reports' },
-    { name: 'change-logs', path: '/dashboard/change-logs' },
-    { name: 'dashboard', path: '/dashboard' },
+    { name: "floor", path: "/dashboard/floor" },
+    { name: "alert-logs", path: "/dashboard/alert-logs" },
+    { name: "users", path: "/dashboard/users" },
+    { name: "devices", path: "/dashboard/devices" },
+    { name: "alerts", path: "/dashboard/alerts" },
+    { name: "data-sources", path: "/dashboard/data-sources" },
+    { name: "profile", path: "/dashboard/profile" },
+    { name: "reports", path: "/dashboard/reports" },
+    { name: "change-logs", path: "/dashboard/change-logs" },
+    { name: "dashboard", path: "/dashboard" },
   ];
 
   for (const route of routes) {
@@ -21,13 +21,13 @@ export const activeSidebar = (path: string): string => {
     }
   }
 
-  return '';
+  return "";
 };
 
 export const validateEmail = (email: string): boolean => {
   const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   return emailPattern.test(email);
-}
+};
 
 export const isValidTimeFormat = (time: string): boolean => {
   const timeRegex: RegExp = /^(?:2[0-3]|[01]?[0-9]):[0-5][0-9]$/;
@@ -35,7 +35,7 @@ export const isValidTimeFormat = (time: string): boolean => {
     return false;
   }
 
-  const [hours, minutes] = time.split(':');
+  const [hours, minutes] = time.split(":");
   const parsedHours: number = parseInt(hours, 10);
   const parsedMinutes: number = parseInt(minutes, 10);
 
@@ -44,10 +44,11 @@ export const isValidTimeFormat = (time: string): boolean => {
   }
 
   return true;
-}
+};
 
-
-export const validateReportsFormData = (formData: ReportsType | null): { isValid: boolean; message: string } => {
+export const validateReportsFormData = (
+  formData: ReportsType | null
+): { isValid: boolean; message: string } => {
   if (!formData) {
     return { isValid: false, message: "Form data is null." };
   }
@@ -66,22 +67,26 @@ export const validateReportsFormData = (formData: ReportsType | null): { isValid
 
   const validScheduleTypes = ["everyday", "weekdays", "custom"];
   if (!validScheduleTypes.includes(formData.scheduleType)) {
-    return { isValid: false, message: "ScheduleType must be one of the following values: everyday, weekdays, custom." };
+    return {
+      isValid: false,
+      message: "ScheduleType must be one of the following values: everyday, weekdays, custom.",
+    };
   }
 
   if (!formData.times || formData.times.length === 0) {
     return { isValid: false, message: "Times should not be empty." };
   }
 
-  if (formData.weekdays.length === 0 && formData.scheduleType === 'custom') {
+  if (formData.weekdays.length === 0 && formData.scheduleType === "custom") {
     return { isValid: false, message: "At least select one day for Custom Schedule Type" };
   }
 
   return { isValid: true, message: "Form data is valid." };
 };
 
-
-export const validateAlertFormData = (formData: AlertDataType | null): { isValid: boolean, message: string } => {
+export const validateAlertFormData = (
+  formData: AlertDataType | null
+): { isValid: boolean; message: string } => {
   if (!formData) {
     return { isValid: false, message: "Form data is null." };
   }
@@ -99,12 +104,10 @@ export const validateAlertFormData = (formData: AlertDataType | null): { isValid
   }
 
   return { isValid: true, message: "Form data is valid." };
-}
-
-
+};
 
 export const formatDate = (date: Date): string => {
-  const day = date.getDate().toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, "0");
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const month = monthNames[date.getMonth()];
   const year = date.getFullYear();
@@ -113,8 +116,8 @@ export const formatDate = (date: Date): string => {
 
 export const formatDateTime = (isoString: string) => {
   const dateObj = dayjs(isoString);
-  const formattedDate = dateObj.format('DD MMM, YYYY');
-  const formattedTime = dateObj.format('h:mm A');
+  const formattedDate = dateObj.format("DD MMM, YYYY");
+  const formattedTime = dateObj.format("h:mm A");
   return { formattedDate, formattedTime };
 };
 
@@ -145,19 +148,19 @@ export function formatToTitleCase(input: string, splitCamelCase = false): string
 
 export const iconsBasedOnType = (key: string) => {
   const icons: Record<string, string> = {
-    humidity: '/icons/humidity.png',
-    pressure: '/icons/highest-pressure.png',
-    freezer: '/icons/freezer.png',
-    fridge: '/icons/fridge.png',
-  }
+    humidity: "/icons/humidity.png",
+    pressure: "/icons/highest-pressure.png",
+    freezer: "/icons/freezer.png",
+    fridge: "/icons/fridge.png",
+  };
 
-  return icons[key] || '';
-}
+  return icons[key] || "";
+};
 
 export const tranformObjectForSelectComponent = (objects: SingleNameIdObject[]) => {
-  return objects.map(org => ({
+  return objects.map((org) => ({
     label: org.name,
-    value: org.id
+    value: org.id,
   }));
 };
 
@@ -177,7 +180,28 @@ export const convertObjectToQueryString = (params: { [key: string]: any }): stri
   }
 
   if (queryStringParts.length === 0) {
-    return ''
+    return "";
   }
-  return queryStringParts.join('&');
+  return queryStringParts.join("&");
+};
+
+export function isNotNullOrUndefined<T>(value: T | null | undefined): value is T {
+  return value !== null && value !== undefined;
+}
+
+export function generateTriggerMessage(trigger: Trigger): string {
+  const { field, value, unit, range } = trigger;
+
+  const formattedField = formatToTitleCase(field, true);
+
+  let rangeMessage;
+  if (isNotNullOrUndefined(range.lower) && isNotNullOrUndefined(range.upper)) {
+    rangeMessage = `(${range.lower} to ${range.upper} ${unit})`;
+  } else if (isNotNullOrUndefined(range.lower) || isNotNullOrUndefined(range.upper)) {
+    rangeMessage = `(${range?.lower || range?.upper} ${unit})`;
+  } else {
+    rangeMessage = "";
+  }
+
+  return `${formattedField} was ${unit ? `${value}${unit}` : ""} ${range.type} ${rangeMessage}`;
 }

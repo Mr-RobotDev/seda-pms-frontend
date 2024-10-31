@@ -3,7 +3,7 @@ import { RootState } from '@/app/store/store';
 import LoadingWrapper from '@/components/ui/LoadingWrapper/LoadingWrapper';
 import withDashboardLayout from '@/hoc/withDashboardLayout'
 import axiosInstance from '@/lib/axiosInstance';
-import { formatDateTime, formatToTitleCase } from "@/utils/helper_functions";
+import { formatDateTime, formatToTitleCase, generateTriggerMessage } from "@/utils/helper_functions";
 import { Button, Card, Checkbox, DatePicker, Modal, Table, TableProps } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import dayjs, { Dayjs } from "dayjs";
@@ -139,16 +139,7 @@ const AlertLogsMainView = () => {
       title: "ALERT REASON",
       dataIndex: "type",
       render: (_, { alert: { trigger } }) =>
-        trigger ? (
-          <p className="!text-gray-800">
-            {formatToTitleCase(trigger.field, true)} was{" "}
-            <b>
-              {trigger.value}
-              {trigger.unit}
-            </b>{" "}
-            {trigger.range.type} ({trigger.range.lower} to {trigger.range.upper} {trigger.unit})
-          </p>
-        ) : null,
+        trigger ? <p className="!text-gray-800">{generateTriggerMessage(trigger)}</p> : null,
     },
     {
       title: "CREATED AT",
