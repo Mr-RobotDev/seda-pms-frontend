@@ -85,7 +85,7 @@ export const validateReportsFormData = (
 };
 
 export const validateAlertFormData = (
-  formData: AlertDataType | null
+  formData: (Omit<AlertDataType, "id"> & { id?: string }) | null
 ): { isValid: boolean; message: string } => {
   if (!formData) {
     return { isValid: false, message: "Form data is null." };

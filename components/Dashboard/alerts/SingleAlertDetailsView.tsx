@@ -20,9 +20,9 @@ import { validateAlertFormData } from '@/utils/helper_functions'
 import { resetAlertDevice } from '@/app/store/slice/devicesSlice'
 
 interface SingleAlertDetailsViewProps {
-  alert: AlertDataType
-  device: DevicesType
-  creatingNewAlert: boolean
+  alert: Omit<AlertDataType, "id"> & { id?: string };
+  device: DevicesType;
+  creatingNewAlert: boolean;
 }
 
 const typeAndUnits: { [key: string]: string } = {
